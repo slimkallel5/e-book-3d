@@ -11,7 +11,13 @@ import {
   RotateCcw
 } from 'lucide-react';
 
-export const BookDetailOverlay: React.FC = () => {
+interface BookDetailOverlayProps {
+  onAddBookWithAnimation?: (book: any, e: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+export const BookDetailOverlay: React.FC<BookDetailOverlayProps> = ({
+  onAddBookWithAnimation
+}) => {
   const selectedBookId = useLibraryStore((s) => s.selectedBookId);
   const selectBook = useLibraryStore((s) => s.selectBook);
   const isBookOpen = useLibraryStore((s) => s.isBookOpen);
@@ -142,7 +148,14 @@ export const BookDetailOverlay: React.FC = () => {
           </div>
 
           <button
-            onClick={() => addToBasket(book)}
+            data-testid="add-to-basket-btn"
+            onClick={(e) => {
+              if (onAddBookWithAnimation) {
+                onAddBookWithAnimation(book, e);
+              } else {
+                addToBasket(book);
+              }
+            }}
             className="glass-panel-interactive"
             style={{
               padding: '10px 18px',
