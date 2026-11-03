@@ -4,7 +4,17 @@ import { LibraryScene } from './scenes/LibraryScene';
 import { WebGLFallback } from './components/ui/WebGLFallback';
 import { useLibraryStore } from './store/useLibraryStore';
 import { EDUCATION_LEVELS } from './data/educationLevels';
-import { BookOpen, Layers, ShoppingBag, Globe, RotateCcw } from 'lucide-react';
+import { BOOKS_DATA } from './data/books';
+import {
+  BookOpen,
+  Layers,
+  ShoppingBag,
+  Globe,
+  RotateCcw,
+  ChevronLeft,
+  ChevronRight,
+  X
+} from 'lucide-react';
 import { Language } from './types/education';
 
 export const App: React.FC = () => {
@@ -35,6 +45,21 @@ export const App: React.FC = () => {
 
   const basketCount = basket.reduce((acc, item) => acc + item.quantity, 0);
 
+  const currentLevel = EDUCATION_LEVELS.find((l) => l.id === activeLevelId) || EDUCATION_LEVELS[0];
+  const currentLevelBooks = BOOKS_DATA.filter((b) => b.educationLevelId === currentLevel.id);
+
+  const handlePrevLevel = () => {
+    const currentIndex = EDUCATION_LEVELS.findIndex((l) => l.id === activeLevelId);
+    const prevIndex = (currentIndex - 1 + EDUCATION_LEVELS.length) % EDUCATION_LEVELS.length;
+    setActiveLevelId(EDUCATION_LEVELS[prevIndex].id);
+  };
+
+  const handleNextLevel = () => {
+    const currentIndex = EDUCATION_LEVELS.findIndex((l) => l.id === activeLevelId);
+    const nextIndex = (currentIndex + 1) % EDUCATION_LEVELS.length;
+    setActiveLevelId(EDUCATION_LEVELS[nextIndex].id);
+  };
+
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
       {/* 3D Canvas Viewport */}
@@ -43,7 +68,7 @@ export const App: React.FC = () => {
           shadows
           gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
           onCreated={({ gl }) => {
-            gl.setClearColor('#0d0f12');
+            gl.setClearColor('#0a0d12');
           }}
         >
           <LibraryScene />
@@ -159,6 +184,86 @@ export const App: React.FC = () => {
           </div>
         </div>
       </header>
+
+      {/* Shelf Mode Floating Info Banner (Appears when viewing a focused row) */}
+      {viewMode === 'shelf' && (
+        <div
+          className="glass-panel animate-fade-in"
+          style={{
+            position: 'absolute',
+            top: '84px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10,
+            borderRadius: '14px',
+            padding: '10px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            boxShadow: 'var(--shadow-md)',
+            borderLeft: `4px solid ${currentLevel.badgeColor}`
+          }}
+        >
+          <button
+            onClick={handlePrevLevel}
+            className="glass-panel-interactive"
+            style={{ padding: '6px', borderRadius: '50%', color: '#f8fafc', display: 'flex' }}
+            title={language === 'ar' ? 'السنة السابقة' : 'Previous Year'}
+          >
+            {language === 'ar' ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+          </button>
+
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <span style={{
+                fontSize: '0.75rem',
+                background: currentLevel.badgeColor,
+                color: '#ffffff',
+                padding: '2px 8px',
+                borderRadius: '10px',
+                fontWeight: 600
+              }}>
+                {currentLevel.code}
+              </span>
+              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
+                {currentLevel.name[language] || currentLevel.name.ar}
+              </h2>
+            </div>
+            <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
+              {currentLevel.description[language] || currentLevel.description.ar}
+              {' • '}
+              <span style={{ color: '#fbbf24', fontWeight: 600 }}>
+                {currentLevelBooks.length} {language === 'ar' ? 'كتب متوفرة' : language === 'fr' ? 'manuels disponibles' : 'books available'}
+              </span>
+            </p>
+          </div>
+
+          <button
+            onClick={handleNextLevel}
+            className="glass-panel-interactive"
+            style={{ padding: '6px', borderRadius: '50%', color: '#f8fafc', display: 'flex' }}
+            title={language === 'ar' ? 'السنة التالية' : 'Next Year'}
+          >
+            {language === 'ar' ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+          </button>
+
+          <button
+            onClick={resetView}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#94a3b8',
+              cursor: 'pointer',
+              padding: '4px',
+              display: 'flex',
+              marginLeft: '4px'
+            }}
+            title={language === 'ar' ? 'إغلاق العرض' : 'Close shelf view'}
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
 
       {/* Education Levels Bottom Shelf Selector Dock */}
       <div
