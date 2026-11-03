@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { LibraryScene } from './scenes/LibraryScene';
 import { WebGLFallback } from './components/ui/WebGLFallback';
+import { BookDetailOverlay } from './components/book/BookDetailOverlay';
 import { useLibraryStore } from './store/useLibraryStore';
 import { EDUCATION_LEVELS } from './data/educationLevels';
 import { BOOKS_DATA } from './data/books';
@@ -25,6 +26,7 @@ export const App: React.FC = () => {
   const activeLevelId = useLibraryStore((s) => s.activeLevelId);
   const setActiveLevelId = useLibraryStore((s) => s.setActiveLevelId);
   const viewMode = useLibraryStore((s) => s.viewMode);
+  const selectedBookId = useLibraryStore((s) => s.selectedBookId);
   const resetView = useLibraryStore((s) => s.resetView);
   const basket = useLibraryStore((s) => s.basket);
 
@@ -265,10 +267,16 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {/* Education Levels Bottom Shelf Selector Dock */}
-      <div
-        className="glass-panel"
-        style={{
+      {/* Book Inspection & Reading HUD Overlay */}
+      {selectedBookId && (viewMode === 'book-detail' || viewMode === 'book-open') && (
+        <BookDetailOverlay />
+      )}
+
+      {/* Education Levels Bottom Shelf Selector Dock (Hidden when inspecting a book) */}
+      {!selectedBookId && (
+        <div
+          className="glass-panel"
+          style={{
           position: 'absolute',
           bottom: '24px',
           left: '50%',
@@ -312,6 +320,7 @@ export const App: React.FC = () => {
           );
         })}
       </div>
+      )}
     </div>
   );
 };
