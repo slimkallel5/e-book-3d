@@ -63,6 +63,24 @@ export const BOOKS_DATA: Book[] = [
           fr: 'Associe la lettre à l’image correspondante pour enrichir ton vocabulaire.',
           en: 'Match letters with corresponding vibrant illustrations to expand vocabulary.'
         }
+      },
+      {
+        pageNumber: 3,
+        title: { ar: 'قصة الأرنب والسلحفاة', fr: 'Le Lièvre et la Tortue', en: 'The Hare & The Tortoise' },
+        content: {
+          ar: 'كَانَ يَا مَكَانَ، فِي قَدِيمِ الزَّمَانِ، أَرْنَبٌ مَغْرُورٌ يَتَبَاهَى بِسُرْعَتِهِ الْفَائِقَةِ.',
+          fr: 'Conte moral classique invitant les élèves à la persévérance et au travail régulier.',
+          en: 'Classic moral fable inspiring perseverance, patience, and joyful dedication.'
+        }
+      },
+      {
+        pageNumber: 4,
+        title: { ar: 'أنشطة الفهم والتركيب', fr: 'Compréhension du texte', en: 'Comprehension & Activities' },
+        content: {
+          ar: 'أَجِبْ عَنِ الأَسْئِلَةِ: مَنْ فَازَ فِي السِّبَاقِ؟ وَمَاذَا تَعَلَّمْتَ مِنَ الْقِصَّةِ؟',
+          fr: 'Questions guidées pour valider la mémorisation et la réflexion critique de l’élève.',
+          en: 'Guided discussion questions evaluating critical thinking and reading mastery.'
+        }
       }
     ]
   },
