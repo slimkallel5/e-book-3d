@@ -1,34 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { LibraryScene } from './scenes/LibraryScene';
 import { WebGLFallback } from './components/ui/WebGLFallback';
 import { BookDetailOverlay } from './components/book/BookDetailOverlay';
+import { Header } from './components/navigation/Header';
+import { SearchModal } from './components/navigation/SearchModal';
+import { BasketDrawer } from './components/basket/BasketDrawer';
+import { FlyingBookEffect } from './components/basket/FlyingBookEffect';
 import { useLibraryStore } from './store/useLibraryStore';
 import { EDUCATION_LEVELS } from './data/educationLevels';
 import { BOOKS_DATA } from './data/books';
+import { Book } from './types/book';
 import {
-  BookOpen,
   Layers,
-  ShoppingBag,
-  Globe,
-  RotateCcw,
   ChevronLeft,
   ChevronRight,
   X
 } from 'lucide-react';
-import { Language } from './types/education';
 
 export const App: React.FC = () => {
   const [hasWebGL, setHasWebGL] = useState(true);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [basketBouncing, setBasketBouncing] = useState(false);
+  const [flyingBook, setFlyingBook] = useState<{
+    book: Book;
+    startPos: { x: number; y: number };
+  } | null>(null);
+
+  const basketButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const language = useLibraryStore((s) => s.language);
-  const setLanguage = useLibraryStore((s) => s.setLanguage);
   const activeLevelId = useLibraryStore((s) => s.activeLevelId);
   const setActiveLevelId = useLibraryStore((s) => s.setActiveLevelId);
   const viewMode = useLibraryStore((s) => s.viewMode);
   const selectedBookId = useLibraryStore((s) => s.selectedBookId);
   const resetView = useLibraryStore((s) => s.resetView);
-  const basket = useLibraryStore((s) => s.basket);
+  const addToBasket = useLibraryStore((s) => s.addToBasket);
 
   useEffect(() => {
     // Check for WebGL capability
@@ -41,11 +48,21 @@ export const App: React.FC = () => {
     }
   }, []);
 
+  // Global keyboard shortcut: Command/Ctrl + K to open search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   if (!hasWebGL) {
     return <WebGLFallback />;
   }
-
-  const basketCount = basket.reduce((acc, item) => acc + item.quantity, 0);
 
   const currentLevel = EDUCATION_LEVELS.find((l) => l.id === activeLevelId) || EDUCATION_LEVELS[0];
   const currentLevelBooks = BOOKS_DATA.filter((b) => b.educationLevelId === currentLevel.id);
@@ -60,6 +77,31 @@ export const App: React.FC = () => {
     const currentIndex = EDUCATION_LEVELS.findIndex((l) => l.id === activeLevelId);
     const nextIndex = (currentIndex + 1) % EDUCATION_LEVELS.length;
     setActiveLevelId(EDUCATION_LEVELS[nextIndex].id);
+  };
+
+  const handleAddBookWithAnimation = (book: Book, e: React.MouseEvent<HTMLButtonElement>) => {
+    // Add to basket state immediately so the basket count and drawer update right away
+    addToBasket(book);
+
+    // Get click location to spawn flying animation
+    const rect = e.currentTarget.getBoundingClientRect();
+    const startX = rect.left + rect.width / 2;
+    const startY = rect.top + rect.height / 2;
+
+    setFlyingBook({
+      book,
+      startPos: { x: startX, y: startY }
+    });
+  };
+
+  const handleFlyingBookComplete = () => {
+    setFlyingBook(null);
+
+    // Trigger basket bounce & glow animation in header
+    setBasketBouncing(true);
+    setTimeout(() => {
+      setBasketBouncing(false);
+    }, 700);
   };
 
   return (
@@ -78,114 +120,11 @@ export const App: React.FC = () => {
       </div>
 
       {/* Floating Header UI */}
-      <header
-        className="glass-panel"
-        style={{
-          position: 'absolute',
-          top: '16px',
-          left: '20px',
-          right: '20px',
-          zIndex: 10,
-          borderRadius: '16px',
-          padding: '12px 24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '16px'
-        }}
-      >
-        {/* Brand / Logo */}
-        <div
-          onClick={resetView}
-          style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
-        >
-          <div style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '10px',
-            background: 'linear-gradient(135deg, #c4823f, #e5b364)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#1e140d',
-            boxShadow: '0 4px 12px rgba(229, 179, 100, 0.3)'
-          }}>
-            <BookOpen size={24} />
-          </div>
-          <div>
-            <h1 style={{ fontSize: '1.25rem', lineHeight: '1.2', color: '#f8fafc' }}>
-              {language === 'ar' ? 'المكتبة التعليمية ثلاثية الأبعاد' : language === 'fr' ? 'Bibliothèque Éducative 3D' : '3D Educational Library'}
-            </h1>
-            <span style={{ fontSize: '0.75rem', color: '#cbd5e1' }}>
-              {language === 'ar' ? 'تجربة تفاعلية غامرة لاقتناء الكتب المدرسية' : language === 'fr' ? 'Expérience interactive immersive' : 'Immersive standalone virtual bookstore'}
-            </span>
-          </div>
-        </div>
-
-        {/* Action Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {/* Reset Overview Camera */}
-          <button
-            onClick={resetView}
-            className="glass-panel-interactive"
-            title={language === 'ar' ? 'عرض المكتبة بالكامل' : 'Full Library View'}
-            style={{
-              padding: '8px 14px',
-              borderRadius: '8px',
-              color: '#f8fafc',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '0.85rem'
-            }}
-          >
-            <RotateCcw size={16} />
-            <span>{language === 'ar' ? 'المكتبة كاملة' : language === 'fr' ? 'Vue Globale' : 'Full View'}</span>
-          </button>
-
-          {/* Language Selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '3px' }}>
-            <Globe size={16} style={{ margin: '0 6px', color: '#cbd5e1' }} />
-            {(['ar', 'fr', 'en'] as Language[]).map((lang) => (
-              <button
-                key={lang}
-                onClick={() => setLanguage(lang)}
-                style={{
-                  padding: '4px 10px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: language === lang ? '#c4823f' : 'transparent',
-                  color: language === lang ? '#ffffff' : '#94a3b8',
-                  fontWeight: language === lang ? 700 : 500,
-                  fontSize: '0.8rem',
-                  cursor: 'pointer'
-                }}
-              >
-                {lang.toUpperCase()}
-              </button>
-            ))}
-          </div>
-
-          {/* Shopping Basket Placeholder */}
-          <div
-            className="glass-panel-interactive"
-            style={{
-              position: 'relative',
-              padding: '8px 16px',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              color: '#f8fafc'
-            }}
-          >
-            <ShoppingBag size={20} color="#e5b364" />
-            <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>
-              {basketCount}
-            </span>
-          </div>
-        </div>
-      </header>
+      <Header
+        onOpenSearch={() => setIsSearchOpen(true)}
+        basketButtonRef={basketButtonRef}
+        basketBouncing={basketBouncing}
+      />
 
       {/* Shelf Mode Floating Info Banner (Appears when viewing a focused row) */}
       {viewMode === 'shelf' && (
@@ -269,8 +208,27 @@ export const App: React.FC = () => {
 
       {/* Book Inspection & Reading HUD Overlay */}
       {selectedBookId && (viewMode === 'book-detail' || viewMode === 'book-open') && (
-        <BookDetailOverlay />
+        <BookDetailOverlay onAddBookWithAnimation={handleAddBookWithAnimation} />
       )}
+
+      {/* Flying Miniature Book Effect */}
+      {flyingBook && (
+        <FlyingBookEffect
+          book={flyingBook.book}
+          startPos={flyingBook.startPos}
+          targetElement={basketButtonRef.current}
+          onComplete={handleFlyingBookComplete}
+        />
+      )}
+
+      {/* Global Search Dialog Modal */}
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
+
+      {/* Shopping Basket Drawer */}
+      <BasketDrawer />
 
       {/* Education Levels Bottom Shelf Selector Dock (Hidden when inspecting a book) */}
       {!selectedBookId && (
