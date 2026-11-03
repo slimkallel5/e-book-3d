@@ -4,19 +4,24 @@ import { EducationLevel } from '../../types/education';
 import { Book } from '../../types/book';
 import { BookshelfBookItem } from './BookshelfBookItem';
 import { useLibraryStore } from '../../store/useLibraryStore';
+import {
+  BOOKSHELF_CONFIG,
+  getShelfY,
+  calculateRowBooksLayout
+} from './bookshelfConfig';
 
 interface BookshelfRowProps {
   level: EducationLevel;
   books: Book[];
-  yPosition: number;
+  shelfIndex: number;
   rowWidth?: number;
 }
 
 export const BookshelfRow: React.FC<BookshelfRowProps> = ({
   level,
   books,
-  yPosition,
-  rowWidth = 15.6
+  shelfIndex,
+  rowWidth = BOOKSHELF_CONFIG.shelfWidth
 }) => {
   const activeLevelId = useLibraryStore((s) => s.activeLevelId);
   const setActiveLevelId = useLibraryStore((s) => s.setActiveLevelId);
@@ -25,12 +30,17 @@ export const BookshelfRow: React.FC<BookshelfRowProps> = ({
   const [rowHovered, setRowHovered] = useState(false);
 
   const isActive = activeLevelId === level.id;
-  const plankThickness = 0.22;
-  const plankDepth = 2.4;
+  const cfg = BOOKSHELF_CONFIG;
+  const yPosition = getShelfY(shelfIndex);
+  const plankThickness = cfg.shelfThickness;
+  const plankDepth = cfg.shelfDepth;
+
+  // Compute dynamic book placements with guaranteed vertical clearance and horizontal spacing
+  const rowBookItems = calculateRowBooksLayout(books, shelfIndex);
 
   return (
     <group position={[0, yPosition, 0]}>
-      {/* 1. Horizontal Wooden Shelf Plank */}
+      {/* 1. HORIZONTAL WOODEN SHELF PLANK */}
       <mesh
         castShadow
         receiveShadow
@@ -51,25 +61,31 @@ export const BookshelfRow: React.FC<BookshelfRowProps> = ({
       >
         <boxGeometry args={[rowWidth, plankThickness, plankDepth]} />
         <meshStandardMaterial
-          color={isActive ? '#5c3a21' : rowHovered ? '#472b17' : '#331e11'}
-          roughness={0.65}
+          color={isActive ? '#55341c' : rowHovered ? '#422815' : '#2b190d'}
+          roughness={0.6}
           metalness={0.12}
         />
       </mesh>
 
-      {/* 2. Front Shelf Edge Molding Strip */}
-      <mesh position={[0, 0, plankDepth / 2 + 0.02]} receiveShadow>
-        <boxGeometry args={[rowWidth, plankThickness * 1.25, 0.06]} />
+      {/* 2. REALISTIC FRONT SHELF BULLNOSE MOLDING STRIP */}
+      {/* Upper beveled front lip */}
+      <mesh position={[0, 0, plankDepth / 2 + 0.025]} receiveShadow castShadow>
+        <boxGeometry args={[rowWidth + 0.05, plankThickness * 1.25, 0.05]} />
         <meshStandardMaterial
-          color={isActive ? '#e5b364' : rowHovered ? '#b8860b' : '#6b4423'}
-          metalness={isActive ? 0.6 : 0.3}
-          roughness={0.35}
+          color={isActive ? '#d99742' : rowHovered ? '#9e6727' : '#523118'}
+          metalness={isActive ? 0.45 : 0.25}
+          roughness={0.4}
         />
       </mesh>
+      {/* Fine brass inlay line embedded along shelf front */}
+      <mesh position={[0, plankThickness * 0.4, plankDepth / 2 + 0.052]} receiveShadow>
+        <boxGeometry args={[rowWidth, 0.03, 0.01]} />
+        <meshStandardMaterial color="#fbbf24" metalness={0.8} roughness={0.2} />
+      </mesh>
 
-      {/* 3. Decorative Brass Shelf Nameplate for Education Year */}
+      {/* 3. DECORATIVE BRASS SHELF NAMEPLATE FOR EDUCATION YEAR */}
       <group
-        position={[0, -0.01, plankDepth / 2 + 0.07]}
+        position={[0, 0, plankDepth / 2 + 0.06]}
         onClick={(e) => {
           e.stopPropagation();
           setActiveLevelId(level.id);
@@ -79,28 +95,28 @@ export const BookshelfRow: React.FC<BookshelfRowProps> = ({
           document.body.style.cursor = 'pointer';
         }}
       >
-        {/* Brass Plate Backing */}
+        {/* Brass Plate Outer Bezel */}
         <mesh castShadow receiveShadow>
-          <boxGeometry args={[4.6, 0.32, 0.03]} />
+          <boxGeometry args={[cfg.nameplateWidth, 0.32, 0.035]} />
           <meshStandardMaterial
-            color={isActive ? '#e5b364' : '#b48a47'}
-            metalness={0.75}
-            roughness={0.25}
+            color={isActive ? '#f59e0b' : '#b8860b'}
+            metalness={0.8}
+            roughness={0.22}
           />
         </mesh>
 
-        {/* Inner Colored Accent Plaque */}
+        {/* Inner Colored Accent Plaque with level badge color */}
         <mesh position={[0, 0, 0.02]}>
-          <planeGeometry args={[4.4, 0.26]} />
-          <meshBasicMaterial color={isActive ? level.badgeColor : '#1a1410'} />
+          <planeGeometry args={[cfg.nameplateWidth - 0.25, 0.25]} />
+          <meshBasicMaterial color={isActive ? level.badgeColor : '#16110d'} />
         </mesh>
 
         {/* Education Year Label Text */}
         <Text
           position={[0, 0, 0.03]}
-          fontSize={0.14}
-          color={isActive ? '#ffffff' : '#f0ddb8'}
-          fontWeight={isActive ? 700 : 500}
+          fontSize={0.135}
+          color={isActive ? '#ffffff' : '#fef3c7'}
+          fontWeight={isActive ? 700 : 600}
           anchorX="center"
           anchorY="middle"
         >
@@ -108,62 +124,51 @@ export const BookshelfRow: React.FC<BookshelfRowProps> = ({
         </Text>
 
         {/* Left & Right Decorative Brass Screws / Rivets */}
-        {[-2.1, 2.1].map((x, i) => (
-          <mesh key={i} position={[x, 0, 0.025]}>
+        {[-cfg.nameplateWidth / 2 + 0.2, cfg.nameplateWidth / 2 - 0.2].map((x, i) => (
+          <mesh key={i} position={[x, 0, 0.026]}>
             <circleGeometry args={[0.035, 12]} />
-            <meshStandardMaterial color="#fef08a" metalness={0.8} roughness={0.2} />
+            <meshStandardMaterial color="#fef08a" metalness={0.85} roughness={0.2} />
           </mesh>
         ))}
       </group>
 
-      {/* 4. Left and Right Brass Bookends */}
-      {[-rowWidth / 2 + 0.6, rowWidth / 2 - 0.6].map((x, i) => (
-        <group key={`bookend-${i}`} position={[x, 0.45, 0.2]}>
+      {/* 4. CLASSICAL CARVED BRASS BOOKENDS */}
+      {[-rowWidth / 2 + 0.65, rowWidth / 2 - 0.65].map((x, i) => (
+        <group key={`bookend-${i}`} position={[x, plankThickness / 2 + 0.42, 0.15]}>
           <mesh castShadow receiveShadow>
-            <boxGeometry args={[0.1, 0.9, 1.2]} />
-            <meshStandardMaterial color="#c4823f" metalness={0.7} roughness={0.3} />
+            <boxGeometry args={[0.1, 0.84, 1.1]} />
+            <meshStandardMaterial color="#c4823f" metalness={0.75} roughness={0.25} />
           </mesh>
-          <mesh position={[i === 0 ? 0.2 : -0.2, -0.4, 0]} castShadow>
-            <boxGeometry args={[0.4, 0.08, 1.2]} />
-            <meshStandardMaterial color="#b45309" metalness={0.6} roughness={0.3} />
+          <mesh position={[i === 0 ? 0.18 : -0.18, -0.38, 0]} castShadow>
+            <boxGeometry args={[0.35, 0.08, 1.1]} />
+            <meshStandardMaterial color="#b45309" metalness={0.65} roughness={0.3} />
           </mesh>
         </group>
       ))}
 
-      {/* 5. Active Row Golden Illumination Glow (when shelf is focused) */}
+      {/* 5. ACTIVE ROW GOLDEN ILLUMINATION (when shelf is focused) */}
       {isActive && (
         <pointLight
-          position={[0, 0.8, 1.5]}
-          intensity={0.8}
-          distance={4.5}
+          position={[0, 0.8, 1.8]}
+          intensity={0.9}
+          distance={4.8}
           color="#fbbf24"
         />
       )}
 
-      {/* 6. Realistic Books Lined Up on the Shelf */}
-      {books.map((book, idx) => {
-        // Bookshelf width is 15.6. To avoid the brass nameplate (width 4.6, |x| <= 2.3),
-        // we flank books nicely on either side with natural spacing or stagger them
-        let bookX: number;
-        if (books.length === 2) {
-          bookX = idx === 0 ? -3.4 : 3.4;
-        } else {
-          const spacing = 1.6;
-          const startX = -((books.length - 1) * spacing) / 2;
-          bookX = startX + idx * spacing;
-          // Push outward if overlapping with the nameplate
-          if (Math.abs(bookX) < 2.6) {
-            bookX = bookX < 0 ? bookX - 1.5 : bookX + 1.5;
-          }
-        }
-        const bookZ = 0.25;
+      {/* 6. DATA-DRIVEN BOOKS LINED UP ON THE SHELF */}
+      {rowBookItems.map((item) => {
+        // item.localPos is relative to the bookshelf origin; convert Y to shelf-local
+        const localY = item.localPos[1] - yPosition;
+        const localPos: [number, number, number] = [item.localPos[0], localY, item.localPos[2]];
 
         return (
           <BookshelfBookItem
-            key={book.id}
-            book={book}
-            position={[bookX, plankThickness / 2, bookZ]}
-            isSelected={selectedBookId === book.id}
+            key={item.book.id}
+            book={item.book}
+            position={localPos}
+            dimensions={item.dimensions}
+            isSelected={selectedBookId === item.book.id}
           />
         );
       })}

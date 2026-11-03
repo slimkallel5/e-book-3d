@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 import { useLibraryStore } from '../store/useLibraryStore';
 import { LibraryEnvironment } from '../components/library/LibraryEnvironment';
@@ -8,10 +8,15 @@ import { Bookshelf } from '../components/bookshelf/Bookshelf';
 import { Book3D } from '../components/book/Book3D';
 import { EDUCATION_LEVELS } from '../data/educationLevels';
 import { BOOKS_DATA } from '../data/books';
+import {
+  BOOKSHELF_CONFIG,
+  calculateRowBooksLayout,
+  getBookWorldPosition,
+  getShelfY
+} from '../components/bookshelf/bookshelfConfig';
 
 export const LibraryScene: React.FC = () => {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
-  const controlsRef = useRef<any>(null);
   const { viewport } = useThree();
 
   const viewMode = useLibraryStore((s) => s.viewMode);
@@ -20,57 +25,86 @@ export const LibraryScene: React.FC = () => {
 
   const selectedBook = BOOKS_DATA.find((b) => b.id === selectedBookId);
 
-  // Compute shelf origin position for the selected book
+  // Responsive device classification
+  // In Three.js Canvas with fov 48 and z ~ 16, viewport.width is ~14 on aspect 16/9, but on mobile portrait (390x844) viewport.aspect is ~0.46
+  const isMobile = viewport.aspect < 0.75;
+  const isTablet = viewport.aspect >= 0.75 && viewport.aspect < 1.35;
+
+  // Transform configuration for bookshelf
+  const shelfTransform = isMobile
+    ? BOOKSHELF_CONFIG.transform.mobile
+    : isTablet
+    ? BOOKSHELF_CONFIG.transform.tablet
+    : BOOKSHELF_CONFIG.transform.desktop;
+
+  // Compute shelf origin world position for the selected book takeoff
   const shelfPosition = React.useMemo<[number, number, number]>(() => {
     if (!selectedBook) return [0, 0, 0];
     const level = EDUCATION_LEVELS.find((l) => l.id === selectedBook.educationLevelId);
     const shelfIndex = level ? level.shelfIndex : 0;
-    const shelfY = 5.2 - shelfIndex * 1.5;
     const levelBooks = BOOKS_DATA.filter((b) => b.educationLevelId === selectedBook.educationLevelId);
-    const idx = levelBooks.findIndex((b) => b.id === selectedBook.id);
-    let bookX = 0;
-    if (levelBooks.length === 2) {
-      bookX = idx === 0 ? -3.4 : 3.4;
-    } else {
-      const spacing = 1.6;
-      const startX = -((levelBooks.length - 1) * spacing) / 2;
-      bookX = startX + idx * spacing;
-      if (Math.abs(bookX) < 2.6) {
-        bookX = bookX < 0 ? bookX - 1.5 : bookX + 1.5;
-      }
+
+    const layout = calculateRowBooksLayout(levelBooks, shelfIndex);
+    const bookLayout = layout.find((item) => item.book.id === selectedBook.id);
+
+    if (bookLayout) {
+      return getBookWorldPosition(
+        bookLayout.localPos,
+        shelfTransform.position,
+        shelfTransform.rotationY
+      );
     }
-    return [bookX, shelfY + 0.65, 0.25];
-  }, [selectedBook]);
 
-  // Dynamic Camera transitions between overview, shelf, and book
+    // Fallback if not found
+    return [shelfTransform.position[0], getShelfY(shelfIndex), shelfTransform.position[2]];
+  }, [selectedBook, shelfTransform]);
+
+  // Smooth, stable, fixed camera transitions strictly based on application state
+  // Absolutely NO mouse movement or OrbitControls dragging
   useFrame(() => {
-    if (!cameraRef.current || !controlsRef.current) return;
+    if (!cameraRef.current) return;
 
-    const isMobile = viewport.width < 7 || viewport.aspect < 1;
-    const isTablet = viewport.width < 10 && !isMobile;
-
-    let targetPos = new THREE.Vector3(0, 0.5, isMobile ? 20.0 : isTablet ? 17.5 : 15.6);
-    let targetLook = new THREE.Vector3(0, 0.4, 0);
+    // Overview positioning:
+    // Bookshelf center is at X = -3.6, with rotationY = 0.26 rad (~15 deg).
+    // Setting targetPos to (1.5, 0.4, 15.8) and targetLook to (-2.2, 0.2, 0)
+    // beautifully places the bookshelf on the left side of the screen with a natural perspective angle,
+    // revealing the right side panel, depth, and leaving the right screen area for reading/UI!
+    let targetPos = new THREE.Vector3(
+      isMobile ? 0 : isTablet ? 0.6 : 1.5,
+      0.4,
+      isMobile ? 24.0 : isTablet ? 17.5 : 15.8
+    );
+    let targetLook = new THREE.Vector3(
+      isMobile ? 0 : isTablet ? -1.4 : -2.2,
+      0.2,
+      0
+    );
 
     if (viewMode === 'shelf') {
       const level = EDUCATION_LEVELS.find((l) => l.id === activeLevelId);
       const shelfIndex = level ? level.shelfIndex : 0;
-      // Shelf heights start at 5.2 with 1.5 spacing:
-      const shelfSpacing = 1.5;
-      const shelfY = 5.2 - shelfIndex * shelfSpacing;
+      const shelfY = getShelfY(shelfIndex);
 
-      const shelfCamZ = isMobile ? 7.6 : isTablet ? 6.6 : 5.6;
-      targetPos = new THREE.Vector3(0, shelfY + 0.35, shelfCamZ);
-      targetLook = new THREE.Vector3(0, shelfY + 0.35, 0);
+      const shelfCamZ = isMobile ? 8.2 : isTablet ? 7.2 : 6.8;
+      targetPos = new THREE.Vector3(
+        isMobile ? 0 : isTablet ? -1.0 : -0.8,
+        shelfY + 0.35,
+        shelfCamZ
+      );
+      targetLook = new THREE.Vector3(
+        isMobile ? 0 : isTablet ? -2.0 : -2.8,
+        shelfY + 0.35,
+        shelfTransform.position[2]
+      );
     } else if (viewMode === 'book-detail' || viewMode === 'book-open') {
+      // Camera centers clearly onto the inspected book
       targetPos = new THREE.Vector3(0, -0.05, 4.0);
       targetLook = new THREE.Vector3(0, -0.05, 0.5);
     }
 
-    // Smooth exponential damping interpolation
-    cameraRef.current.position.lerp(targetPos, 0.05);
-    controlsRef.current.target.lerp(targetLook, 0.05);
-    controlsRef.current.update();
+    // Smooth exponential damping interpolation to stable target
+    cameraRef.current.position.lerp(targetPos, 0.06);
+    cameraRef.current.lookAt(targetLook);
   });
 
   return (
@@ -78,26 +112,20 @@ export const LibraryScene: React.FC = () => {
       <PerspectiveCamera
         ref={cameraRef}
         makeDefault
-        position={[0, 1.2, 14.5]}
+        position={[1.5, 0.4, 15.8]}
         fov={48}
         near={0.1}
         far={120}
       />
 
-      <OrbitControls
-        ref={controlsRef}
-        enableDamping
-        dampingFactor={0.06}
-        maxPolarAngle={Math.PI / 2 + 0.02}
-        minPolarAngle={Math.PI / 6}
-        minDistance={2.2}
-        maxDistance={25}
-        maxAzimuthAngle={Math.PI / 3}
-        minAzimuthAngle={-Math.PI / 3}
-      />
-
+      {/* Realistic Library Architectural Environment & Lighting */}
       <LibraryEnvironment />
-      <Bookshelf />
+
+      {/* Real 3D Wooden Bookshelf, Anchored to Left with 3D Perspective */}
+      <Bookshelf
+        position={shelfTransform.position}
+        rotation={[0, shelfTransform.rotationY, 0]}
+      />
 
       {/* Selected 3D Book instance transitioning to center */}
       {selectedBook && (
