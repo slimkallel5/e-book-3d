@@ -60,23 +60,22 @@ export const LibraryScene: React.FC = () => {
   }, [selectedBook, shelfTransform]);
 
   // Smooth, stable, fixed camera transitions strictly based on application state
-  // Absolutely NO mouse movement or OrbitControls dragging
+  // Absolutely NO mouse movement, no parallax, and no OrbitControls dragging
   useFrame(() => {
     if (!cameraRef.current) return;
 
-    // Overview positioning:
-    // Bookshelf center is at X = -3.6, with rotationY = 0.26 rad (~15 deg).
-    // Setting targetPos to (1.5, 0.4, 15.8) and targetLook to (-2.2, 0.2, 0)
-    // beautifully places the bookshelf on the left side of the screen with a natural perspective angle,
-    // revealing the right side panel, depth, and leaving the right screen area for reading/UI!
+    // In the dedicated 33% viewport container:
+    // With bookshelf rotated around Y by ~0.38 rad, placing camera slightly to the right of bookshelf center
+    // and looking at the bookshelf center captures the front facade turned toward the right (center of web page)
+    // while looking directly into the shelves to read books, titles, and nameplates clearly!
     let targetPos = new THREE.Vector3(
-      isMobile ? 0 : isTablet ? 0.6 : 1.5,
-      0.4,
-      isMobile ? 24.0 : isTablet ? 17.5 : 15.8
+      isMobile ? 0.3 : isTablet ? 0.6 : 0.85,
+      -0.05,
+      isMobile ? 22.0 : isTablet ? 19.5 : 18.2
     );
     let targetLook = new THREE.Vector3(
-      isMobile ? 0 : isTablet ? -1.4 : -2.2,
-      0.2,
+      isMobile ? 0 : isTablet ? 0.1 : 0.15,
+      -0.15,
       0
     );
 
@@ -85,25 +84,25 @@ export const LibraryScene: React.FC = () => {
       const shelfIndex = level ? level.shelfIndex : 0;
       const shelfY = getShelfY(shelfIndex);
 
-      const shelfCamZ = isMobile ? 8.2 : isTablet ? 7.2 : 6.8;
+      const shelfCamZ = isMobile ? 12.0 : isTablet ? 10.5 : 9.8;
       targetPos = new THREE.Vector3(
-        isMobile ? 0 : isTablet ? -1.0 : -0.8,
-        shelfY + 0.35,
+        isMobile ? 0.2 : 0.6,
+        shelfY + 0.2,
         shelfCamZ
       );
       targetLook = new THREE.Vector3(
-        isMobile ? 0 : isTablet ? -2.0 : -2.8,
-        shelfY + 0.35,
+        isMobile ? 0 : 0.15,
+        shelfY + 0.1,
         shelfTransform.position[2]
       );
     } else if (viewMode === 'book-detail' || viewMode === 'book-open') {
       // Camera centers clearly onto the inspected book
-      targetPos = new THREE.Vector3(0, -0.05, 4.0);
+      targetPos = new THREE.Vector3(0, -0.05, 4.2);
       targetLook = new THREE.Vector3(0, -0.05, 0.5);
     }
 
     // Smooth exponential damping interpolation to stable target
-    cameraRef.current.position.lerp(targetPos, 0.06);
+    cameraRef.current.position.lerp(targetPos, 0.08);
     cameraRef.current.lookAt(targetLook);
   });
 
@@ -112,8 +111,8 @@ export const LibraryScene: React.FC = () => {
       <PerspectiveCamera
         ref={cameraRef}
         makeDefault
-        position={[1.5, 0.4, 15.8]}
-        fov={48}
+        position={[0.85, -0.05, 18.2]}
+        fov={46}
         near={0.1}
         far={120}
       />

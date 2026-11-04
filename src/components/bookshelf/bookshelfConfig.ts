@@ -34,22 +34,24 @@ export const BOOKSHELF_CONFIG = {
   nameplateWidth: 4.0, // Center brass plaque width on shelf front edge
   bookZOffset: 0.15, // Forward offset for books relative to shelf center, away from backboard
 
-  // Bookshelf World Transform (Left anchor with subtle 3D perspective angle)
+  // Bookshelf World Transform (Anchored in left 33% container, angled towards website center & camera)
   transform: {
-    // Left-anchored position in 3D world:
-    // Placed at X = -3.6 so that with camera looking towards (0, 0, 0) or (-0.5, 0, 0),
-    // the bookshelf is prominently framed on the left half of the viewport.
+    // Bookshelf rotation & position:
+    // - Turned diagonally toward the CENTER of the website (positive Y rotation ~0.38 rad / ~22 deg).
+    // - At the same time, rotated slightly toward the camera so books, covers, and brass nameplates are clearly visible.
+    // - Shows the left side panel and shelf inner depth, giving a true 3D furniture presence.
+    // - Remains completely static regardless of mouse movements.
     desktop: {
-      position: [-3.6, 0.1, -0.6] as [number, number, number],
-      rotationY: 0.26, // ~15 degrees, reveals outer and inner side panels & depth
+      position: [0.15, -0.2, 0.2] as [number, number, number],
+      rotationY: 0.38, // ~21.8 degrees, optimal balance facing center & camera
     },
     tablet: {
-      position: [-2.0, 0.1, -0.4] as [number, number, number],
-      rotationY: 0.18,
+      position: [0.1, -0.2, 0.1] as [number, number, number],
+      rotationY: 0.28,
     },
     mobile: {
-      position: [0, -0.1, 0] as [number, number, number],
-      rotationY: 0.08,
+      position: [0, -0.2, 0] as [number, number, number],
+      rotationY: 0.14,
     }
   }
 };
