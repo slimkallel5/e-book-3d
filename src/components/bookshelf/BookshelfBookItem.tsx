@@ -8,18 +8,27 @@ import { useLibraryStore } from '../../store/useLibraryStore';
 interface BookshelfBookItemProps {
   book: Book;
   position: [number, number, number];
+  dimensions: {
+    height: number;
+    depth: number;
+    width: number;
+    scale: number;
+  };
   isSelected: boolean;
 }
 
 export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
   book,
   position,
+  dimensions,
   isSelected
 }) => {
   const meshRef = useRef<Group>(null);
   const [hovered, setHovered] = useState(false);
   const selectBook = useLibraryStore((s) => s.selectBook);
   const language = useLibraryStore((s) => s.language);
+
+  const { height, depth, width } = dimensions;
 
   // Subtle breathing hover animation
   useFrame(() => {
@@ -39,13 +48,6 @@ export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
     }
   });
 
-  // Scale dimensions proportionally so the book fits naturally inside a 1.5-unit shelf row
-  // Book height scaled to ~1.15
-  const scale = 0.65;
-  const width = book.dimensions.width * scale;
-  const height = book.dimensions.height * scale;
-  const depth = book.dimensions.depth * scale;
-
   return (
     <group
       ref={meshRef}
@@ -64,7 +66,7 @@ export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
         document.body.style.cursor = 'default';
       }}
     >
-      {/* 1. Main Book Interior Pages (slightly recessed with warm paper tone) */}
+      {/* 1. Main Book Interior Pages (recessed with warm archival paper tone) */}
       <mesh castShadow receiveShadow position={[0, height / 2, -0.02]}>
         <boxGeometry args={[depth * 0.88, height * 0.94, width * 0.95]} />
         <meshStandardMaterial
