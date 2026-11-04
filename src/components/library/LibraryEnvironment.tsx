@@ -84,16 +84,16 @@ const LibraryDustParticles: React.FC = () => {
 export const LibraryEnvironment: React.FC = () => {
   return (
     <group name="library-environment">
-      {/* 1. Balanced Global Ambient & Warm Directional Lighting */}
-      <ambientLight intensity={1.1} color="#fff6eb" />
+      {/* 1. Balanced Global Ambient & Warm Library Lighting */}
+      <ambientLight intensity={1.15} color="#fff7ed" />
 
-      {/* Main warm chandelier/spotlight positioned over the left-anchored bookshelf assembly */}
+      {/* Main warm chandelier positioned above the bookshelf */}
       <spotLight
-        position={[-3.5, 16, 10]}
-        target-position={[-3.5, 0.5, 0]}
-        angle={0.72}
-        penumbra={0.75}
-        intensity={4.2}
+        position={[0.5, 16, 12]}
+        target-position={[0.2, 0, 0]}
+        angle={0.75}
+        penumbra={0.8}
+        intensity={4.5}
         color="#ffecd1"
         castShadow
         shadow-mapSize-width={2048}
@@ -101,122 +101,172 @@ export const LibraryEnvironment: React.FC = () => {
         shadow-bias={-0.0001}
       />
 
-      {/* Direct front fill light to brightly illuminate titles, spine texts, and shelf details */}
-      <directionalLight position={[-2.0, 4.5, 14]} intensity={1.5} color="#fbf7ee" />
+      {/* Direct front-fill light angled to brightly illuminate book covers, titles, and shelf details */}
+      <directionalLight position={[2.5, 4.0, 16]} intensity={1.6} color="#fbf7ee" />
 
-      {/* Left side rim light revealing outer side panel texture and moldings */}
-      <pointLight position={[-16, 7, 5]} intensity={1.6} color="#ffd494" />
+      {/* Left side rim light revealing outer side panel texture, pilasters, and craftsmanship */}
+      <pointLight position={[-12, 6, 6]} intensity={1.8} color="#ffd494" />
 
-      {/* Right side rim light illuminating inner side panel and 3D depth */}
-      <pointLight position={[8, 6, 6]} intensity={1.2} color="#93c5fd" />
+      {/* Right side fill light giving clean depth to the inner shelf cavities */}
+      <pointLight position={[10, 5, 8]} intensity={1.2} color="#fde68a" />
 
       {/* Subtle warm floor bounce light */}
-      <pointLight position={[-3.5, -3.5, 5]} intensity={0.7} color="#e5b364" />
+      <pointLight position={[0, -4.5, 6]} intensity={0.8} color="#e5b364" />
 
-      {/* 2. Library Floor - Rich warm polished parquet wood */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -5.75, 0]} receiveShadow>
-        <planeGeometry args={[80, 80]} />
+      {/* 2. Library Floor - Polished warm walnut parquet wood extending throughout the room */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -6.0, 0]} receiveShadow>
+        <planeGeometry args={[90, 90]} />
         <meshStandardMaterial
-          color="#160e08"
-          roughness={0.32}
-          metalness={0.22}
+          color="#180f09"
+          roughness={0.28}
+          metalness={0.25}
         />
       </mesh>
 
-      {/* Persian/Oriental runner rug in front of the bookshelf */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-3.5, -5.73, 3.8]} receiveShadow>
-        <planeGeometry args={[18, 8]} />
+      {/* Dark mahogany border inlay on floor */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -5.99, 1.0]} receiveShadow>
+        <planeGeometry args={[26, 18]} />
+        <meshStandardMaterial color="#22140d" roughness={0.4} metalness={0.15} />
+      </mesh>
+
+      {/* Classical Oriental library carpet under the bookshelf */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.2, -5.98, 2.8]} receiveShadow>
+        <planeGeometry args={[20, 10]} />
         <meshStandardMaterial
-          color="#381b17"
+          color="#331713"
+          roughness={0.88}
+          metalness={0.06}
+        />
+      </mesh>
+      {/* Carpet gold/amber patterned border */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.2, -5.97, 2.8]}>
+        <ringGeometry args={[9.5, 9.8, 4, 1, 0, Math.PI * 2]} />
+        <meshStandardMaterial color="#c4823f" roughness={0.6} metalness={0.3} />
+      </mesh>
+
+      {/* 3. Deep Library Architectural Back Wall (Spanning fully behind bookshelf) */}
+      <mesh position={[0, 4.5, -6.0]} receiveShadow>
+        <planeGeometry args={[90, 30]} />
+        <meshStandardMaterial
+          color="#0f131a"
           roughness={0.9}
           metalness={0.05}
         />
       </mesh>
-      {/* Rug border accent */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-3.5, -5.72, 3.8]}>
-        <ringGeometry args={[8.8, 9, 4, 1, 0, Math.PI * 2]} />
-        <meshStandardMaterial color="#c4823f" roughness={0.6} metalness={0.3} />
+
+      {/* Continuous classical dark oak baseboard along the back wall */}
+      <mesh position={[0, -5.3, -5.85]} receiveShadow>
+        <boxGeometry args={[90, 1.4, 0.3]} />
+        <meshStandardMaterial color="#1a110a" roughness={0.65} metalness={0.15} />
       </mesh>
 
-      {/* 3. Library Back Accent Wall with architectural wood wainscoting panels */}
-      <mesh position={[0, 4, -4.5]} receiveShadow>
-        <planeGeometry args={[70, 26]} />
-        <meshStandardMaterial
-          color="#0c1017"
-          roughness={0.88}
-          metalness={0.05}
-        />
+      {/* Architectural wood wainscot paneling across the back wall */}
+      {[-28, -21, -14, -7, 0, 7, 14, 21, 28].map((x, i) => (
+        <group key={`wainscot-group-${i}`} position={[x, 3.8, -5.8]}>
+          {/* Main paneled field */}
+          <mesh receiveShadow>
+            <boxGeometry args={[5.8, 14.5, 0.12]} />
+            <meshStandardMaterial color="#16100b" roughness={0.75} metalness={0.1} />
+          </mesh>
+          {/* Raised inner molding frame */}
+          <mesh position={[0, 0, 0.07]} receiveShadow>
+            <boxGeometry args={[4.8, 13.0, 0.04]} />
+            <meshStandardMaterial color="#1f150e" roughness={0.6} metalness={0.12} />
+          </mesh>
+          {/* Subtle brass bead accent line */}
+          <mesh position={[0, 6.4, 0.1]}>
+            <boxGeometry args={[5.2, 0.06, 0.03]} />
+            <meshStandardMaterial color="#b47833" roughness={0.4} metalness={0.6} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Mid-wall decorative chair rail molding */}
+      <mesh position={[0, -2.8, -5.7]} receiveShadow>
+        <boxGeometry args={[90, 0.28, 0.35]} />
+        <meshStandardMaterial color="#291b12" roughness={0.55} metalness={0.2} />
       </mesh>
 
-      {/* Architectural decorative wood wainscot panel lines on back wall */}
-      {[-24, -18, -12, -6, 0, 6, 12, 18, 24].map((x, i) => (
-        <mesh key={`panel-${i}`} position={[x, 3.5, -4.4]} receiveShadow>
-          <boxGeometry args={[4.5, 14, 0.1]} />
-          <meshStandardMaterial color="#17110c" roughness={0.75} metalness={0.1} />
+      {/* 4. Left Architectural Side Wall providing depth to the room */}
+      <group position={[-18.5, 4.5, 2.0]} rotation={[0, Math.PI / 2, 0]}>
+        <mesh receiveShadow>
+          <planeGeometry args={[26, 30]} />
+          <meshStandardMaterial color="#10151e" roughness={0.9} metalness={0.05} />
         </mesh>
-      ))}
-
-      {/* 4. Grand Vaulted Ceiling Beams overhead */}
-      {[-8, -2, 4, 10].map((z, idx) => (
-        <mesh key={`beam-${idx}`} position={[0, 11, z]} receiveShadow castShadow>
-          <boxGeometry args={[56, 1.2, 0.9]} />
-          <meshStandardMaterial color="#22150d" roughness={0.7} metalness={0.15} />
+        {/* Side wall baseboard */}
+        <mesh position={[0, -9.8, 0.15]} receiveShadow>
+          <boxGeometry args={[26, 1.4, 0.3]} />
+          <meshStandardMaterial color="#1a110a" roughness={0.65} metalness={0.15} />
         </mesh>
-      ))}
+        {/* Side wall wainscot paneling */}
+        {[-8, 0, 8].map((px, pIdx) => (
+          <mesh key={`side-panel-${pIdx}`} position={[px, -0.7, 0.1]} receiveShadow>
+            <boxGeometry args={[6.5, 14.5, 0.12]} />
+            <meshStandardMaterial color="#17110c" roughness={0.75} metalness={0.1} />
+          </mesh>
+        ))}
+      </group>
 
-      {/* 5. Classical Flanking Pillars with Carved Molded Bases and Caps */}
-      {[-18, 16].map((xPos, idx) => (
-        <group key={`pillar-${idx}`} position={[xPos, 2.5, -1.5]}>
+      {/* 5. Classical Architectural Flanking Pillars Framing the Reading Hall */}
+      {[-12.5, 13.5].map((xPos, idx) => (
+        <group key={`hall-pillar-${idx}`} position={[xPos, 2.2, -3.2]}>
           {/* Main fluted column shaft */}
           <mesh castShadow receiveShadow>
-            <cylinderGeometry args={[0.75, 0.75, 16, 24]} />
-            <meshStandardMaterial color="#2a1d13" roughness={0.65} metalness={0.1} />
+            <cylinderGeometry args={[0.7, 0.7, 16.5, 24]} />
+            <meshStandardMaterial color="#22160d" roughness={0.65} metalness={0.12} />
           </mesh>
-          {/* Golden/Brass ornate capital */}
-          <mesh position={[0, 8, 0]} castShadow>
-            <boxGeometry args={[2.0, 0.6, 2.0]} />
-            <meshStandardMaterial color="#c4823f" metalness={0.5} roughness={0.3} />
+          {/* Corinthian style brass capital */}
+          <mesh position={[0, 8.2, 0]} castShadow>
+            <boxGeometry args={[1.9, 0.65, 1.9]} />
+            <meshStandardMaterial color="#c4823f" metalness={0.6} roughness={0.3} />
           </mesh>
           {/* Column Pedestal Base */}
-          <mesh position={[0, -7.5, 0]} receiveShadow>
-            <boxGeometry args={[2.2, 1.0, 2.2]} />
-            <meshStandardMaterial color="#1b110a" roughness={0.6} metalness={0.2} />
+          <mesh position={[0, -7.6, 0]} receiveShadow>
+            <boxGeometry args={[2.1, 1.2, 2.1]} />
+            <meshStandardMaterial color="#180e08" roughness={0.65} metalness={0.18} />
           </mesh>
 
-          {/* Warm decorative wall sconce light on each pillar */}
-          <group position={[idx === 0 ? 0.9 : -0.9, 2.5, 0]}>
+          {/* Warm decorative wall sconce lantern on each pillar */}
+          <group position={[idx === 0 ? 0.85 : -0.85, 2.2, 0]}>
             <mesh>
-              <sphereGeometry args={[0.2, 16, 16]} />
+              <sphereGeometry args={[0.18, 16, 16]} />
               <meshBasicMaterial color="#ffeed1" />
             </mesh>
             <pointLight
               color="#fbbf24"
-              intensity={1.2}
-              distance={8}
+              intensity={1.1}
+              distance={7.5}
               decay={2}
             />
           </group>
         </group>
       ))}
 
-      {/* 6. Background Auxiliary Bookshelves flanking the room for added depth */}
-      {[-25, 23].map((xPos, idx) => (
-        <group key={`side-shelf-${idx}`} position={[xPos, 2, -2]} rotation={[0, idx === 0 ? 0.25 : -0.25, 0]}>
+      {/* 6. Grand Overhead Dark Oak Ceiling Beams */}
+      {[-5, 0, 5, 10].map((z, idx) => (
+        <mesh key={`ceiling-beam-${idx}`} position={[0, 11.2, z]} receiveShadow castShadow>
+          <boxGeometry args={[60, 1.2, 0.9]} />
+          <meshStandardMaterial color="#1e120a" roughness={0.7} metalness={0.15} />
+        </mesh>
+      ))}
+
+      {/* 7. Background Auxiliary Bookshelves giving deep library room atmosphere */}
+      {[-21, 22].map((xPos, idx) => (
+        <group key={`ambient-shelf-${idx}`} position={[xPos, 2, -3.8]} rotation={[0, idx === 0 ? 0.35 : -0.35, 0]}>
           <mesh receiveShadow castShadow>
-            <boxGeometry args={[7, 14, 1.5]} />
-            <meshStandardMaterial color="#170f09" roughness={0.78} />
+            <boxGeometry args={[7, 14.5, 1.6]} />
+            <meshStandardMaterial color="#170f09" roughness={0.8} />
           </mesh>
-          {/* Horizontal shelves on side bookcases */}
-          {[-4, -1.5, 1, 3.5].map((y, sIdx) => (
+          {[-4.2, -1.8, 0.8, 3.4].map((y, sIdx) => (
             <mesh key={sIdx} position={[0, y, 0.4]}>
-              <boxGeometry args={[6.6, 0.15, 1.2]} />
-              <meshStandardMaterial color="#27180e" roughness={0.7} />
+              <boxGeometry args={[6.6, 0.16, 1.3]} />
+              <meshStandardMaterial color="#26170e" roughness={0.7} />
             </mesh>
           ))}
         </group>
       ))}
 
-      {/* 7. Floating dust particles motes in the warm light */}
+      {/* 8. Floating subtle dust particles motes in the warm atmospheric light */}
       <LibraryDustParticles />
     </group>
   );
