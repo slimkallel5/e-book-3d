@@ -36,16 +36,16 @@ export const BOOKSHELF_CONFIG = {
 
   // Bookshelf World Transform (Left anchor with subtle 3D perspective angle)
   transform: {
-    // Left-anchored position in 3D world:
-    // Placed at X = -3.6 so that with camera looking towards (0, 0, 0) or (-0.5, 0, 0),
-    // the bookshelf is prominently framed on the left half of the viewport.
+    // Left-anchored position in 3D world (occupying ~33% left side of viewport):
+    // Positioned at X = -6.2 so the main educational bookshelf occupies the left 33%,
+    // leaving the right 67% open for the reading hall, grand arched windows, and secondary wall shelves.
     desktop: {
-      position: [-3.6, 0.1, -0.6] as [number, number, number],
-      rotationY: 0.26, // ~15 degrees, reveals outer and inner side panels & depth
+      position: [-7.8, 0.1, -1.0] as [number, number, number],
+      rotationY: 0.32, // ~18.3 degrees, angled inwards toward center and user
     },
     tablet: {
-      position: [-2.0, 0.1, -0.4] as [number, number, number],
-      rotationY: 0.18,
+      position: [-4.6, 0.1, -0.5] as [number, number, number],
+      rotationY: 0.22,
     },
     mobile: {
       position: [0, -0.1, 0] as [number, number, number],
