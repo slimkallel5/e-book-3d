@@ -18,11 +18,11 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
   const totalW = cfg.totalWidth;
 
   // Wood color palette for realistic premium furniture
-  const woodDark = '#201209'; // Rich walnut dark tone
-  const woodMedium = '#2e190d'; // Main furniture carcass
-  const woodWarm = '#3d2212'; // Shelf faces & trims
-  const brassGold = '#d49b4b'; // Brass inlay and accents
-  const darkRecess = '#140c06'; // Shadow recesses and grooves
+  const woodDark = '#382014'; // Dark walnut
+  const woodMedium = '#693a1f'; // Rich warm walnut carcass
+  const woodWarm = '#945629'; // Warm illuminated wood highlights
+  const brassGold = '#e9a743'; // Golden amber & brass
+  const darkRecess = '#21140f'; // Dark architectural shadow recesses
 
   return (
     <group name="bookshelf-assembly" position={position} rotation={rotation}>
@@ -166,6 +166,31 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
             <boxGeometry args={[4.9, 0.26, 0.01]} />
             <meshStandardMaterial color="#1a120b" roughness={0.5} />
           </mesh>
+        </group>
+
+        {/* Trailing Green Ivy Foliage on Top Left of Bookshelf (matching reference) */}
+        <group position={[-totalW / 2 + 1.2, 0.55, 0.3]}>
+          <mesh castShadow position={[0, 0.15, 0]}>
+            <cylinderGeometry args={[0.45, 0.35, 0.5, 16]} />
+            <meshStandardMaterial color="#5c3826" roughness={0.8} />
+          </mesh>
+          {[
+            { pos: [0, 0.4, 0.2], s: [0.7, 0.5, 0.7] },
+            { pos: [-0.3, 0.2, 0.4], s: [0.65, 0.6, 0.65] },
+            { pos: [0.35, 0.15, 0.4], s: [0.7, 0.5, 0.7] },
+            { pos: [-0.6, -0.1, 0.6], s: [0.55, 0.7, 0.55] },
+            { pos: [-0.1, -0.25, 0.75], s: [0.65, 0.8, 0.6] },
+            { pos: [-0.75, -0.65, 0.8], s: [0.5, 0.9, 0.5] },
+            { pos: [-0.3, -0.95, 0.9], s: [0.45, 1.1, 0.45] },
+            { pos: [-0.85, -1.35, 0.95], s: [0.4, 1.0, 0.4] },
+            { pos: [0.1, -0.5, 0.7], s: [0.6, 0.7, 0.5] },
+            { pos: [0.5, -0.2, 0.6], s: [0.5, 0.5, 0.5] }
+          ].map((cluster, cIdx) => (
+            <mesh key={`ivy-${cIdx}`} position={cluster.pos as [number, number, number]} castShadow>
+              <sphereGeometry args={[cluster.s[0] * 0.45, 10, 10]} />
+              <meshStandardMaterial color={cIdx % 2 === 0 ? '#264e28' : '#396933'} roughness={0.5} />
+            </mesh>
+          ))}
         </group>
       </group>
 

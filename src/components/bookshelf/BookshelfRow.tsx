@@ -114,11 +114,12 @@ export const BookshelfRow: React.FC<BookshelfRowProps> = ({
         {/* Education Year Label Text */}
         <Text
           position={[0, 0, 0.03]}
-          fontSize={0.135}
+          fontSize={0.11}
           color={isActive ? '#ffffff' : '#fef3c7'}
           fontWeight={isActive ? 700 : 600}
           anchorX="center"
           anchorY="middle"
+          maxWidth={cfg.nameplateWidth - 0.4}
         >
           {level.name[language] || level.name.ar}
         </Text>
