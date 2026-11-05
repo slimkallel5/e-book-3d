@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { LibraryScene } from './scenes/LibraryScene';
 import { WebGLFallback } from './components/ui/WebGLFallback';
@@ -7,6 +7,8 @@ import { Header } from './components/navigation/Header';
 import { SearchModal } from './components/navigation/SearchModal';
 import { BasketDrawer } from './components/basket/BasketDrawer';
 import { FlyingBookEffect } from './components/basket/FlyingBookEffect';
+import GlassyCarousel, { GlassyCarouselItem } from './components/ui/glassy-coverflow-carousel';
+import { bookToCarouselItem } from './utils/bookCarouselAdapter';
 import { useLibraryStore } from './store/useLibraryStore';
 import { EDUCATION_LEVELS } from './data/educationLevels';
 import { BOOKS_DATA } from './data/books';
@@ -15,6 +17,8 @@ import {
   Layers,
   ChevronLeft,
   ChevronRight,
+  Eye,
+  ShoppingCart,
   X
 } from 'lucide-react';
 
@@ -38,6 +42,7 @@ export const App: React.FC = () => {
   const carouselActiveIndex = useLibraryStore((s) => s.carouselActiveIndex);
   const setCarouselActiveIndex = useLibraryStore((s) => s.setCarouselActiveIndex);
   const selectedBookId = useLibraryStore((s) => s.selectedBookId);
+  const selectBook = useLibraryStore((s) => s.selectBook);
   const addToBasket = useLibraryStore((s) => s.addToBasket);
 
   useEffect(() => {
@@ -69,9 +74,17 @@ export const App: React.FC = () => {
 
   const isAllLevels = activeLevelId === 'all';
   const currentLevel = isAllLevels ? null : (EDUCATION_LEVELS.find((l) => l.id === activeLevelId) || EDUCATION_LEVELS[0]);
-  const currentLevelBooks = isAllLevels
-    ? BOOKS_DATA
-    : BOOKS_DATA.filter((b) => b.educationLevelId === currentLevel?.id);
+  const currentLevelBooks = useMemo(() => {
+    return isAllLevels
+      ? BOOKS_DATA
+      : BOOKS_DATA.filter((b) => b.educationLevelId === currentLevel?.id);
+  }, [isAllLevels, currentLevel?.id]);
+
+  const carouselItems: GlassyCarouselItem[] = useMemo(() => {
+    return currentLevelBooks.map((book) => bookToCarouselItem(book, language));
+  }, [currentLevelBooks, language]);
+
+  const activeBook: Book | undefined = currentLevelBooks[carouselActiveIndex] || currentLevelBooks[0];
 
   const handlePrevLevel = () => {
     if (isAllLevels) {
@@ -99,23 +112,18 @@ export const App: React.FC = () => {
     }
   };
 
-  const handlePrevCard = () => {
-    if (currentLevelBooks.length === 0) return;
-    const prevIdx = (carouselActiveIndex - 1 + currentLevelBooks.length) % currentLevelBooks.length;
-    setCarouselActiveIndex(prevIdx);
+  const handleSelectCarouselItem = (_item: GlassyCarouselItem, idx: number) => {
+    setCarouselActiveIndex(idx);
   };
 
-  const handleNextCard = () => {
-    if (currentLevelBooks.length === 0) return;
-    const nextIdx = (carouselActiveIndex + 1) % currentLevelBooks.length;
-    setCarouselActiveIndex(nextIdx);
+  const handleInspectSelectedBook = () => {
+    if (activeBook) {
+      selectBook(activeBook.id);
+    }
   };
 
   const handleAddBookWithAnimation = (book: Book, e: React.MouseEvent<HTMLButtonElement>) => {
-    // Add to basket state immediately so the basket count and drawer update right away
     addToBasket(book);
-
-    // Get click location to spawn flying animation
     const rect = e.currentTarget.getBoundingClientRect();
     const startX = rect.left + rect.width / 2;
     const startY = rect.top + rect.height / 2;
@@ -128,8 +136,6 @@ export const App: React.FC = () => {
 
   const handleFlyingBookComplete = () => {
     setFlyingBook(null);
-
-    // Trigger basket bounce & glow animation in header
     setBasketBouncing(true);
     setTimeout(() => {
       setBasketBouncing(false);
@@ -165,154 +171,166 @@ export const App: React.FC = () => {
         basketBouncing={basketBouncing}
       />
 
-      {/* 3D Circular Carousel HUD Banner & Navigation Controls */}
-      {isCarouselOpen && !selectedBookId && (
-        <>
-          {/* Top Level Info Banner */}
+      {/* Glassy Coverflow Carousel Book Showcase Layer */}
+      {isCarouselOpen && !selectedBookId && carouselItems.length > 0 && (
+        <div
+          data-testid="glassy-carousel-layer"
+          style={{
+            position: 'absolute',
+            top: '74px',
+            bottom: '76px',
+            left: 'clamp(280px, 32%, 520px)',
+            right: '24px',
+            zIndex: 10,
+            display: 'flex',
+            flexDirection: 'column',
+            pointerEvents: 'none'
+          }}
+        >
+          {/* Level Info HUD Banner */}
           <div
             className="glass-panel animate-fade-in"
             style={{
-              position: 'absolute',
-              top: '84px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              zIndex: 10,
+              pointerEvents: 'auto',
               borderRadius: '14px',
-              padding: '10px 20px',
+              padding: '8px 16px',
               display: 'flex',
               alignItems: 'center',
-              gap: '16px',
+              justifyContent: 'space-between',
+              gap: '12px',
+              marginBottom: '4px',
               boxShadow: 'var(--shadow-md)',
               borderLeft: `4px solid ${currentLevel ? currentLevel.badgeColor : '#e5b364'}`
             }}
           >
-            <button
-              onClick={handlePrevLevel}
-              className="glass-panel-interactive"
-              style={{ padding: '6px', borderRadius: '50%', color: '#f8fafc', display: 'flex' }}
-              title={language === 'ar' ? 'السنة السابقة' : 'Previous Year'}
-            >
-              {language === 'ar' ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                onClick={handlePrevLevel}
+                className="glass-panel-interactive"
+                style={{ padding: '5px', borderRadius: '50%', color: '#f8fafc', display: 'flex' }}
+                title={language === 'ar' ? 'السنة السابقة' : 'Previous Year'}
+              >
+                {language === 'ar' ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+              </button>
 
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                <span style={{
-                  fontSize: '0.75rem',
-                  background: currentLevel ? currentLevel.badgeColor : 'linear-gradient(135deg, #e5b364, #945629)',
-                  color: '#ffffff',
-                  padding: '2px 8px',
-                  borderRadius: '10px',
-                  fontWeight: 600
-                }}>
-                  {currentLevel ? currentLevel.code : (language === 'ar' ? 'الكل' : language === 'fr' ? 'Tous' : 'ALL')}
-                </span>
-                <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
-                  {currentLevel
-                    ? (currentLevel.name[language] || currentLevel.name.ar)
-                    : (language === 'ar' ? 'جميع المستويات التعليمية' : language === 'fr' ? 'Tous les niveaux scolaires' : 'All Education Levels')}
-                </h2>
-              </div>
-              <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
+              <span style={{
+                fontSize: '0.72rem',
+                background: currentLevel ? currentLevel.badgeColor : 'linear-gradient(135deg, #e5b364, #945629)',
+                color: '#ffffff',
+                padding: '2px 8px',
+                borderRadius: '10px',
+                fontWeight: 600
+              }}>
+                {currentLevel ? currentLevel.code : (language === 'ar' ? 'الكل' : language === 'fr' ? 'Tous' : 'ALL')}
+              </span>
+
+              <h2 style={{ fontSize: '0.92rem', fontWeight: 700, color: '#f8fafc', margin: 0 }}>
                 {currentLevel
-                  ? (currentLevel.description[language] || currentLevel.description.ar)
-                  : (language === 'ar' ? 'عرض شامل لكافة الكتب المدرسية والبرامج البيداغوجية' : language === 'fr' ? 'Catalogue complet de tous les manuels scolaires' : 'Complete catalog of all school textbooks')}
-                {' • '}
-                <span style={{ color: '#fbbf24', fontWeight: 600 }}>
-                  {currentLevelBooks.length} {language === 'ar' ? 'كتب متوفرة' : language === 'fr' ? 'manuels disponibles' : 'books available'}
-                </span>
-              </p>
+                  ? (currentLevel.name[language] || currentLevel.name.ar)
+                  : (language === 'ar' ? 'جميع المستويات التعليمية' : language === 'fr' ? 'Tous les niveaux scolaires' : 'All Education Levels')}
+              </h2>
+
+              <button
+                onClick={handleNextLevel}
+                className="glass-panel-interactive"
+                style={{ padding: '5px', borderRadius: '50%', color: '#f8fafc', display: 'flex' }}
+                title={language === 'ar' ? 'السنة التالية' : 'Next Year'}
+              >
+                {language === 'ar' ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+              </button>
             </div>
 
-            <button
-              onClick={handleNextLevel}
-              className="glass-panel-interactive"
-              style={{ padding: '6px', borderRadius: '50%', color: '#f8fafc', display: 'flex' }}
-              title={language === 'ar' ? 'السنة التالية' : 'Next Year'}
-            >
-              {language === 'ar' ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
-            </button>
-
-            <button
-              data-testid="close-carousel-btn"
-              onClick={() => setIsCarouselOpen(false)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#94a3b8',
-                cursor: 'pointer',
-                padding: '4px',
-                display: 'flex',
-                marginLeft: '4px'
-              }}
-              title={language === 'ar' ? 'إغلاق المعرض الدائري' : 'Close carousel'}
-            >
-              <X size={18} />
-            </button>
+            {/* Quick Actions: 3D Inspect & Add to Basket for active book */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {activeBook && (
+                <>
+                  <button
+                    data-testid="inspect-3d-btn"
+                    onClick={handleInspectSelectedBook}
+                    className="glass-panel-interactive"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '5px 12px',
+                      borderRadius: '8px',
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
+                      color: '#fbbf24',
+                      border: '1px solid rgba(229, 179, 100, 0.4)',
+                      background: 'rgba(229, 179, 100, 0.12)'
+                    }}
+                  >
+                    <Eye size={14} />
+                    <span>{language === 'ar' ? 'معاينة 3D' : language === 'fr' ? 'Inspecter 3D' : '3D Inspect'}</span>
+                  </button>
+                  <button
+                    data-testid="add-carousel-book-btn"
+                    onClick={(e) => handleAddBookWithAnimation(activeBook, e)}
+                    className="glass-panel-interactive"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '5px 12px',
+                      borderRadius: '8px',
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
+                      color: '#ffffff',
+                      border: '1px solid rgba(16, 185, 129, 0.5)',
+                      background: 'rgba(16, 185, 129, 0.2)'
+                    }}
+                  >
+                    <ShoppingCart size={14} />
+                    <span>{language === 'ar' ? 'إضافة للسلة' : language === 'fr' ? 'Ajouter' : 'Add to cart'}</span>
+                  </button>
+                </>
+              )}
+              <button
+                data-testid="close-carousel-btn"
+                onClick={() => setIsCarouselOpen(false)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94a3b8',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex'
+                }}
+                title={language === 'ar' ? 'إغلاق القائمة' : 'Close'}
+              >
+                <X size={18} />
+              </button>
+            </div>
           </div>
 
-          {/* Quick Carousel Prev/Next Overlay Buttons in the center area */}
+          {/* Embedded Glassy Coverflow Carousel */}
           <div
             style={{
-              position: 'absolute',
-              top: '50%',
-              left: 'clamp(280px, 34%, 480px)',
-              right: '30px',
-              transform: 'translateY(-50%)',
-              pointerEvents: 'none',
-              zIndex: 10,
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
+              position: 'relative',
+              flex: 1,
+              minHeight: 0,
+              pointerEvents: 'auto',
+              borderRadius: '16px',
+              overflow: 'hidden'
             }}
           >
-            <button
-              data-testid="carousel-prev-btn"
-              onClick={handlePrevCard}
-              className="glass-panel-interactive"
+            <GlassyCarousel
+              items={carouselItems}
+              layout="poster"
+              initialIndex={Math.min(carouselActiveIndex, carouselItems.length - 1)}
+              autoPlay={false}
+              label={language === 'ar' ? 'معرض الكتب المدرسية' : language === 'fr' ? 'Collection de manuels' : 'Textbook Collection'}
+              onSelect={handleSelectCarouselItem}
               style={{
-                pointerEvents: 'auto',
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#f8fafc',
-                border: '1px solid rgba(229, 179, 100, 0.4)',
-                background: 'rgba(15, 23, 42, 0.65)',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
-                cursor: 'pointer'
+                height: '100%',
+                maxHeight: '100%',
+                minHeight: '440px',
+                background: 'transparent'
               }}
-              title={language === 'ar' ? 'الكتاب السابق' : 'Previous book'}
-            >
-              {language === 'ar' ? <ChevronRight size={22} /> : <ChevronLeft size={22} />}
-            </button>
-
-            <button
-              data-testid="carousel-next-btn"
-              onClick={handleNextCard}
-              className="glass-panel-interactive"
-              style={{
-                pointerEvents: 'auto',
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#f8fafc',
-                border: '1px solid rgba(229, 179, 100, 0.4)',
-                background: 'rgba(15, 23, 42, 0.65)',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
-                cursor: 'pointer'
-              }}
-              title={language === 'ar' ? 'الكتاب التالي' : 'Next book'}
-            >
-              {language === 'ar' ? <ChevronLeft size={22} /> : <ChevronRight size={22} />}
-            </button>
+            />
           </div>
-        </>
+        </div>
       )}
 
       {/* Book Inspection & Reading HUD Overlay */}
@@ -344,69 +362,69 @@ export const App: React.FC = () => {
         <div
           className="glass-panel"
           style={{
-          position: 'absolute',
-          bottom: '24px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 10,
-          borderRadius: '30px',
-          padding: '8px 14px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          maxWidth: '92vw',
-          overflowX: 'auto',
-          boxShadow: 'var(--shadow-lg)'
-        }}
-      >
-        <span style={{ fontSize: '0.8rem', color: '#94a3b8', padding: '0 8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <Layers size={14} />
-          {language === 'ar' ? 'السنوات الدراسية:' : language === 'fr' ? 'Niveaux:' : 'Years:'}
-        </span>
-        {/* All Levels Button */}
-        <button
-          data-testid="dock-level-all"
-          onClick={() => setActiveLevelId('all')}
-          style={{
-            border: activeLevelId === 'all' && isCarouselOpen ? '1px solid #e5b364' : '1px solid rgba(255,255,255,0.08)',
-            background: activeLevelId === 'all' && isCarouselOpen ? 'rgba(229, 179, 100, 0.25)' : 'rgba(255,255,255,0.04)',
-            color: activeLevelId === 'all' && isCarouselOpen ? '#fbbf24' : '#cbd5e1',
-            padding: '8px 14px',
-            borderRadius: '20px',
-            fontSize: '0.82rem',
-            fontWeight: activeLevelId === 'all' && isCarouselOpen ? 700 : 500,
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-            transition: 'all 0.2s ease'
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10,
+            borderRadius: '30px',
+            padding: '6px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            maxWidth: '92vw',
+            overflowX: 'auto',
+            boxShadow: 'var(--shadow-lg)'
           }}
         >
-          {language === 'ar' ? 'جميع المستويات' : language === 'fr' ? 'Tous les niveaux' : 'All Levels'}
-        </button>
-        {EDUCATION_LEVELS.map((level) => {
-          const isSelected = activeLevelId === level.id && isCarouselOpen;
-          return (
-            <button
-              key={level.id}
-              data-testid={`dock-level-${level.id}`}
-              onClick={() => setActiveLevelId(level.id)}
-              style={{
-                border: isSelected ? '1px solid #e5b364' : '1px solid rgba(255,255,255,0.08)',
-                background: isSelected ? 'rgba(229, 179, 100, 0.25)' : 'rgba(255,255,255,0.04)',
-                color: isSelected ? '#fbbf24' : '#cbd5e1',
-                padding: '8px 14px',
-                borderRadius: '20px',
-                fontSize: '0.82rem',
-                fontWeight: isSelected ? 700 : 500,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              {level.shortName[language] || level.shortName.ar}
-            </button>
-          );
-        })}
-      </div>
+          <span style={{ fontSize: '0.8rem', color: '#94a3b8', padding: '0 8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Layers size={14} />
+            {language === 'ar' ? 'السنوات الدراسية:' : language === 'fr' ? 'Niveaux:' : 'Years:'}
+          </span>
+          {/* All Levels Button */}
+          <button
+            data-testid="dock-level-all"
+            onClick={() => setActiveLevelId('all')}
+            style={{
+              border: activeLevelId === 'all' && isCarouselOpen ? '1px solid #e5b364' : '1px solid rgba(255,255,255,0.08)',
+              background: activeLevelId === 'all' && isCarouselOpen ? 'rgba(229, 179, 100, 0.25)' : 'rgba(255,255,255,0.04)',
+              color: activeLevelId === 'all' && isCarouselOpen ? '#fbbf24' : '#cbd5e1',
+              padding: '6px 12px',
+              borderRadius: '20px',
+              fontSize: '0.8rem',
+              fontWeight: activeLevelId === 'all' && isCarouselOpen ? 700 : 500,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            {language === 'ar' ? 'جميع المستويات' : language === 'fr' ? 'Tous les niveaux' : 'All Levels'}
+          </button>
+          {EDUCATION_LEVELS.map((level) => {
+            const isSelected = activeLevelId === level.id && isCarouselOpen;
+            return (
+              <button
+                key={level.id}
+                data-testid={`dock-level-${level.id}`}
+                onClick={() => setActiveLevelId(level.id)}
+                style={{
+                  border: isSelected ? '1px solid #e5b364' : '1px solid rgba(255,255,255,0.08)',
+                  background: isSelected ? 'rgba(229, 179, 100, 0.25)' : 'rgba(255,255,255,0.04)',
+                  color: isSelected ? '#fbbf24' : '#cbd5e1',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                  fontSize: '0.8rem',
+                  fontWeight: isSelected ? 700 : 500,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {level.shortName[language] || level.shortName.ar}
+              </button>
+            );
+          })}
+        </div>
       )}
     </div>
   );

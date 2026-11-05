@@ -7,7 +7,6 @@ import { LibraryEnvironment } from '../components/library/LibraryEnvironment';
 import { Bookshelf } from '../components/bookshelf/Bookshelf';
 import { Book3D } from '../components/book/Book3D';
 import { BookHoverPreview } from '../components/book/BookHoverPreview';
-import { CircularBookCarousel } from '../components/carousel/CircularBookCarousel';
 import { EDUCATION_LEVELS } from '../data/educationLevels';
 import { BOOKS_DATA } from '../data/books';
 import {
@@ -107,9 +106,6 @@ export const LibraryScene: React.FC = () => {
 
       {/* Book Hover Preview Poster Card */}
       <BookHoverPreview />
-
-      {/* 3D Circular Orbit Carousel in Center/Right 67% Area */}
-      <CircularBookCarousel />
 
       {/* Selected 3D Book instance transitioning to center */}
       {selectedBook && (
