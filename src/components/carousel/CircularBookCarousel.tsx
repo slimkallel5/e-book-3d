@@ -29,8 +29,11 @@ export const CircularBookCarousel: React.FC = () => {
   const carouselActiveIndex = useLibraryStore((s) => s.carouselActiveIndex);
   const setCarouselActiveIndex = useLibraryStore((s) => s.setCarouselActiveIndex);
 
-  // Filter books belonging to the selected education level
+  // Filter books: if 'all', pick representative books across all levels or all books
   const books = useMemo(() => {
+    if (activeLevelId === 'all') {
+      return BOOKS_DATA;
+    }
     return BOOKS_DATA.filter((b) => b.educationLevelId === activeLevelId);
   }, [activeLevelId]);
 
@@ -41,45 +44,45 @@ export const CircularBookCarousel: React.FC = () => {
   const isTablet = viewport.aspect >= 0.75 && viewport.aspect < 1.35;
 
   // Carousel world origin:
-  // Positioned in the available 67% reading hall area to the right of the bookshelf
-  // (Bookshelf is on left X ~ -6.8). Carousel center is at X ~ 2.2, Y ~ 0.2, Z ~ 8.0 to 9.5
-  // keeping the bookshelf visible on the left side behind it!
+  // Positioned safely in the reading hall area cleanly to the right of the bookshelf.
+  // Bookshelf right edge reaches ~ -3.2 in world X.
+  // Carousel center is at X ~ 3.0, Y ~ 0.15, Z ~ 9.0 so even leftmost radius point (3.0 - 2.5 = 0.5)
+  // is well clear of the bookshelf by over 3.7 meters!
   const carouselPosition = useMemo<[number, number, number]>(() => {
     if (isMobile) return [0, 0.1, 14.0];
-    if (isTablet) return [1.4, 0.1, 10.5];
-    return [2.2, 0.15, 9.2];
+    if (isTablet) return [2.0, 0.1, 10.5];
+    return [3.0, 0.15, 9.0];
   }, [isMobile, isTablet]);
 
-  // Ellipse radii tailored to book count and responsive space
+  // Compact radii so the 3d list does not intersect with the bookshelf or room edges
   const radiusX = useMemo(() => {
-    if (isMobile) return 2.6;
-    if (isTablet) return 3.4;
-    return Math.max(3.2, Math.min(4.4, 2.6 + bookCount * 0.22));
+    if (isMobile) return 2.1;
+    if (isTablet) return 2.4;
+    return Math.max(2.1, Math.min(2.7, 1.9 + Math.min(bookCount, 12) * 0.07));
   }, [isMobile, isTablet, bookCount]);
 
   const radiusZ = useMemo(() => {
-    if (isMobile) return 1.6;
-    if (isTablet) return 2.1;
-    return 2.4;
+    if (isMobile) return 1.3;
+    if (isTablet) return 1.5;
+    return 1.65;
   }, [isMobile, isTablet]);
 
-  // Drag interaction state
+  // Drag and auto-animation interaction state
   const rotationAngleRef = useRef(0);
   const targetRotationRef = useRef(0);
   const isDraggingRef = useRef(false);
   const startPointerXRef = useRef(0);
   const lastDeltaXRef = useRef(0);
+  const isHoveredRef = useRef(false);
 
   // Calculate angle step per book
   const stepAngle = useMemo(() => {
     return bookCount > 0 ? (Math.PI * 2) / bookCount : 0;
   }, [bookCount]);
 
-  // Sync target rotation whenever carouselActiveIndex changes externally
+  // Keep target rotation in sync when carouselActiveIndex changes externally
   useEffect(() => {
-    if (bookCount > 0) {
-      // In our coordinate system, card index 0 is at theta = 0 (Math.sin(0)=0, Math.cos(0)=1 = front)
-      // To bring index i to front, carousel rotation should be -i * stepAngle
+    if (bookCount > 0 && !isDraggingRef.current) {
       targetRotationRef.current = -carouselActiveIndex * stepAngle;
     }
   }, [carouselActiveIndex, stepAngle, bookCount]);
@@ -150,19 +153,34 @@ export const CircularBookCarousel: React.FC = () => {
     [books, setCarouselActiveIndex, stepAngle, selectBook]
   );
 
-  // Animation frame loop for smooth rotation and entrance/exit scaling
-  useFrame(() => {
+  // Animation frame loop for smooth rotation, continuous circular animation, and entrance/exit scaling
+  useFrame((_, delta) => {
     if (!groupRef.current) return;
+
+    // Continuous circular movement animation:
+    // By default, rotate smoothly around orbit when user is not actively dragging or hovering
+    if (!isDraggingRef.current && !isHoveredRef.current && !selectedBookId && isCarouselOpen && bookCount > 0) {
+      // Rotate slowly in circular movement (~0.18 rad/s)
+      const autoSpeed = 0.16;
+      targetRotationRef.current -= delta * autoSpeed;
+      // Keep track of approximate front card index
+      if (stepAngle > 0) {
+        const approxIdx = Math.round(-targetRotationRef.current / stepAngle);
+        const normIdx = ((approxIdx % bookCount) + bookCount) % bookCount;
+        if (normIdx !== carouselActiveIndex) {
+          setCarouselActiveIndex(normIdx);
+        }
+      }
+    }
 
     // Smooth rotation lerp with damping
     rotationAngleRef.current = THREE.MathUtils.lerp(
       rotationAngleRef.current,
       targetRotationRef.current,
-      0.12
+      0.10
     );
 
     // Visibility & Entrance/Exit scale animation
-    // When carousel is open and no book is currently selected for inspection, show carousel
     const shouldBeVisible = isCarouselOpen && !selectedBookId && bookCount > 0;
     const targetScale = shouldBeVisible ? 1.0 : 0.001;
 
@@ -176,7 +194,18 @@ export const CircularBookCarousel: React.FC = () => {
   if (bookCount === 0) return null;
 
   return (
-    <group ref={groupRef} position={carouselPosition} scale={[0, 0, 0]} visible={false}>
+    <group
+      ref={groupRef}
+      position={carouselPosition}
+      scale={[0, 0, 0]}
+      visible={false}
+      onPointerEnter={() => {
+        isHoveredRef.current = true;
+      }}
+      onPointerLeave={() => {
+        isHoveredRef.current = false;
+      }}
+    >
       {/* Subtle floor shadow / halo ring underneath the carousel */}
       <mesh position={[0, -1.35, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[radiusX * 0.65, radiusX * 1.15, 36]} />

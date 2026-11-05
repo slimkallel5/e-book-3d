@@ -44,10 +44,11 @@ export const Book3D: React.FC<Book3DProps> = ({ book, shelfPosition }) => {
   const bookDepth = 0.28;
   const coverThickness = 0.035;
 
-  // Flight destination when inspected
-  // Center screen in front of camera
+  // Flight destination when inspected:
+  // Aligns precisely within the transparent inspection window of the centered grouped card
   const centerTarget = useMemo(() => {
-    return new THREE.Vector3(0, -0.45, 0.6);
+    // When viewport is wide, position slightly to the left (-2.4 in world units) to line up with the card's left viewport
+    return new THREE.Vector3(-2.2, 0.4, 6.0);
   }, []);
 
   const shelfTarget = useMemo(() => {

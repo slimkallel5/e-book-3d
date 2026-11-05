@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { Language } from '../types/education';
 import { Book } from '../types/book';
-import { EDUCATION_LEVELS } from '../data/educationLevels';
 import { BOOKS_DATA } from '../data/books';
 
 export interface BasketItem {
@@ -75,8 +74,8 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
   viewMode: 'overview',
   setViewMode: (mode) => set({ viewMode: mode }),
 
-  activeLevelId: EDUCATION_LEVELS[0].id,
-  isCarouselOpen: false,
+  activeLevelId: 'all',
+  isCarouselOpen: true,
   setIsCarouselOpen: (open) => set({ isCarouselOpen: open }),
   carouselActiveIndex: 0,
   setCarouselActiveIndex: (index) => set({ carouselActiveIndex: index }),
@@ -86,17 +85,14 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
 
   setActiveLevelId: (id) => {
     const state = get();
-    // If selecting the same level while carousel is open, toggle;
-    // Otherwise open carousel with the selected level's books
     if (state.activeLevelId === id && state.isCarouselOpen) {
-      // Keep it open or reset index
       set({ carouselActiveIndex: 0 });
     } else {
       set({
         activeLevelId: id,
         isCarouselOpen: true,
         carouselActiveIndex: 0,
-        viewMode: 'shelf'
+        viewMode: id === 'all' ? 'overview' : 'shelf'
       });
     }
   },
@@ -186,7 +182,8 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
   resetView: () =>
     set({
       viewMode: 'overview',
-      isCarouselOpen: false,
+      activeLevelId: 'all',
+      isCarouselOpen: true,
       selectedBookId: null,
       hoveredBookInfo: null,
       isBookOpen: false,

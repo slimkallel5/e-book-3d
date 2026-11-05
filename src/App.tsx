@@ -67,19 +67,36 @@ export const App: React.FC = () => {
     return <WebGLFallback />;
   }
 
-  const currentLevel = EDUCATION_LEVELS.find((l) => l.id === activeLevelId) || EDUCATION_LEVELS[0];
-  const currentLevelBooks = BOOKS_DATA.filter((b) => b.educationLevelId === currentLevel.id);
+  const isAllLevels = activeLevelId === 'all';
+  const currentLevel = isAllLevels ? null : (EDUCATION_LEVELS.find((l) => l.id === activeLevelId) || EDUCATION_LEVELS[0]);
+  const currentLevelBooks = isAllLevels
+    ? BOOKS_DATA
+    : BOOKS_DATA.filter((b) => b.educationLevelId === currentLevel?.id);
 
   const handlePrevLevel = () => {
+    if (isAllLevels) {
+      setActiveLevelId(EDUCATION_LEVELS[EDUCATION_LEVELS.length - 1].id);
+      return;
+    }
     const currentIndex = EDUCATION_LEVELS.findIndex((l) => l.id === activeLevelId);
-    const prevIndex = (currentIndex - 1 + EDUCATION_LEVELS.length) % EDUCATION_LEVELS.length;
-    setActiveLevelId(EDUCATION_LEVELS[prevIndex].id);
+    if (currentIndex <= 0) {
+      setActiveLevelId('all');
+    } else {
+      setActiveLevelId(EDUCATION_LEVELS[currentIndex - 1].id);
+    }
   };
 
   const handleNextLevel = () => {
+    if (isAllLevels) {
+      setActiveLevelId(EDUCATION_LEVELS[0].id);
+      return;
+    }
     const currentIndex = EDUCATION_LEVELS.findIndex((l) => l.id === activeLevelId);
-    const nextIndex = (currentIndex + 1) % EDUCATION_LEVELS.length;
-    setActiveLevelId(EDUCATION_LEVELS[nextIndex].id);
+    if (currentIndex >= EDUCATION_LEVELS.length - 1) {
+      setActiveLevelId('all');
+    } else {
+      setActiveLevelId(EDUCATION_LEVELS[currentIndex + 1].id);
+    }
   };
 
   const handlePrevCard = () => {
@@ -125,7 +142,14 @@ export const App: React.FC = () => {
       <div className="canvas-container">
         <Canvas
           shadows
-          gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+          dpr={[1, 1.5]}
+          gl={{
+            antialias: true,
+            alpha: false,
+            powerPreference: 'high-performance',
+            stencil: false,
+            depth: true
+          }}
           onCreated={({ gl }) => {
             gl.setClearColor('#0a0d12');
           }}
@@ -159,7 +183,7 @@ export const App: React.FC = () => {
               alignItems: 'center',
               gap: '16px',
               boxShadow: 'var(--shadow-md)',
-              borderLeft: `4px solid ${currentLevel.badgeColor}`
+              borderLeft: `4px solid ${currentLevel ? currentLevel.badgeColor : '#e5b364'}`
             }}
           >
             <button
@@ -175,20 +199,24 @@ export const App: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                 <span style={{
                   fontSize: '0.75rem',
-                  background: currentLevel.badgeColor,
+                  background: currentLevel ? currentLevel.badgeColor : 'linear-gradient(135deg, #e5b364, #945629)',
                   color: '#ffffff',
                   padding: '2px 8px',
                   borderRadius: '10px',
                   fontWeight: 600
                 }}>
-                  {currentLevel.code}
+                  {currentLevel ? currentLevel.code : (language === 'ar' ? 'الكل' : language === 'fr' ? 'Tous' : 'ALL')}
                 </span>
                 <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
-                  {currentLevel.name[language] || currentLevel.name.ar}
+                  {currentLevel
+                    ? (currentLevel.name[language] || currentLevel.name.ar)
+                    : (language === 'ar' ? 'جميع المستويات التعليمية' : language === 'fr' ? 'Tous les niveaux scolaires' : 'All Education Levels')}
                 </h2>
               </div>
               <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
-                {currentLevel.description[language] || currentLevel.description.ar}
+                {currentLevel
+                  ? (currentLevel.description[language] || currentLevel.description.ar)
+                  : (language === 'ar' ? 'عرض شامل لكافة الكتب المدرسية والبرامج البيداغوجية' : language === 'fr' ? 'Catalogue complet de tous les manuels scolaires' : 'Complete catalog of all school textbooks')}
                 {' • '}
                 <span style={{ color: '#fbbf24', fontWeight: 600 }}>
                   {currentLevelBooks.length} {language === 'ar' ? 'كتب متوفرة' : language === 'fr' ? 'manuels disponibles' : 'books available'}
@@ -335,6 +363,25 @@ export const App: React.FC = () => {
           <Layers size={14} />
           {language === 'ar' ? 'السنوات الدراسية:' : language === 'fr' ? 'Niveaux:' : 'Years:'}
         </span>
+        {/* All Levels Button */}
+        <button
+          data-testid="dock-level-all"
+          onClick={() => setActiveLevelId('all')}
+          style={{
+            border: activeLevelId === 'all' && isCarouselOpen ? '1px solid #e5b364' : '1px solid rgba(255,255,255,0.08)',
+            background: activeLevelId === 'all' && isCarouselOpen ? 'rgba(229, 179, 100, 0.25)' : 'rgba(255,255,255,0.04)',
+            color: activeLevelId === 'all' && isCarouselOpen ? '#fbbf24' : '#cbd5e1',
+            padding: '8px 14px',
+            borderRadius: '20px',
+            fontSize: '0.82rem',
+            fontWeight: activeLevelId === 'all' && isCarouselOpen ? 700 : 500,
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          {language === 'ar' ? 'جميع المستويات' : language === 'fr' ? 'Tous les niveaux' : 'All Levels'}
+        </button>
         {EDUCATION_LEVELS.map((level) => {
           const isSelected = activeLevelId === level.id && isCarouselOpen;
           return (

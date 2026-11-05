@@ -40,9 +40,9 @@ export const BookCarouselCard: React.FC<BookCarouselCardProps> = ({
     return createCoverTexture(book, language);
   }, [book, language]);
 
-  const cardWidth = 1.6;
-  const cardHeight = 2.25;
-  const cardThickness = 0.08;
+  const cardWidth = 1.22;
+  const cardHeight = 1.72;
+  const cardThickness = 0.065;
 
   // Compute position on the orbital ellipse
   // Angle + carouselRotation determines where on the ring it sits
@@ -150,47 +150,47 @@ export const BookCarouselCard: React.FC<BookCarouselCardProps> = ({
 
       {/* Prominent Info Plaque below Front Card */}
       {isFrontCard && (
-        <group position={[0, -cardHeight / 2 - 0.32, 0.08]}>
+        <group position={[0, -cardHeight / 2 - 0.24, 0.06]}>
           {/* Backplate */}
           <mesh position={[0, 0, 0]}>
-            <boxGeometry args={[cardWidth + 0.45, 0.46, 0.03]} />
+            <boxGeometry args={[cardWidth + 0.32, 0.38, 0.025]} />
             <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.4} />
           </mesh>
-          <mesh position={[0, 0, 0.018]}>
-            <planeGeometry args={[cardWidth + 0.41, 0.42]} />
+          <mesh position={[0, 0, 0.015]}>
+            <planeGeometry args={[cardWidth + 0.28, 0.34]} />
             <meshStandardMaterial color="#1e293b" roughness={0.6} />
           </mesh>
 
           {/* Subject Badge */}
           <Text
-            position={[0, 0.12, 0.025]}
-            fontSize={0.08}
+            position={[0, 0.09, 0.02]}
+            fontSize={0.068}
             color="#fbbf24"
             fontWeight={700}
             anchorX="center"
             anchorY="middle"
-            maxWidth={cardWidth + 0.3}
+            maxWidth={cardWidth + 0.22}
           >
             {subject}
           </Text>
 
           {/* Title */}
           <Text
-            position={[0, -0.02, 0.025]}
-            fontSize={0.095}
+            position={[0, -0.02, 0.02]}
+            fontSize={0.08}
             color="#ffffff"
             fontWeight={700}
             anchorX="center"
             anchorY="middle"
-            maxWidth={cardWidth + 0.35}
+            maxWidth={cardWidth + 0.24}
           >
             {title}
           </Text>
 
           {/* Price */}
           <Text
-            position={[0, -0.14, 0.025]}
-            fontSize={0.075}
+            position={[0, -0.11, 0.02]}
+            fontSize={0.062}
             color="#94a3b8"
             fontWeight={600}
             anchorX="center"
