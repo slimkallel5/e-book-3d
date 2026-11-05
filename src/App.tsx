@@ -33,8 +33,11 @@ export const App: React.FC = () => {
   const activeLevelId = useLibraryStore((s) => s.activeLevelId);
   const setActiveLevelId = useLibraryStore((s) => s.setActiveLevelId);
   const viewMode = useLibraryStore((s) => s.viewMode);
+  const isCarouselOpen = useLibraryStore((s) => s.isCarouselOpen);
+  const setIsCarouselOpen = useLibraryStore((s) => s.setIsCarouselOpen);
+  const carouselActiveIndex = useLibraryStore((s) => s.carouselActiveIndex);
+  const setCarouselActiveIndex = useLibraryStore((s) => s.setCarouselActiveIndex);
   const selectedBookId = useLibraryStore((s) => s.selectedBookId);
-  const resetView = useLibraryStore((s) => s.resetView);
   const addToBasket = useLibraryStore((s) => s.addToBasket);
 
   useEffect(() => {
@@ -77,6 +80,18 @@ export const App: React.FC = () => {
     const currentIndex = EDUCATION_LEVELS.findIndex((l) => l.id === activeLevelId);
     const nextIndex = (currentIndex + 1) % EDUCATION_LEVELS.length;
     setActiveLevelId(EDUCATION_LEVELS[nextIndex].id);
+  };
+
+  const handlePrevCard = () => {
+    if (currentLevelBooks.length === 0) return;
+    const prevIdx = (carouselActiveIndex - 1 + currentLevelBooks.length) % currentLevelBooks.length;
+    setCarouselActiveIndex(prevIdx);
+  };
+
+  const handleNextCard = () => {
+    if (currentLevelBooks.length === 0) return;
+    const nextIdx = (carouselActiveIndex + 1) % currentLevelBooks.length;
+    setCarouselActiveIndex(nextIdx);
   };
 
   const handleAddBookWithAnimation = (book: Book, e: React.MouseEvent<HTMLButtonElement>) => {
@@ -126,84 +141,150 @@ export const App: React.FC = () => {
         basketBouncing={basketBouncing}
       />
 
-      {/* Shelf Mode Floating Info Banner (Appears when viewing a focused row) */}
-      {viewMode === 'shelf' && (
-        <div
-          className="glass-panel animate-fade-in"
-          style={{
-            position: 'absolute',
-            top: '84px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 10,
-            borderRadius: '14px',
-            padding: '10px 20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '16px',
-            boxShadow: 'var(--shadow-md)',
-            borderLeft: `4px solid ${currentLevel.badgeColor}`
-          }}
-        >
-          <button
-            onClick={handlePrevLevel}
-            className="glass-panel-interactive"
-            style={{ padding: '6px', borderRadius: '50%', color: '#f8fafc', display: 'flex' }}
-            title={language === 'ar' ? 'السنة السابقة' : 'Previous Year'}
+      {/* 3D Circular Carousel HUD Banner & Navigation Controls */}
+      {isCarouselOpen && !selectedBookId && (
+        <>
+          {/* Top Level Info Banner */}
+          <div
+            className="glass-panel animate-fade-in"
+            style={{
+              position: 'absolute',
+              top: '84px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 10,
+              borderRadius: '14px',
+              padding: '10px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              boxShadow: 'var(--shadow-md)',
+              borderLeft: `4px solid ${currentLevel.badgeColor}`
+            }}
           >
-            {language === 'ar' ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-          </button>
+            <button
+              onClick={handlePrevLevel}
+              className="glass-panel-interactive"
+              style={{ padding: '6px', borderRadius: '50%', color: '#f8fafc', display: 'flex' }}
+              title={language === 'ar' ? 'السنة السابقة' : 'Previous Year'}
+            >
+              {language === 'ar' ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+            </button>
 
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <span style={{
-                fontSize: '0.75rem',
-                background: currentLevel.badgeColor,
-                color: '#ffffff',
-                padding: '2px 8px',
-                borderRadius: '10px',
-                fontWeight: 600
-              }}>
-                {currentLevel.code}
-              </span>
-              <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
-                {currentLevel.name[language] || currentLevel.name.ar}
-              </h2>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <span style={{
+                  fontSize: '0.75rem',
+                  background: currentLevel.badgeColor,
+                  color: '#ffffff',
+                  padding: '2px 8px',
+                  borderRadius: '10px',
+                  fontWeight: 600
+                }}>
+                  {currentLevel.code}
+                </span>
+                <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
+                  {currentLevel.name[language] || currentLevel.name.ar}
+                </h2>
+              </div>
+              <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
+                {currentLevel.description[language] || currentLevel.description.ar}
+                {' • '}
+                <span style={{ color: '#fbbf24', fontWeight: 600 }}>
+                  {currentLevelBooks.length} {language === 'ar' ? 'كتب متوفرة' : language === 'fr' ? 'manuels disponibles' : 'books available'}
+                </span>
+              </p>
             </div>
-            <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
-              {currentLevel.description[language] || currentLevel.description.ar}
-              {' • '}
-              <span style={{ color: '#fbbf24', fontWeight: 600 }}>
-                {currentLevelBooks.length} {language === 'ar' ? 'كتب متوفرة' : language === 'fr' ? 'manuels disponibles' : 'books available'}
-              </span>
-            </p>
+
+            <button
+              onClick={handleNextLevel}
+              className="glass-panel-interactive"
+              style={{ padding: '6px', borderRadius: '50%', color: '#f8fafc', display: 'flex' }}
+              title={language === 'ar' ? 'السنة التالية' : 'Next Year'}
+            >
+              {language === 'ar' ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+            </button>
+
+            <button
+              data-testid="close-carousel-btn"
+              onClick={() => setIsCarouselOpen(false)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#94a3b8',
+                cursor: 'pointer',
+                padding: '4px',
+                display: 'flex',
+                marginLeft: '4px'
+              }}
+              title={language === 'ar' ? 'إغلاق المعرض الدائري' : 'Close carousel'}
+            >
+              <X size={18} />
+            </button>
           </div>
 
-          <button
-            onClick={handleNextLevel}
-            className="glass-panel-interactive"
-            style={{ padding: '6px', borderRadius: '50%', color: '#f8fafc', display: 'flex' }}
-            title={language === 'ar' ? 'السنة التالية' : 'Next Year'}
-          >
-            {language === 'ar' ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
-          </button>
-
-          <button
-            onClick={resetView}
+          {/* Quick Carousel Prev/Next Overlay Buttons in the center area */}
+          <div
             style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#94a3b8',
-              cursor: 'pointer',
-              padding: '4px',
+              position: 'absolute',
+              top: '50%',
+              left: 'clamp(280px, 34%, 480px)',
+              right: '30px',
+              transform: 'translateY(-50%)',
+              pointerEvents: 'none',
+              zIndex: 10,
               display: 'flex',
-              marginLeft: '4px'
+              justifyContent: 'space-between',
+              alignItems: 'center'
             }}
-            title={language === 'ar' ? 'إغلاق العرض' : 'Close shelf view'}
           >
-            <X size={16} />
-          </button>
-        </div>
+            <button
+              data-testid="carousel-prev-btn"
+              onClick={handlePrevCard}
+              className="glass-panel-interactive"
+              style={{
+                pointerEvents: 'auto',
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#f8fafc',
+                border: '1px solid rgba(229, 179, 100, 0.4)',
+                background: 'rgba(15, 23, 42, 0.65)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                cursor: 'pointer'
+              }}
+              title={language === 'ar' ? 'الكتاب السابق' : 'Previous book'}
+            >
+              {language === 'ar' ? <ChevronRight size={22} /> : <ChevronLeft size={22} />}
+            </button>
+
+            <button
+              data-testid="carousel-next-btn"
+              onClick={handleNextCard}
+              className="glass-panel-interactive"
+              style={{
+                pointerEvents: 'auto',
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#f8fafc',
+                border: '1px solid rgba(229, 179, 100, 0.4)',
+                background: 'rgba(15, 23, 42, 0.65)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                cursor: 'pointer'
+              }}
+              title={language === 'ar' ? 'الكتاب التالي' : 'Next book'}
+            >
+              {language === 'ar' ? <ChevronLeft size={22} /> : <ChevronRight size={22} />}
+            </button>
+          </div>
+        </>
       )}
 
       {/* Book Inspection & Reading HUD Overlay */}
@@ -255,10 +336,11 @@ export const App: React.FC = () => {
           {language === 'ar' ? 'السنوات الدراسية:' : language === 'fr' ? 'Niveaux:' : 'Years:'}
         </span>
         {EDUCATION_LEVELS.map((level) => {
-          const isSelected = activeLevelId === level.id && viewMode === 'shelf';
+          const isSelected = activeLevelId === level.id && isCarouselOpen;
           return (
             <button
               key={level.id}
+              data-testid={`dock-level-${level.id}`}
               onClick={() => setActiveLevelId(level.id)}
               style={{
                 border: isSelected ? '1px solid #e5b364' : '1px solid rgba(255,255,255,0.08)',

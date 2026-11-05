@@ -11,6 +11,11 @@ export interface BasketItem {
 
 export type ViewMode = 'overview' | 'shelf' | 'book-detail' | 'book-open';
 
+export interface HoveredBookInfo {
+  book: Book;
+  worldPosition: [number, number, number];
+}
+
 interface LibraryState {
   // Localization
   language: Language;
@@ -23,6 +28,16 @@ interface LibraryState {
   // Active Education Level / Shelf
   activeLevelId: string;
   setActiveLevelId: (id: string) => void;
+
+  // 3D Circular Carousel state
+  isCarouselOpen: boolean;
+  setIsCarouselOpen: (open: boolean) => void;
+  carouselActiveIndex: number;
+  setCarouselActiveIndex: (index: number) => void;
+
+  // Book Hover Preview state (Separate from selection)
+  hoveredBookInfo: HoveredBookInfo | null;
+  setHoveredBookInfo: (info: HoveredBookInfo | null) => void;
 
   // Selected Book
   selectedBookId: string | null;
@@ -61,13 +76,28 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
   setViewMode: (mode) => set({ viewMode: mode }),
 
   activeLevelId: EDUCATION_LEVELS[0].id,
+  isCarouselOpen: false,
+  setIsCarouselOpen: (open) => set({ isCarouselOpen: open }),
+  carouselActiveIndex: 0,
+  setCarouselActiveIndex: (index) => set({ carouselActiveIndex: index }),
+
+  hoveredBookInfo: null,
+  setHoveredBookInfo: (info) => set({ hoveredBookInfo: info }),
+
   setActiveLevelId: (id) => {
     const state = get();
-    // If selecting the currently active level, focus to shelf view; else update active level
-    if (state.activeLevelId === id && state.viewMode === 'shelf') {
-      set({ viewMode: 'overview' });
+    // If selecting the same level while carousel is open, toggle;
+    // Otherwise open carousel with the selected level's books
+    if (state.activeLevelId === id && state.isCarouselOpen) {
+      // Keep it open or reset index
+      set({ carouselActiveIndex: 0 });
     } else {
-      set({ activeLevelId: id, viewMode: 'shelf' });
+      set({
+        activeLevelId: id,
+        isCarouselOpen: true,
+        carouselActiveIndex: 0,
+        viewMode: 'shelf'
+      });
     }
   },
 
@@ -78,7 +108,7 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
         selectedBookId: null,
         isBookOpen: false,
         currentBookPage: 0,
-        viewMode: get().activeLevelId ? 'shelf' : 'overview'
+        viewMode: get().isCarouselOpen ? 'shelf' : 'overview'
       });
       return;
     }
@@ -156,9 +186,15 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
   resetView: () =>
     set({
       viewMode: 'overview',
+      isCarouselOpen: false,
       selectedBookId: null,
+      hoveredBookInfo: null,
       isBookOpen: false,
       currentBookPage: 0,
       searchQuery: ''
     })
 }));
+
+if (typeof window !== 'undefined') {
+  (window as any).__LIBRARY_STORE__ = useLibraryStore;
+}

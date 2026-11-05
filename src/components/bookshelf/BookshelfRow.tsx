@@ -25,11 +25,12 @@ export const BookshelfRow: React.FC<BookshelfRowProps> = ({
 }) => {
   const activeLevelId = useLibraryStore((s) => s.activeLevelId);
   const setActiveLevelId = useLibraryStore((s) => s.setActiveLevelId);
+  const isCarouselOpen = useLibraryStore((s) => s.isCarouselOpen);
   const selectedBookId = useLibraryStore((s) => s.selectedBookId);
   const language = useLibraryStore((s) => s.language);
   const [rowHovered, setRowHovered] = useState(false);
 
-  const isActive = activeLevelId === level.id;
+  const isActive = activeLevelId === level.id && isCarouselOpen;
   const cfg = BOOKSHELF_CONFIG;
   const yPosition = getShelfY(shelfIndex);
   const plankThickness = cfg.shelfThickness;
@@ -45,6 +46,7 @@ export const BookshelfRow: React.FC<BookshelfRowProps> = ({
         castShadow
         receiveShadow
         position={[0, 0, 0]}
+        userData={{ testId: `shelf-plank-${level.id}` }}
         onClick={(e) => {
           e.stopPropagation();
           setActiveLevelId(level.id);
@@ -86,6 +88,7 @@ export const BookshelfRow: React.FC<BookshelfRowProps> = ({
       {/* 3. DECORATIVE BRASS SHELF NAMEPLATE FOR EDUCATION YEAR */}
       <group
         position={[0, 0, plankDepth / 2 + 0.06]}
+        userData={{ testId: `shelf-nameplate-${level.id}` }}
         onClick={(e) => {
           e.stopPropagation();
           setActiveLevelId(level.id);
