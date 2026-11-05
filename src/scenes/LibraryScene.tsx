@@ -65,17 +65,17 @@ export const LibraryScene: React.FC = () => {
     if (!cameraRef.current) return;
 
     // Overview positioning:
-    // Bookshelf center is at X = -3.6, with rotationY = 0.26 rad (~15 deg).
-    // Setting targetPos to (1.5, 0.4, 15.8) and targetLook to (-2.2, 0.2, 0)
-    // beautifully places the bookshelf on the left side of the screen with a natural perspective angle,
-    // revealing the right side panel, depth, and leaving the right screen area for reading/UI!
+    // Bookshelf center is placed at X = -6.8 with 0.38 rad rotation,
+    // camera at X = 0.5, Z = 16.5, looking towards (0.8, 0.2, 0).
+    // This perfectly places the bookshelf strictly within the left 33% of the viewport,
+    // and devotes the entire remaining 67% to the expansive, luxurious library reading hall!
     let targetPos = new THREE.Vector3(
-      isMobile ? 0 : isTablet ? 0.6 : 1.5,
-      0.4,
-      isMobile ? 24.0 : isTablet ? 17.5 : 15.8
+      isMobile ? 0 : isTablet ? 0.6 : 0.5,
+      0.6,
+      isMobile ? 24.0 : isTablet ? 18.5 : 16.5
     );
     let targetLook = new THREE.Vector3(
-      isMobile ? 0 : isTablet ? -1.4 : -2.2,
+      isMobile ? 0 : isTablet ? -1.0 : 0.8,
       0.2,
       0
     );
@@ -112,8 +112,8 @@ export const LibraryScene: React.FC = () => {
       <PerspectiveCamera
         ref={cameraRef}
         makeDefault
-        position={[1.5, 0.4, 15.8]}
-        fov={48}
+        position={[0.5, 0.6, 16.5]}
+        fov={46}
         near={0.1}
         far={120}
       />

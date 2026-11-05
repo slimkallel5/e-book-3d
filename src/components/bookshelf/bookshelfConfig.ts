@@ -5,43 +5,40 @@ import { Book } from '../../types/book';
  * All dimensions are in Three.js world units (meters).
  */
 export const BOOKSHELF_CONFIG = {
-  // Overall bookshelf furniture dimensions
-  shelfWidth: 13.8, // Inner width available between side uprights
-  totalWidth: 14.6, // Outer total width including side panels
-  shelfDepth: 2.2, // Depth of horizontal shelf planks
-  shelfThickness: 0.22, // Thickness of each shelf plank
-  shelfSpacing: 1.48, // Center-to-center vertical distance between shelf planks
-  startY: 4.15, // Y position of top-most shelf (shelfIndex = 0)
+  // Overall bookshelf furniture dimensions - scaled to fit strictly left 33% of viewport
+  shelfWidth: 7.2, // Inner width available between side uprights
+  totalWidth: 7.8, // Outer total width including side panels
+  shelfDepth: 1.8, // Depth of horizontal shelf planks
+  shelfThickness: 0.20, // Thickness of each shelf plank
+  shelfSpacing: 1.42, // Center-to-center vertical distance between shelf planks
+  startY: 4.10, // Y position of top-most shelf (shelfIndex = 0)
   totalShelves: 7, // 7 education levels (1AP to Secondary)
 
   // Architectural panels & moldings
-  sidePanelThickness: 0.42,
-  sidePanelDepth: 2.45,
-  sidePanelHeight: 11.2,
+  sidePanelThickness: 0.38,
+  sidePanelDepth: 2.0,
+  sidePanelHeight: 11.0,
   backPanelThickness: 0.12,
-  backPanelDepthOffset: -1.05, // Z position of backboard front face
+  backPanelDepthOffset: -0.9, // Z position of backboard front face
   basePlinthHeight: 1.35,
-  basePlinthDepth: 2.65,
+  basePlinthDepth: 2.2,
   crownHeight: 0.95,
-  crownDepth: 2.75,
+  crownDepth: 2.3,
 
   // Book placement & dimensions
-  bookScale: 0.62, // Proportional scale for bookshelf books
+  bookScale: 0.58, // Proportional scale for bookshelf books
   defaultBookHeight: 1.85,
   defaultBookWidth: 1.35,
   defaultBookDepth: 0.30,
-  shelfMarginX: 0.75, // Margin from side pillars
-  nameplateWidth: 4.0, // Center brass plaque width on shelf front edge
+  shelfMarginX: 0.45, // Margin from side pillars
+  nameplateWidth: 2.8, // Center brass plaque width on shelf front edge
   bookZOffset: 0.15, // Forward offset for books relative to shelf center, away from backboard
 
-  // Bookshelf World Transform (Left anchor with subtle 3D perspective angle)
+  // Bookshelf World Transform (Strict Left 33% anchor with diagonal perspective)
   transform: {
-    // Left-anchored position in 3D world:
-    // Placed at X = -3.6 so that with camera looking towards (0, 0, 0) or (-0.5, 0, 0),
-    // the bookshelf is prominently framed on the left half of the viewport.
     desktop: {
-      position: [-3.6, 0.1, -0.6] as [number, number, number],
-      rotationY: 0.26, // ~15 degrees, reveals outer and inner side panels & depth
+      position: [-6.8, 0.0, -0.2] as [number, number, number],
+      rotationY: 0.38, // ~22 degrees, faces diagonally toward the center
     },
     tablet: {
       position: [-2.0, 0.1, -0.4] as [number, number, number],
@@ -84,16 +81,16 @@ export function calculateRowBooksLayout(books: Book[], shelfIndex: number) {
 
     let bookX = 0;
     if (count === 1) {
-      bookX = halfNameplate + 1.2;
+      bookX = halfNameplate + 0.6;
     } else if (count === 2) {
-      bookX = idx === 0 ? -(halfNameplate + 1.5) : (halfNameplate + 1.5);
+      bookX = idx === 0 ? -(halfNameplate + 0.6) : (halfNameplate + 0.6);
     } else if (count === 3) {
       if (idx === 0) {
-        bookX = -(halfNameplate + 1.5);
+        bookX = -(halfNameplate + 0.6);
       } else if (idx === 1) {
-        bookX = halfNameplate + 0.9;
+        bookX = halfNameplate + 0.45;
       } else {
-        bookX = halfNameplate + 2.35;
+        bookX = halfNameplate + 1.25;
       }
     } else {
       const leftCount = Math.ceil(count / 2);
@@ -102,8 +99,8 @@ export function calculateRowBooksLayout(books: Book[], shelfIndex: number) {
       const sideTotal = isLeft ? leftCount : (count - leftCount);
 
       const sideSpan = maxAvailableX - halfNameplate;
-      const step = sideTotal > 1 ? sideSpan / (sideTotal + 0.2) : sideSpan * 0.5;
-      const offset = halfNameplate + 0.6 + sideIndex * step;
+      const step = sideTotal > 1 ? sideSpan / (sideTotal - 0.2) : sideSpan * 0.5;
+      const offset = halfNameplate + 0.35 + sideIndex * step;
       bookX = isLeft ? -offset : offset;
     }
 
