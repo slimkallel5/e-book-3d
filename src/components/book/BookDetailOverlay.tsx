@@ -2,6 +2,7 @@ import React from 'react';
 import { useLibraryStore } from '../../store/useLibraryStore';
 import { BOOKS_DATA } from '../../data/books';
 import { EDUCATION_LEVELS } from '../../data/educationLevels';
+import { BookDetailCanvas } from './BookDetailCanvas';
 import {
   BookOpen,
   ArrowRight,
@@ -189,7 +190,7 @@ export const BookDetailOverlay: React.FC<BookDetailOverlayProps> = ({
           }}
           className="selected-book-body-grid"
         >
-          {/* Left Column: Transparent Frame for 3D Book Viewing + Drag Hint */}
+          {/* Left Column: 3D Book Viewing Canvas inside first div + Drag Hint */}
           <div
             style={{
               display: 'flex',
@@ -197,14 +198,18 @@ export const BookDetailOverlay: React.FC<BookDetailOverlayProps> = ({
               alignItems: 'center',
               justifyContent: 'center',
               position: 'relative',
-              minHeight: '260px',
-              background: 'radial-gradient(circle at center, rgba(229, 179, 100, 0.12) 0%, rgba(0,0,0,0) 70%)',
+              minHeight: '340px',
+              height: '100%',
+              background: 'radial-gradient(circle at center, rgba(229, 179, 100, 0.15) 0%, rgba(0,0,0,0.3) 80%)',
               borderRadius: '16px',
-              border: '1px dashed rgba(229, 179, 100, 0.25)',
-              padding: '12px'
+              border: '1px solid rgba(229, 179, 100, 0.25)',
+              padding: '12px',
+              overflow: 'hidden'
             }}
           >
-            {/* The 3D Book canvas renders right behind this centered viewport box */}
+            {/* Real Interactive 3D Book Canvas Linked Directly inside the first div */}
+            <BookDetailCanvas book={book} />
+
             <div
               style={{
                 position: 'absolute',
@@ -212,12 +217,13 @@ export const BookDetailOverlay: React.FC<BookDetailOverlayProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                background: 'rgba(15, 23, 42, 0.8)',
+                background: 'rgba(15, 23, 42, 0.85)',
                 padding: '4px 12px',
                 borderRadius: '16px',
                 fontSize: '0.72rem',
                 color: '#cbd5e1',
-                pointerEvents: 'none'
+                pointerEvents: 'none',
+                zIndex: 10
               }}
             >
               <RotateCcw size={12} className="spin-slow" />

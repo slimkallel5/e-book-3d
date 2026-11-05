@@ -171,8 +171,8 @@ export const App: React.FC = () => {
         basketBouncing={basketBouncing}
       />
 
-      {/* Glassy Coverflow Carousel Book Showcase Layer */}
-      {isCarouselOpen && !selectedBookId && carouselItems.length > 0 && (
+      {/* Glassy Coverflow Carousel Book Showcase Layer - Always visible even when book is inspected */}
+      {isCarouselOpen && carouselItems.length > 0 && (
         <div
           data-testid="glassy-carousel-layer"
           style={{
@@ -320,7 +320,8 @@ export const App: React.FC = () => {
               items={carouselItems}
               layout="poster"
               initialIndex={Math.min(carouselActiveIndex, carouselItems.length - 1)}
-              autoPlay={false}
+              autoPlay={true}
+              interval={3500}
               hideControls={true}
               label={language === 'ar' ? 'معرض الكتب المدرسية' : language === 'fr' ? 'Collection de manuels' : 'Textbook Collection'}
               onSelect={handleSelectCarouselItem}
@@ -360,26 +361,25 @@ export const App: React.FC = () => {
       {/* Shopping Basket Drawer */}
       <BasketDrawer />
 
-      {/* Education Levels Bottom Shelf Selector Dock (Hidden when inspecting a book) */}
-      {!selectedBookId && (
-        <div
-          className="glass-panel"
-          style={{
-            position: 'absolute',
-            bottom: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 10,
-            borderRadius: '30px',
-            padding: '6px 12px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            maxWidth: '92vw',
-            overflowX: 'auto',
-            boxShadow: 'var(--shadow-lg)'
-          }}
-        >
+      {/* Education Levels Bottom Shelf Selector Dock - Always visible */}
+      <div
+        className="glass-panel"
+        style={{
+          position: 'absolute',
+          bottom: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 15,
+          borderRadius: '30px',
+          padding: '6px 12px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          maxWidth: '92vw',
+          overflowX: 'auto',
+          boxShadow: 'var(--shadow-lg)'
+        }}
+      >
           <span style={{ fontSize: '0.8rem', color: '#94a3b8', padding: '0 8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
             <Layers size={14} />
             {language === 'ar' ? 'السنوات الدراسية:' : language === 'fr' ? 'Niveaux:' : 'Years:'}
@@ -428,7 +428,6 @@ export const App: React.FC = () => {
             );
           })}
         </div>
-      )}
     </div>
   );
 };

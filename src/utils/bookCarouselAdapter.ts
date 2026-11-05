@@ -2,47 +2,184 @@ import { Book } from '../types/book';
 import { GlassyCarouselItem } from '../components/ui/glassy-coverflow-carousel';
 import { Language } from '../types/education';
 
-// Real, tested Unsplash high-resolution book / education cover photos
-const BOOK_COVER_IMAGES: Record<string, string> = {
-  'book-1ap-arabic': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
-  'book-1ap-math': 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&q=80',
-  'book-1ap-science': 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80',
-  'book-1ap-islamic': 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=800&q=80',
-  'book-1ap-art': 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80',
-  'book-2ap-french': 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80',
-  'book-2ap-arabic': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80',
-  'book-2ap-math': 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80',
-  'book-2ap-science': 'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=800&q=80',
-  'book-3ap-math': 'https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=format&fit=crop&w=800&q=80',
-  'book-3ap-french': 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=800&q=80',
-  'book-3ap-arabic': 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=800&q=80',
-  'book-3ap-science': 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80',
-  'book-4ap-social': 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=800&q=80',
-  'book-4ap-math': 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80',
-  'book-4ap-arabic': 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80',
-  'book-4ap-french': 'https://images.unsplash.com/photo-1491841573634-28140fc7ced7?auto=format&fit=crop&w=800&q=80',
-  'book-5ap-arabic': 'https://images.unsplash.com/photo-1463320726281-696a485928c7?auto=format&fit=crop&w=800&q=80',
-  'book-5ap-science': 'https://images.unsplash.com/photo-1518152006812-edab29b069ac?auto=format&fit=crop&w=800&q=80',
-  'book-5ap-math': 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
-  'book-5ap-social': 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=800&q=80',
-  'book-6ap-math': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80',
-  'book-6ap-french': 'https://images.unsplash.com/photo-1476275466078-4007374efbbe?auto=format&fit=crop&w=800&q=80',
-  'book-6ap-arabic': 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=800&q=80',
-  'book-6ap-science': 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80',
-  'book-sec-physics': 'https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&w=800&q=80',
-  'book-sec-philosophy': 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=800&q=80',
-  'book-sec-math': 'https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?auto=format&fit=crop&w=800&q=80',
-  'book-sec-svt': 'https://images.unsplash.com/photo-1530026405186-ed1f139313f8?auto=format&fit=crop&w=800&q=80',
-  'book-sec-english': 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80'
-};
+// Cache generated cover image data URLs so they are created once per book/language
+const coverDataUrlCache = new Map<string, string>();
 
-const DEFAULT_COVER_IMAGE = 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80';
+/**
+ * Procedurally generates a realistic educational book cover image (data URL)
+ * for the given book and language, complete with borders, badges, Arabic calligraphy styling,
+ * curriculum emblem, subject labels, and publisher insignia.
+ */
+export function generateBookCoverDataUrl(book: Book, lang: Language = 'ar'): string {
+  const cacheKey = `${book.id}_${lang}`;
+  if (coverDataUrlCache.has(cacheKey)) {
+    return coverDataUrlCache.get(cacheKey)!;
+  }
+
+  // Generate on an off-screen HTML5 Canvas (512x768 matches the 2:3 poster aspect ratio)
+  if (typeof document === 'undefined') {
+    return 'https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&w=800&q=80';
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 768;
+  const ctx = canvas.getContext('2d');
+
+  if (!ctx) {
+    return 'https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&w=800&q=80';
+  }
+
+  const { primaryColor, secondaryColor, accentColor, textColor } = book.coverStyle;
+
+  // 1. Rich Background Gradient
+  const bgGrad = ctx.createLinearGradient(0, 0, 512, 768);
+  bgGrad.addColorStop(0, primaryColor);
+  bgGrad.addColorStop(0.5, secondaryColor);
+  bgGrad.addColorStop(1, primaryColor);
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, 512, 768);
+
+  // 2. Geometric patterned watermark
+  ctx.save();
+  ctx.strokeStyle = accentColor;
+  ctx.lineWidth = 1.5;
+  ctx.globalAlpha = 0.15;
+  for (let i = 0; i < 6; i++) {
+    ctx.beginPath();
+    ctx.arc(256, 384, 110 + i * 40, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // 3. Ornate Decorative Gilded Borders
+  ctx.save();
+  ctx.strokeStyle = accentColor || '#e5b364';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(18, 18, 476, 732);
+
+  ctx.lineWidth = 2;
+  ctx.strokeRect(30, 30, 452, 708);
+
+  // Corner ornaments
+  const corners = [
+    [18, 18],
+    [494, 18],
+    [18, 750],
+    [494, 750]
+  ];
+  ctx.fillStyle = accentColor || '#e5b364';
+  corners.forEach(([cx, cy]) => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.restore();
+
+  // 4. Header: Ministry of Education Banner
+  ctx.save();
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+  ctx.beginPath();
+  ctx.roundRect(70, 48, 372, 42, 8);
+  ctx.fill();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = 'bold 13px "Noto Sans Arabic", "Amiri", sans-serif';
+  ctx.fillText('الجمهورية التونسية • وزارة التربية والتعليم', 256, 69);
+  ctx.restore();
+
+  // 5. Subject Badge Pill
+  ctx.save();
+  ctx.fillStyle = accentColor || '#e5b364';
+  ctx.beginPath();
+  ctx.roundRect(146, 135, 220, 34, 17);
+  ctx.fill();
+
+  ctx.fillStyle = '#1e140d';
+  ctx.font = 'bold 15px "Noto Sans Arabic", "Amiri", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const subjectName = book.subject[lang] || book.subject.ar;
+  ctx.fillText(subjectName, 256, 152);
+  ctx.restore();
+
+  // 6. Main Book Title
+  ctx.save();
+  ctx.fillStyle = textColor || '#ffffff';
+  ctx.font = 'bold 40px "Amiri", "Noto Sans Arabic", serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetY = 4;
+  const titleText = book.title[lang] || book.title.ar;
+  ctx.fillText(titleText, 256, 260);
+
+  // Subtitle
+  if (book.subtitle) {
+    ctx.font = '600 17px "Amiri", "Noto Sans Arabic", sans-serif';
+    ctx.fillStyle = accentColor || '#e5b364';
+    const subText = book.subtitle[lang] || book.subtitle.ar;
+    ctx.fillText(subText, 256, 305);
+  }
+  ctx.restore();
+
+  // 7. Center Educational Emblem / Medallion
+  ctx.save();
+  ctx.translate(256, 435);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+  ctx.beginPath();
+  ctx.arc(0, 0, 85, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = accentColor || '#e5b364';
+  ctx.lineWidth = 3.5;
+  ctx.stroke();
+
+  ctx.fillStyle = accentColor || '#e5b364';
+  ctx.font = '46px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('📖', 0, -8);
+
+  ctx.font = 'bold 13px sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(book.isbn.substring(book.isbn.length - 4), 0, 36);
+  ctx.restore();
+
+  // 8. Author & Committee Credits
+  ctx.save();
+  ctx.fillStyle = '#e2e8f0';
+  ctx.font = '16px "Noto Sans Arabic", sans-serif';
+  ctx.textAlign = 'center';
+  const authorName = book.author[lang] || book.author.ar;
+  ctx.fillText(authorName, 256, 615);
+
+  // 9. Academic Year & Certification Stamp
+  ctx.font = '12px sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText(`السنة الدراسية ${book.publishYear} - ${book.publishYear + 1}`, 256, 648);
+
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+  ctx.beginPath();
+  ctx.roundRect(156, 672, 200, 26, 6);
+  ctx.fill();
+  ctx.fillStyle = '#f8fafc';
+  ctx.font = 'bold 11px "Noto Sans Arabic", sans-serif';
+  ctx.fillText('كتاب مدرسي مصادق عليه رسمياً', 256, 685);
+  ctx.restore();
+
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+  coverDataUrlCache.set(cacheKey, dataUrl);
+  return dataUrl;
+}
 
 export function bookToCarouselItem(book: Book, lang: Language): GlassyCarouselItem {
   const title = book.title[lang] || book.title.ar;
-  const subtitle = `${book.subject[lang] || book.subject.ar} · ${book.price} ${book.currency[lang] || book.currency.ar}`;
+  const subtitle = `${book.subject[lang] || book.subject.ar} · ${book.price.toFixed(3)} ${book.currency[lang] || book.currency.ar}`;
   const description = book.synopsis[lang] || book.synopsis.ar;
-  const image = BOOK_COVER_IMAGES[book.id] || DEFAULT_COVER_IMAGE;
+  const image = generateBookCoverDataUrl(book, lang);
   const accent = book.coverStyle.accentColor || book.coverStyle.primaryColor || '#e5b364';
 
   return {
