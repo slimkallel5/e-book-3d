@@ -179,11 +179,12 @@ export const App: React.FC = () => {
             position: 'absolute',
             top: '74px',
             bottom: '76px',
-            left: 'clamp(280px, 32%, 520px)',
-            right: '24px',
+            left: 'clamp(380px, 42%, 660px)',
+            right: '28px',
             zIndex: 10,
             display: 'flex',
             flexDirection: 'column',
+            paddingLeft: '36px',
             pointerEvents: 'none'
           }}
         >
@@ -320,8 +321,10 @@ export const App: React.FC = () => {
               layout="poster"
               initialIndex={Math.min(carouselActiveIndex, carouselItems.length - 1)}
               autoPlay={false}
+              hideControls={true}
               label={language === 'ar' ? 'معرض الكتب المدرسية' : language === 'fr' ? 'Collection de manuels' : 'Textbook Collection'}
               onSelect={handleSelectCarouselItem}
+              onItemClick={(item) => selectBook(item.id)}
               style={{
                 height: '100%',
                 maxHeight: '100%',

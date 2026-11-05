@@ -41,6 +41,8 @@ export interface GlassyCarouselProps {
   interval?: number;
   /** Timed advance. Default false; updates when changed. Pauses for hover, card focus, dragging, open preview, hidden page and OS reduced motion. */
   autoPlay?: boolean;
+  /** Hide the bottom dock navigation buttons so navigation is mouse-only (drag/swipe/click). */
+  hideControls?: boolean;
   /** Accessible name of the region. Default Media collection. */
   label?: string;
   /** Extra class on the component root. */
@@ -51,6 +53,8 @@ export interface GlassyCarouselProps {
   brand?: { image: string; lightImage?: string; alt: string; href?: string };
   /** Called with the selected record and its zero-based index. */
   onSelect?: (item: GlassyCarouselItem, index: number) => void;
+  /** Called when any card is clicked. */
+  onItemClick?: (item: GlassyCarouselItem, index: number) => void;
 }
 
 const wrap = (value: number, length: number) => ((value % length) + length) % length;
@@ -70,7 +74,7 @@ function trailerEmbed(url?: string) {
   } catch { return undefined; }
 }
 
-export default function GlassyCarousel({ items, initialIndex = 0, layout = "website", interval = 6000, autoPlay = false, label = "Media collection", className = "", style, brand, onSelect }: GlassyCarouselProps) {
+export default function GlassyCarousel({ items, initialIndex = 0, layout = "website", interval = 6000, autoPlay = false, hideControls = false, label = "Media collection", className = "", style, brand, onSelect, onItemClick }: GlassyCarouselProps) {
   const [index, setIndex] = useState(Number.isFinite(initialIndex) ? Math.trunc(initialIndex) : 0);
   const [playing, setPlaying] = useState(autoPlay);
   const [reduced, setReduced] = useState(false);
@@ -210,7 +214,14 @@ export default function GlassyCarousel({ items, initialIndex = 0, layout = "webs
         return <button key={slot} type="button" className="gc-card" data-active={selected || undefined} tabIndex={selected ? 0 : -1}
           aria-label={selected ? (item.trailerUrl ? `Watch ${item.title} trailer` : `Preview ${item.title}`) : `Select ${item.title}`} aria-current={selected ? "true" : undefined}
           aria-hidden={(d < -before || d > after) || undefined}
-          onClick={() => { if (performance.now() < suppressClickUntil.current) return; selected ? open(item) : select(index + d); }}
+          onClick={() => {
+            if (performance.now() < suppressClickUntil.current) return;
+            if (onItemClick) {
+              onItemClick(item, wrap(slot, items.length));
+              return;
+            }
+            selected ? open(item) : select(index + d);
+          }}
           style={{
             transform: `translate3d(${x}px, 0, ${-Math.min(abs, 3) * 130}px) rotateY(${-Math.max(-42, Math.min(42, offset * 30))}deg) scale(${1 - Math.min(abs, 3) * .08})`,
             opacity: (d < -before || d > after) ? 0 : 1,
@@ -230,14 +241,16 @@ export default function GlassyCarousel({ items, initialIndex = 0, layout = "webs
     </div>
     <div className="gc-bottom">
       <div className="gc-active-info"><h2>{active.title}</h2><p>{active.subtitle}</p></div>
-      <div className="gc-dock" role="group" aria-label="Carousel controls">
-        <span className="gc-position" aria-hidden="true"><span>{String(activeIndex + 1).padStart(2, "0")}</span><span>/</span><span>{String(items.length).padStart(2, "0")}</span></span>
-        <div className="gc-transport">
-          <button type="button" onClick={() => select(index - 1)} aria-label="Previous slide" disabled={items.length < 2}><ChevronLeft size={19} /></button>
-          <button type="button" className="gc-play-toggle" onClick={() => setPlaying(value => !value)} aria-label={playing ? "Pause carousel" : "Play carousel"} aria-pressed={playing} disabled={reduced || items.length < 2}>{playing ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}</button>
-          <button type="button" onClick={() => select(index + 1)} aria-label="Next slide" disabled={items.length < 2}><ChevronRight size={19} /></button>
+      {!hideControls && (
+        <div className="gc-dock" role="group" aria-label="Carousel controls">
+          <span className="gc-position" aria-hidden="true"><span>{String(activeIndex + 1).padStart(2, "0")}</span><span>/</span><span>{String(items.length).padStart(2, "0")}</span></span>
+          <div className="gc-transport">
+            <button type="button" onClick={() => select(index - 1)} aria-label="Previous slide" disabled={items.length < 2}><ChevronLeft size={19} /></button>
+            <button type="button" className="gc-play-toggle" onClick={() => setPlaying(value => !value)} aria-label={playing ? "Pause carousel" : "Play carousel"} aria-pressed={playing} disabled={reduced || items.length < 2}>{playing ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}</button>
+            <button type="button" onClick={() => select(index + 1)} aria-label="Next slide" disabled={items.length < 2}><ChevronRight size={19} /></button>
+          </div>
         </div>
-      </div>
+      )}
       <p className="gc-hint"><span>Drag to explore</span><span className="gc-hint-separator">or</span><ArrowLeft size={12} /><ArrowRight size={12} /><span>to browse</span></p>
     </div>
     <p className="gc-sr-only" aria-live="polite" aria-atomic="true">{!playing && `${active.title}. ${activeIndex + 1} of ${items.length}.`}</p>
