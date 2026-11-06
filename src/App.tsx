@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { LibraryScene } from './scenes/LibraryScene';
 import { WebGLFallback } from './components/ui/WebGLFallback';
-import { BookDetailOverlay } from './components/book/BookDetailOverlay';
+import { BookReader } from './components/reader/BookReader';
 import { Header } from './components/navigation/Header';
 import { SearchModal } from './components/navigation/SearchModal';
 import { BasketDrawer } from './components/basket/BasketDrawer';
@@ -158,7 +158,7 @@ export const App: React.FC = () => {
             depth: true
           }}
           onCreated={({ gl }) => {
-            gl.setClearColor('#0a0d12');
+            gl.setClearColor('#f3ebdd');
           }}
         >
           <LibraryScene />
@@ -338,9 +338,9 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {/* Book Inspection & Reading HUD Overlay */}
+      {/* Direct 3D Book Reader Presentation */}
       {selectedBookId && (viewMode === 'book-detail' || viewMode === 'book-open') && (
-        <BookDetailOverlay onAddBookWithAnimation={handleAddBookWithAnimation} />
+        <BookReader onClose={() => selectBook(null)} />
       )}
 
       {/* Flying Miniature Book Effect */}

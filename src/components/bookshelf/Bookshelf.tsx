@@ -21,12 +21,13 @@ export const Bookshelf: React.FC<BookshelfProps> = React.memo(({
   const innerWidth = cfg.shelfWidth;
   const totalW = cfg.totalWidth;
 
-  // Wood color palette for realistic premium furniture
-  const woodDark = '#382014'; // Dark walnut
-  const woodMedium = '#693a1f'; // Rich warm walnut carcass
-  const woodWarm = '#945629'; // Warm illuminated wood highlights
+  // Brighter, warmer natural wood palette:
+  // Light oak, natural honey wood, warm walnut, soft golden brass and subtle shadow accents
+  const woodMedium = '#c99a62'; // Natural honey wood carcass
+  const woodWarm = '#a8794d'; // Warm walnut accents
+  const woodDark = '#806044'; // Soft natural wood shadow
   const brassGold = '#e9a743'; // Golden amber & brass
-  const darkRecess = '#21140f'; // Dark architectural shadow recesses
+  const darkRecess = '#5c3e29'; // Softer, lighter architectural shadow recesses
 
   return (
     <group name="bookshelf-assembly" position={position} rotation={rotation}>
@@ -120,10 +121,10 @@ export const Bookshelf: React.FC<BookshelfProps> = React.memo(({
           3. SOLID RECESSED WOODEN BACKBOARD WITH VERTICAL WAINSCOT SLATS
           ========================================================================= */}
       <group position={[0, 0.75, cfg.backPanelDepthOffset]}>
-        {/* Main Solid Backing Board */}
+        {/* Main Solid Backing Board (Warm honey wood backdrop) */}
         <mesh receiveShadow position={[0, 0, 0]}>
           <boxGeometry args={[innerWidth + 0.1, cfg.sidePanelHeight, cfg.backPanelThickness]} />
-          <meshStandardMaterial color={woodDark} roughness={0.85} metalness={0.05} />
+          <meshStandardMaterial color={woodMedium} roughness={0.7} metalness={0.06} />
         </mesh>
 
         {/* Subtle Vertical Paneling Grooves for realistic craftsman look */}

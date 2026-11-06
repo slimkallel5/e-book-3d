@@ -113,9 +113,9 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
       set({
         selectedBookId: bookId,
         activeLevelId: book.educationLevelId,
-        isBookOpen: false,
+        isBookOpen: true,
         currentBookPage: 0,
-        viewMode: 'book-detail'
+        viewMode: 'book-open'
       });
     }
   },
