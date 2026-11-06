@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Group } from 'three';
-import { useFrame } from '@react-three/fiber';
+
 import { Text } from '@react-three/drei';
 import { Book } from '../../types/book';
 import { useLibraryStore } from '../../store/useLibraryStore';
@@ -19,7 +19,7 @@ interface BookshelfBookItemProps {
   isSelected: boolean;
 }
 
-export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
+export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = React.memo(({
   book,
   position,
   worldPosition,
@@ -34,16 +34,7 @@ export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
 
   const { height, depth, width } = dimensions;
 
-  // Book remains on its shelf without jumping or moving out
-  useFrame(() => {
-    if (meshRef.current) {
-      if (isSelected) {
-        meshRef.current.visible = false;
-      } else {
-        meshRef.current.visible = true;
-      }
-    }
-  });
+
 
   const handlePointerEnter = (e: any) => {
     e.stopPropagation();
@@ -74,6 +65,7 @@ export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
     <group
       ref={meshRef}
       position={position}
+      visible={!isSelected}
       onClick={(e) => {
         e.stopPropagation();
         // Hovering is preview; clicking selects book
@@ -83,7 +75,7 @@ export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
       onPointerOut={handlePointerLeave}
     >
       {/* 1. Main Book Interior Pages (recessed with warm archival paper tone) */}
-      <mesh castShadow receiveShadow position={[0, height / 2, -0.02]}>
+      <mesh  receiveShadow position={[0, height / 2, -0.02]}>
         <boxGeometry args={[depth * 0.88, height * 0.94, width * 0.95]} />
         <meshStandardMaterial
           color="#fbf7ec"
@@ -99,7 +91,7 @@ export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
       </mesh>
 
       {/* 2. Book Spine Facing the Viewer */}
-      <mesh castShadow receiveShadow position={[0, height / 2, width / 2]}>
+      <mesh  receiveShadow position={[0, height / 2, width / 2]}>
         <boxGeometry args={[depth, height, 0.04]} />
         <meshStandardMaterial
           color={hovered ? book.coverStyle.accentColor : book.coverStyle.spineColor}
@@ -110,7 +102,7 @@ export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
 
       {/* 3. Book Front & Back Hardcovers */}
       {/* Front cover */}
-      <mesh castShadow position={[-depth / 2, height / 2, 0]}>
+      <mesh  position={[-depth / 2, height / 2, 0]}>
         <boxGeometry args={[0.025, height, width]} />
         <meshStandardMaterial
           color={book.coverStyle.primaryColor}
@@ -119,7 +111,7 @@ export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
         />
       </mesh>
       {/* Back cover */}
-      <mesh castShadow position={[depth / 2, height / 2, 0]}>
+      <mesh  position={[depth / 2, height / 2, 0]}>
         <boxGeometry args={[0.025, height, width]} />
         <meshStandardMaterial
           color={book.coverStyle.secondaryColor}
@@ -189,4 +181,4 @@ export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
       )}
     </group>
   );
-};
+});

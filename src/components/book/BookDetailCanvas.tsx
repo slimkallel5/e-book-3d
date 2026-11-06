@@ -74,7 +74,8 @@ const InteractiveBookMesh: React.FC<{ book: Book }> = ({ book }) => {
   useFrame(() => {
     if (!groupRef.current) return;
 
-    if (!isDragging) {
+    const hasInertia = Math.abs(rotationVelocity.current.x) > 0.0001 || Math.abs(rotationVelocity.current.y) > 0.0001;
+    if (!isDragging && hasInertia) {
       userRotation.current.x += rotationVelocity.current.x;
       userRotation.current.y += rotationVelocity.current.y;
       rotationVelocity.current.x *= 0.94;

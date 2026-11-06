@@ -17,7 +17,7 @@ interface BookshelfRowProps {
   rowWidth?: number;
 }
 
-export const BookshelfRow: React.FC<BookshelfRowProps> = ({
+export const BookshelfRow: React.FC<BookshelfRowProps> = React.memo(({
   level,
   books,
   shelfIndex,
@@ -37,7 +37,9 @@ export const BookshelfRow: React.FC<BookshelfRowProps> = ({
   const plankDepth = cfg.shelfDepth;
 
   // Compute dynamic book placements with guaranteed vertical clearance and horizontal spacing
-  const rowBookItems = calculateRowBooksLayout(books, shelfIndex);
+  const rowBookItems = React.useMemo(() => {
+    return calculateRowBooksLayout(books, shelfIndex);
+  }, [books, shelfIndex]);
 
   return (
     <group position={[0, yPosition, 0]}>
@@ -178,4 +180,4 @@ export const BookshelfRow: React.FC<BookshelfRowProps> = ({
       })}
     </group>
   );
-};
+});

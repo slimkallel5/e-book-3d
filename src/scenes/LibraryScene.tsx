@@ -62,24 +62,34 @@ export const LibraryScene: React.FC = () => {
   // Camera is strictly and completely fixed at the normal overview framing.
   // Requirement: Selecting a shelf, selecting an education level, or selecting a book MUST NOT ZOOM.
   // The library camera maintains exactly the same position, perspective, scale and framing throughout.
+  const targetPos = React.useMemo(() => new THREE.Vector3(
+    isMobile ? 0 : isTablet ? 0.6 : 0.5,
+    0.6,
+    isMobile ? 24.0 : isTablet ? 18.5 : 16.5
+  ), [isMobile, isTablet]);
+
+  const targetLook = React.useMemo(() => new THREE.Vector3(
+    isMobile ? 0 : isTablet ? -1.0 : 0.8,
+    0.2,
+    0
+  ), [isMobile, isTablet]);
+
+  const cameraSettled = useRef(false);
+
+  React.useEffect(() => {
+    cameraSettled.current = false;
+  }, [targetPos, targetLook]);
+
   useFrame(() => {
-    if (!cameraRef.current) return;
+    if (!cameraRef.current || cameraSettled.current) return;
 
-    // Fixed overview positioning:
-    // Bookshelf is anchored within the left 33% of the viewport,
-    // and the remaining 67% provides the library reading hall & 3D carousel presentation area.
-    const targetPos = new THREE.Vector3(
-      isMobile ? 0 : isTablet ? 0.6 : 0.5,
-      0.6,
-      isMobile ? 24.0 : isTablet ? 18.5 : 16.5
-    );
-    const targetLook = new THREE.Vector3(
-      isMobile ? 0 : isTablet ? -1.0 : 0.8,
-      0.2,
-      0
-    );
+    if (cameraRef.current.position.distanceToSquared(targetPos) < 0.0001) {
+      cameraRef.current.position.copy(targetPos);
+      cameraRef.current.lookAt(targetLook);
+      cameraSettled.current = true;
+      return;
+    }
 
-    // Keep camera fixed without zoom or dolly
     cameraRef.current.position.lerp(targetPos, 0.08);
     cameraRef.current.lookAt(targetLook);
   });
@@ -117,7 +127,6 @@ export const LibraryScene: React.FC = () => {
             intensity={viewMode === 'book-detail' || viewMode === 'book-open' ? 2.5 : 0}
             angle={0.65}
             penumbra={0.7}
-            castShadow
             color="#fffbeb"
           />
           <Book3D book={selectedBook} shelfPosition={shelfPosition} />

@@ -64,13 +64,15 @@ export const BookHoverPreview: React.FC = () => {
       groupRef.current.scale.setScalar(nextScale);
       groupRef.current.visible = true;
     } else {
-      // Scale down smoothly towards 0
+      if (!groupRef.current.visible && groupRef.current.scale.x === 0) return;
       const currentScale = groupRef.current.scale.x;
       const nextScale = THREE.MathUtils.lerp(currentScale, 0, 0.22);
-      groupRef.current.scale.setScalar(nextScale);
 
       if (nextScale < 0.01) {
+        groupRef.current.scale.setScalar(0);
         groupRef.current.visible = false;
+      } else {
+        groupRef.current.scale.setScalar(nextScale);
       }
     }
   });

@@ -175,11 +175,37 @@ export function generateBookCoverDataUrl(book: Book, lang: Language = 'ar'): str
   return dataUrl;
 }
 
-export function bookToCarouselItem(book: Book, lang: Language): GlassyCarouselItem {
+function generatePlaceholderCoverSvg(book: Book): string {
+  const { primaryColor, secondaryColor, accentColor } = book.coverStyle;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768">
+    <defs>
+      <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="${primaryColor}"/>
+        <stop offset="60%" stop-color="${secondaryColor}"/>
+        <stop offset="100%" stop-color="${primaryColor}"/>
+      </linearGradient>
+    </defs>
+    <rect width="512" height="768" fill="url(#bg)"/>
+    <rect x="20" y="20" width="472" height="728" fill="none" stroke="${accentColor || '#e5b364'}" stroke-width="6"/>
+    <rect x="30" y="30" width="452" height="708" fill="none" stroke="${accentColor || '#e5b364'}" stroke-width="2"/>
+    <circle cx="256" cy="384" r="80" fill="rgba(255,255,255,0.08)" stroke="${accentColor || '#e5b364'}" stroke-width="2"/>
+  </svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+export function bookToCarouselItem(book: Book, lang: Language, lazyCover = false): GlassyCarouselItem {
   const title = book.title[lang] || book.title.ar;
   const subtitle = `${book.subject[lang] || book.subject.ar} · ${book.price.toFixed(3)} ${book.currency[lang] || book.currency.ar}`;
   const description = book.synopsis[lang] || book.synopsis.ar;
-  const image = generateBookCoverDataUrl(book, lang);
+  const cacheKey = `${book.id}_${lang}`;
+  let image: string;
+  if (coverDataUrlCache.has(cacheKey)) {
+    image = coverDataUrlCache.get(cacheKey)!;
+  } else if (lazyCover) {
+    image = generatePlaceholderCoverSvg(book);
+  } else {
+    image = generateBookCoverDataUrl(book, lang);
+  }
   const accent = book.coverStyle.accentColor || book.coverStyle.primaryColor || '#e5b364';
 
   return {

@@ -207,6 +207,7 @@ export default function GlassyCarousel({ items, initialIndex = 0, layout = "webs
       {slots.map(slot => {
         const item = items[wrap(slot, items.length)];
         const d = slot - index;
+        if (d < -before - 1 || d > after + 1) return null;
         const offset = d + drag;
         const abs = Math.abs(offset);
         const x = offset * step;
@@ -231,7 +232,7 @@ export default function GlassyCarousel({ items, initialIndex = 0, layout = "webs
             "--gc-shade": Math.min(abs, 2) * .19,
           } as CSSProperties}>
           {layout === "website" && <span className="gc-browser-bar" aria-hidden="true"><span className="gc-browser-dots"><i /><i /><i /></span><span>{projectDomain(item.href)}</span><Maximize2 size={10} /></span>}
-          <span className="gc-poster"><img src={item.image} alt={`${item.title} ${layout === "poster" ? "poster" : "website preview"}`} draggable={false} loading={Math.abs(d) < 2 ? "eager" : "lazy"} />
+          <span className="gc-poster"><img src={item.image} alt={`${item.title} ${layout === "poster" ? "poster" : "website preview"}`} draggable={false} loading={Math.abs(d) < 2 ? "eager" : "lazy"} decoding="async" />
             <span className="gc-poster-shade" aria-hidden="true" />
             {item.trailerUrl && <span className="gc-watch" aria-hidden="true"><Play size={13} fill="currentColor" strokeWidth={0} /> Watch trailer</span>}
           </span>

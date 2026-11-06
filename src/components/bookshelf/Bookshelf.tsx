@@ -9,9 +9,13 @@ interface BookshelfProps {
   rotation?: [number, number, number];
 }
 
-export const Bookshelf: React.FC<BookshelfProps> = ({
-  position = [0, 0, 0],
-  rotation = [0, 0, 0]
+const defaultPosition: [number, number, number] = [0, 0, 0];
+const defaultRotation: [number, number, number] = [0, 0, 0];
+
+export const Bookshelf: React.FC<BookshelfProps> = React.memo(({
+  position = defaultPosition,
+  rotation = defaultRotation
+
 }) => {
   const cfg = BOOKSHELF_CONFIG;
   const innerWidth = cfg.shelfWidth;
@@ -212,4 +216,4 @@ export const Bookshelf: React.FC<BookshelfProps> = ({
       })}
     </group>
   );
-};
+});
