@@ -84,8 +84,9 @@ export const LibraryEnvironment: React.FC = () => {
         intensity={3.8}
         color="#fff1d6"
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-bias={-0.0001}
       />
 
       {/* Warm ambient fill light throughout reading hall to prevent dark voids */}
@@ -355,11 +356,11 @@ export const LibraryEnvironment: React.FC = () => {
             </mesh>
             {/* Colorful background book spines */}
             {[-1.6, -1.2, -0.8, -0.4, 0.0, 0.4, 0.8, 1.2, 1.6].map((bx, bIdx) => (
-              <mesh key={`bg-book-${sIdx}-${bIdx}`} position={[bx, 0.45, 0]} castShadow>
+              <mesh key={`bg-book-${sIdx}-${bIdx}`} position={[bx, 0.45, 0]}>
                 <boxGeometry args={[0.26, 0.8, 0.35]} />
                 <meshStandardMaterial
                   color={['#a83232', '#2a5a8c', '#2f7543', '#c98a2c', '#6d3c8c', '#8c482a'][(sIdx + bIdx) % 6]}
-                  roughness={0.4}
+                  roughness={0.5}
                 />
               </mesh>
             ))}

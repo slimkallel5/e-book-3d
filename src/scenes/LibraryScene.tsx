@@ -6,6 +6,7 @@ import { useLibraryStore } from '../store/useLibraryStore';
 import { LibraryEnvironment } from '../components/library/LibraryEnvironment';
 import { Bookshelf } from '../components/bookshelf/Bookshelf';
 import { Book3D } from '../components/book/Book3D';
+import { BookHoverPreview } from '../components/book/BookHoverPreview';
 import { EDUCATION_LEVELS } from '../data/educationLevels';
 import { BOOKS_DATA } from '../data/books';
 import {
@@ -20,7 +21,6 @@ export const LibraryScene: React.FC = () => {
   const { viewport } = useThree();
 
   const viewMode = useLibraryStore((s) => s.viewMode);
-  const activeLevelId = useLibraryStore((s) => s.activeLevelId);
   const selectedBookId = useLibraryStore((s) => s.selectedBookId);
 
   const selectedBook = BOOKS_DATA.find((b) => b.id === selectedBookId);
@@ -59,51 +59,28 @@ export const LibraryScene: React.FC = () => {
     return [shelfTransform.position[0], getShelfY(shelfIndex), shelfTransform.position[2]];
   }, [selectedBook, shelfTransform]);
 
-  // Smooth, stable, fixed camera transitions strictly based on application state
-  // Absolutely NO mouse movement or OrbitControls dragging
+  // Camera is strictly and completely fixed at the normal overview framing.
+  // Requirement: Selecting a shelf, selecting an education level, or selecting a book MUST NOT ZOOM.
+  // The library camera maintains exactly the same position, perspective, scale and framing throughout.
   useFrame(() => {
     if (!cameraRef.current) return;
 
-    // Overview positioning:
-    // Bookshelf center is placed at X = -6.8 with 0.38 rad rotation,
-    // camera at X = 0.5, Z = 16.5, looking towards (0.8, 0.2, 0).
-    // This perfectly places the bookshelf strictly within the left 33% of the viewport,
-    // and devotes the entire remaining 67% to the expansive, luxurious library reading hall!
-    let targetPos = new THREE.Vector3(
+    // Fixed overview positioning:
+    // Bookshelf is anchored within the left 33% of the viewport,
+    // and the remaining 67% provides the library reading hall & 3D carousel presentation area.
+    const targetPos = new THREE.Vector3(
       isMobile ? 0 : isTablet ? 0.6 : 0.5,
       0.6,
       isMobile ? 24.0 : isTablet ? 18.5 : 16.5
     );
-    let targetLook = new THREE.Vector3(
+    const targetLook = new THREE.Vector3(
       isMobile ? 0 : isTablet ? -1.0 : 0.8,
       0.2,
       0
     );
 
-    if (viewMode === 'shelf') {
-      const level = EDUCATION_LEVELS.find((l) => l.id === activeLevelId);
-      const shelfIndex = level ? level.shelfIndex : 0;
-      const shelfY = getShelfY(shelfIndex);
-
-      const shelfCamZ = isMobile ? 8.2 : isTablet ? 7.2 : 6.8;
-      targetPos = new THREE.Vector3(
-        isMobile ? 0 : isTablet ? -1.0 : -0.8,
-        shelfY + 0.35,
-        shelfCamZ
-      );
-      targetLook = new THREE.Vector3(
-        isMobile ? 0 : isTablet ? -2.0 : -2.8,
-        shelfY + 0.35,
-        shelfTransform.position[2]
-      );
-    } else if (viewMode === 'book-detail' || viewMode === 'book-open') {
-      // Camera centers clearly onto the inspected book
-      targetPos = new THREE.Vector3(0, -0.05, 4.0);
-      targetLook = new THREE.Vector3(0, -0.05, 0.5);
-    }
-
-    // Smooth exponential damping interpolation to stable target
-    cameraRef.current.position.lerp(targetPos, 0.06);
+    // Keep camera fixed without zoom or dolly
+    cameraRef.current.position.lerp(targetPos, 0.08);
     cameraRef.current.lookAt(targetLook);
   });
 
@@ -126,6 +103,9 @@ export const LibraryScene: React.FC = () => {
         position={shelfTransform.position}
         rotation={[0, shelfTransform.rotationY, 0]}
       />
+
+      {/* Book Hover Preview Poster Card */}
+      <BookHoverPreview />
 
       {/* Selected 3D Book instance transitioning to center */}
       {selectedBook && (

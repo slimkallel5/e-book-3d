@@ -1,7 +1,9 @@
 import { Book } from '../types/book';
 
 export const BOOKS_DATA: Book[] = [
+  // ==========================================
   // 1AP - Primary 1
+  // ==========================================
   {
     id: 'book-1ap-arabic',
     educationLevelId: 'primary-1',
@@ -53,33 +55,6 @@ export const BOOKS_DATA: Book[] = [
           ar: 'أَنَا أَسَدٌ، أَرْنَبٌ يَجْرِي، بَيْتٌ جَمِيلٌ. رَدِّدْ مَعَ مُعَلِّمِكَ بِصَوْتٍ عَالٍ.',
           fr: 'Découverte des phonèmes initiaux avec illustrations vivantes et exercices guidés.',
           en: 'Phonics discovery with bright illustrations and guided interactive reading exercises.'
-        }
-      },
-      {
-        pageNumber: 2,
-        title: { ar: 'تمارين التهجئة', fr: 'Exercices de syllabes', en: 'Spelling Exercises' },
-        content: {
-          ar: 'صِلْ بَيْنَ الْحَرْفِ وَالصُّورَةِ الْمُنَاسِبَةِ: (بَـ) بَطَّةٌ - (تَـ) تُفَّاحَةٌ.',
-          fr: 'Associe la lettre à l’image correspondante pour enrichir ton vocabulaire.',
-          en: 'Match letters with corresponding vibrant illustrations to expand vocabulary.'
-        }
-      },
-      {
-        pageNumber: 3,
-        title: { ar: 'قصة الأرنب والسلحفاة', fr: 'Le Lièvre et la Tortue', en: 'The Hare & The Tortoise' },
-        content: {
-          ar: 'كَانَ يَا مَكَانَ، فِي قَدِيمِ الزَّمَانِ، أَرْنَبٌ مَغْرُورٌ يَتَبَاهَى بِسُرْعَتِهِ الْفَائِقَةِ.',
-          fr: 'Conte moral classique invitant les élèves à la persévérance et au travail régulier.',
-          en: 'Classic moral fable inspiring perseverance, patience, and joyful dedication.'
-        }
-      },
-      {
-        pageNumber: 4,
-        title: { ar: 'أنشطة الفهم والتركيب', fr: 'Compréhension du texte', en: 'Comprehension & Activities' },
-        content: {
-          ar: 'أَجِبْ عَنِ الأَسْئِلَةِ: مَنْ فَازَ فِي السِّبَاقِ؟ وَمَاذَا تَعَلَّمْتَ مِنَ الْقِصَّةِ؟',
-          fr: 'Questions guidées pour valider la mémorisation et la réflexion critique de l’élève.',
-          en: 'Guided discussion questions evaluating critical thinking and reading mastery.'
         }
       }
     ]
@@ -194,8 +169,120 @@ export const BOOKS_DATA: Book[] = [
       }
     ]
   },
+  {
+    id: 'book-1ap-islamic',
+    educationLevelId: 'primary-1',
+    title: {
+      ar: 'في رحاب التربية الإسلامية',
+      fr: 'Éducation Islamique 1AP',
+      en: 'Foundations of Islamic Education 1'
+    },
+    subtitle: {
+      ar: 'القرآن الكريم والآداب والأخلاق الحميدة',
+      fr: 'Coran, bonnes manières et valeurs morales',
+      en: 'Holy Quran, moral etiquette, and virtuous values'
+    },
+    author: {
+      ar: 'د. عبد الجليل التازي',
+      fr: 'Dr. Abdeljalil Tazi',
+      en: 'Dr. Abdeljalil Tazi'
+    },
+    subject: {
+      ar: 'التربية الإسلامية',
+      fr: 'Éducation Islamique',
+      en: 'Islamic Education'
+    },
+    isbn: '978-9954-1-0104-3',
+    publishYear: 2024,
+    price: 28.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.9,
+    pagesCount: 112,
+    coverStyle: {
+      primaryColor: '#15803d',
+      secondaryColor: '#166534',
+      spineColor: '#14532d',
+      accentColor: '#86efac',
+      pattern: 'classic',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.26 },
+    synopsis: {
+      ar: 'قصص نبوية مبسطة وآيات قرآنية قصيرة تغرس المحبة والتسامح واحترام الوالدين.',
+      fr: 'Courtes sourates et récits prophétiques bienveillants favorisant le respect et l’entraide.',
+      en: 'Gentle prophetic stories and short Quranic verses nurturing kindness, respect, and love.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'سورة الفاتحة', fr: 'Sourate Al-Fatiha', en: 'Surah Al-Fatiha' },
+        content: {
+          ar: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ. الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ.',
+          fr: 'Récitation rythmée et méditation sur la bienveillance divine.',
+          en: 'Rhythmic recitation cultivating reflection on divine grace and mercy.'
+        }
+      }
+    ]
+  },
+  {
+    id: 'book-1ap-art',
+    educationLevelId: 'primary-1',
+    title: {
+      ar: 'عالم الفنون التشكيلية',
+      fr: 'L’Atelier des Arts Visuels',
+      en: 'Visual Arts Workshop 1'
+    },
+    subtitle: {
+      ar: 'الألوان الأساسية والرسم والتشكيل بالصلصال',
+      fr: 'Couleurs primaires, dessin et modelage',
+      en: 'Primary colors, drawing and clay sculpting'
+    },
+    author: {
+      ar: 'فاطمة بناني ونخبة الفنانين',
+      fr: 'Fatima Bennani et artistes enseignants',
+      en: 'Fatima Bennani & Art Educators'
+    },
+    subject: {
+      ar: 'التربية التشكيلية',
+      fr: 'Arts Plastiques',
+      en: 'Visual Arts'
+    },
+    isbn: '978-9954-1-0105-0',
+    publishYear: 2024,
+    price: 34.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.8,
+    pagesCount: 88,
+    coverStyle: {
+      primaryColor: '#c026d3',
+      secondaryColor: '#a21caf',
+      spineColor: '#701a75',
+      accentColor: '#f0abfc',
+      pattern: 'modern',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.24 },
+    synopsis: {
+      ar: 'أنشطة يدوية مبتكرة ورسم حر بالألوان المائية لتطوير الحس الإبداعي والخيال الفني لدى الطفل.',
+      fr: 'Activités manuelles et dessin libre pour développer la créativité et la motricité fine.',
+      en: 'Creative crafts and watercolor painting sessions encouraging artistic imagination.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'مزج الألوان الأساسية', fr: 'Mélanger les couleurs', en: 'Mixing Primary Colors' },
+        content: {
+          ar: 'الأزرق + الأصفر = الأخضر! جرّب مزج الألوان بفرشاتك وشاهد السحر.',
+          fr: 'Bleu + Jaune = Vert ! Expérimente les mélanges avec tes pinceaux.',
+          en: 'Blue + Yellow = Green! Experiment with paints and observe the vibrant blends.'
+        }
+      }
+    ]
+  },
 
+  // ==========================================
   // 2AP - Primary 2
+  // ==========================================
   {
     id: 'book-2ap-french',
     educationLevelId: 'primary-2',
@@ -306,8 +393,120 @@ export const BOOKS_DATA: Book[] = [
       }
     ]
   },
+  {
+    id: 'book-2ap-math',
+    educationLevelId: 'primary-2',
+    title: {
+      ar: 'الجيد في الرياضيات 2',
+      fr: 'Mathématiques Pratiques 2AP',
+      en: 'Mastering Elementary Math 2'
+    },
+    subtitle: {
+      ar: 'الجمع بالاحتفاظ، الطرح، والأشكال الهندسية',
+      fr: 'Addition avec retenue, soustraction et géométrie',
+      en: 'Addition with regrouping, subtraction, and 2D geometry'
+    },
+    author: {
+      ar: 'د. سمير الناصري',
+      fr: 'Dr. Samir Naciri',
+      en: 'Dr. Samir Naciri'
+    },
+    subject: {
+      ar: 'الرياضيات',
+      fr: 'Mathématiques',
+      en: 'Mathematics'
+    },
+    isbn: '978-9954-1-0203-3',
+    publishYear: 2024,
+    price: 37.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.8,
+    pagesCount: 136,
+    coverStyle: {
+      primaryColor: '#0369a1',
+      secondaryColor: '#075985',
+      spineColor: '#0c4a6e',
+      accentColor: '#38bdf8',
+      pattern: 'geometric',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.31 },
+    synopsis: {
+      ar: 'تمارين تطبيقية ومسائل واقعية تنمي التفكير المنطقي وسرعة الحساب الذهني.',
+      fr: 'Problèmes ludiques développant le calcul mental et la rigueur logique.',
+      en: 'Applied math exercises sharpening mental calculation and geometric drawing.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'الجمع بالاحتفاظ', fr: 'Addition avec retenue', en: 'Regrouping in Addition' },
+        content: {
+          ar: '47 + 28 = 75: نجمع الوحدات أولاً (7+8=15) نكتب 5 ونحتفظ بـ 1 في خانة العشرات.',
+          fr: 'Addition verticale méthodique avec retenue détaillée étape par étape.',
+          en: 'Step-by-step column addition demonstrating regrouping of units into tens.'
+        }
+      }
+    ]
+  },
+  {
+    id: 'book-2ap-science',
+    educationLevelId: 'primary-2',
+    title: {
+      ar: 'فضاء النشاط العلمي والبيئة',
+      fr: 'Espace Découverte des Sciences 2',
+      en: 'Science & Living World 2'
+    },
+    subtitle: {
+      ar: 'نمو النباتات، تغذية الحيوانات، والتنفس',
+      fr: 'Croissance des plantes et nutrition animale',
+      en: 'Plant growth, animal nutrition, and respiration'
+    },
+    author: {
+      ar: 'أ. نادية الصقلي',
+      fr: 'Pr. Nadia Sqalli',
+      en: 'Prof. Nadia Sqalli'
+    },
+    subject: {
+      ar: 'النشاط العلمي',
+      fr: 'Sciences',
+      en: 'Science'
+    },
+    isbn: '978-9954-1-0204-0',
+    publishYear: 2024,
+    price: 33.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.7,
+    pagesCount: 104,
+    coverStyle: {
+      primaryColor: '#059669',
+      secondaryColor: '#047857',
+      spineColor: '#064e3b',
+      accentColor: '#6ee7b7',
+      pattern: 'science',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.27 },
+    synopsis: {
+      ar: 'استكشاف دورات حياة الكائنات الحية وأهمية الماء والهواء النقي لصحة الإنسان.',
+      fr: 'Étude des cycles de vie et de l’importance de l’eau et de l’air pur.',
+      en: 'Investigating living cycles and the importance of clean air and water for healthy living.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'إنبات البذرة ونموها', fr: 'La germination', en: 'Seed Germination' },
+        content: {
+          ar: 'تحتاج البذرة إلى الماء والحرارة والضوء لتنبت وتتحول إلى نبتة مورقة.',
+          fr: 'Observation des étapes: graine, racine, tige et premières feuilles.',
+          en: 'Observing the phases: dormant seed, roots, stem, and first green leaves.'
+        }
+      }
+    ]
+  },
 
+  // ==========================================
   // 3AP - Primary 3
+  // ==========================================
   {
     id: 'book-3ap-math',
     educationLevelId: 'primary-3',
@@ -418,8 +617,120 @@ export const BOOKS_DATA: Book[] = [
       }
     ]
   },
+  {
+    id: 'book-3ap-arabic',
+    educationLevelId: 'primary-3',
+    title: {
+      ar: 'المفيد في اللغة العربية 3',
+      fr: 'L’Arabe Utile 3AP',
+      en: 'Practical Arabic Reader 3'
+    },
+    subtitle: {
+      ar: 'النصوص القرائية، التطبيقات الإملائية، والإنشاء',
+      fr: 'Textes choisis, orthographe et expression écrite',
+      en: 'Reading passages, orthography, and writing composition'
+    },
+    author: {
+      ar: 'أ. د. بوشعيب الزين',
+      fr: 'Pr. Bouchaib Ezzine',
+      en: 'Prof. Bouchaib Ezzine'
+    },
+    subject: {
+      ar: 'اللغة العربية',
+      fr: 'Langue Arabe',
+      en: 'Arabic Language'
+    },
+    isbn: '978-9954-1-0303-0',
+    publishYear: 2024,
+    price: 38.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.8,
+    pagesCount: 156,
+    coverStyle: {
+      primaryColor: '#047857',
+      secondaryColor: '#065f46',
+      spineColor: '#064e3b',
+      accentColor: '#a7f3d0',
+      pattern: 'classic',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.33 },
+    synopsis: {
+      ar: 'تعزيز مهارات الفهم القرائي مع نصوص تراثية ومعاصرة تراعي التدرج البيداغوجي.',
+      fr: 'Perfectionnement de la lecture fluide avec un corpus de textes variés et stimulants.',
+      en: 'Strengthening comprehension skills through classical and contemporary Arabic prose.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'عالم الحشرات العجيب', fr: 'Le monde des insectes', en: 'The Insect World' },
+        content: {
+          ar: 'النملة كائن نشيط يعمل بلا كلل، يدخر طعامه في الصيف ليجده في الشتاء.',
+          fr: 'Récit informatif sur l’organisation coopérative exemplaire des fourmis.',
+          en: 'An informative text celebrating cooperation and discipline within the ant colony.'
+        }
+      }
+    ]
+  },
+  {
+    id: 'book-3ap-science',
+    educationLevelId: 'primary-3',
+    title: {
+      ar: 'المنهل في النشاط العلمي',
+      fr: 'La Source des Sciences 3AP',
+      en: 'The Science Fountain 3'
+    },
+    subtitle: {
+      ar: 'الطقس والمناخ، المادة وتحولاتها، والمغناطيس',
+      fr: 'Météo, états de la matière et magnétisme',
+      en: 'Weather, states of matter, and magnetism'
+    },
+    author: {
+      ar: 'د. حسناء المنصوري',
+      fr: 'Dr. Hasnaa Mansouri',
+      en: 'Dr. Hasnaa Mansouri'
+    },
+    subject: {
+      ar: 'النشاط العلمي',
+      fr: 'Sciences',
+      en: 'Science'
+    },
+    isbn: '978-9954-1-0304-7',
+    publishYear: 2024,
+    price: 35.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.7,
+    pagesCount: 118,
+    coverStyle: {
+      primaryColor: '#b45309',
+      secondaryColor: '#92400e',
+      spineColor: '#78350f',
+      accentColor: '#fde047',
+      pattern: 'science',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.29 },
+    synopsis: {
+      ar: 'تجارب علمية ميسرة لفهم حالات المادة (الصلبة والسائلة والغازية) وخواص المغناطيس والكهرباء الساكنة.',
+      fr: 'Expériences pratiques sur les changements d’état de la matière et le magnétisme.',
+      en: 'Hands-on exploration of phases of matter, magnet attraction, and static electricity.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'تحولات الماء في الطبيعة', fr: 'Le cycle de l’eau', en: 'Water Cycle' },
+        content: {
+          ar: 'التبخر، التكاثف، والتجمد: كيف يتنقل الماء بين الأرض والسماء في دورة مستمرة.',
+          fr: 'Observation des phases d’évaporation et de condensation à travers une maquette.',
+          en: 'Demonstrating evaporation, cloud condensation, and precipitation using simple models.'
+        }
+      }
+    ]
+  },
 
+  // ==========================================
   // 4AP - Primary 4
+  // ==========================================
   {
     id: 'book-4ap-social',
     educationLevelId: 'primary-4',
@@ -530,8 +841,120 @@ export const BOOKS_DATA: Book[] = [
       }
     ]
   },
+  {
+    id: 'book-4ap-arabic',
+    educationLevelId: 'primary-4',
+    title: {
+      ar: 'الواضح في اللغة العربية 4',
+      fr: 'L’Arabe Clair 4AP',
+      en: 'Clear Arabic Expression 4'
+    },
+    subtitle: {
+      ar: 'الصرف والتحويل، التراكيب، والتطبيقات الكتابية',
+      fr: 'Grammaire, conjugaison et rédaction guidée',
+      en: 'Grammar mechanics, conjugation, and guided writing'
+    },
+    author: {
+      ar: 'أ. لطيفة الشرقاوي',
+      fr: 'Pr. Latifa Cherkaoui',
+      en: 'Prof. Latifa Cherkaoui'
+    },
+    subject: {
+      ar: 'اللغة العربية',
+      fr: 'Langue Arabe',
+      en: 'Arabic Language'
+    },
+    isbn: '978-9954-1-0403-7',
+    publishYear: 2024,
+    price: 40.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.7,
+    pagesCount: 164,
+    coverStyle: {
+      primaryColor: '#0e7490',
+      secondaryColor: '#155e75',
+      spineColor: '#164e63',
+      accentColor: '#67e8f9',
+      pattern: 'geometric',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.34 },
+    synopsis: {
+      ar: 'دليل لغوي منهجي لضبط قواعد الإعراب وتراكيب الجمل الاسمية والفعلية ونصوص أدبية مشوقة.',
+      fr: 'Méthode complète de syntaxe arabe et de composition de textes descriptifs.',
+      en: 'Comprehensive Arabic syntax guide with engaging descriptive and narrative texts.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'الجملة الفعلية وعناصرها', fr: 'La phrase verbale', en: 'Verbal Sentences' },
+        content: {
+          ar: 'تتكون الجملة الفعلية من فعل وفاعل ومفعول به: حَفِظَ التِّلْمِيذُ النَّشِيدَ.',
+          fr: 'Structure canonique: verbe, sujet et complément d’objet direct.',
+          en: 'Standard grammatical hierarchy: verb action, nominative subject, and direct object.'
+        }
+      }
+    ]
+  },
+  {
+    id: 'book-4ap-french',
+    educationLevelId: 'primary-4',
+    title: {
+      ar: 'نحو التميز بالفرنسية 4',
+      fr: 'Cap Français CM1 / 4AP',
+      en: 'French Excellence 4'
+    },
+    subtitle: {
+      ar: 'المعجم والتواصل والقصص المصورة',
+      fr: 'Vocabulaire, bande dessinée et récits',
+      en: 'Vocabulary expansion, comics, and short novels'
+    },
+    author: {
+      ar: 'برتران لوفيفر و منى العلمي',
+      fr: 'Bertrand Lefebvre & Mouna Alami',
+      en: 'Bertrand Lefebvre & Mouna Alami'
+    },
+    subject: {
+      ar: 'اللغة الفرنسية',
+      fr: 'Français',
+      en: 'French'
+    },
+    isbn: '978-9954-1-0404-4',
+    publishYear: 2024,
+    price: 44.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.8,
+    pagesCount: 152,
+    coverStyle: {
+      primaryColor: '#4f46e5',
+      secondaryColor: '#4338ca',
+      spineColor: '#3730a3',
+      accentColor: '#a5b4fc',
+      pattern: 'modern',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.33 },
+    synopsis: {
+      ar: 'بناء المهارات اللغوية في التعبير الشفهي والكتابي عبر القصص المصورة والمواقف التفاعلية.',
+      fr: 'Approche communicative et théâtrale pour s’exprimer avec confiance en français.',
+      en: 'Interactive theatrical role-play and graphic storytelling for conversational fluency.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'زيارة المتحف الأثري', fr: 'Visite au musée historique', en: 'Museum Field Trip' },
+        content: {
+          ar: 'وصف لوحات المعرض ومقتنيات الآثار الرومانية والإسلامية القديمة.',
+          fr: 'Récit d’une excursion scolaire à la découverte du patrimoine architectural.',
+          en: 'Recounting a school field trip examining ancient mosaics and architecture.'
+        }
+      }
+    ]
+  },
 
+  // ==========================================
   // 5AP - Primary 5
+  // ==========================================
   {
     id: 'book-5ap-arabic',
     educationLevelId: 'primary-5',
@@ -642,8 +1065,120 @@ export const BOOKS_DATA: Book[] = [
       }
     ]
   },
+  {
+    id: 'book-5ap-math',
+    educationLevelId: 'primary-5',
+    title: {
+      ar: 'النجاح في الرياضيات 5',
+      fr: 'Mathématiques Avancées 5AP',
+      en: 'Advanced Elementary Mathematics 5'
+    },
+    subtitle: {
+      ar: 'الأعداد الكسرية والعمليات والتماثل المحوري',
+      fr: 'Fractions, opérations et symétrie axiale',
+      en: 'Fractions, operations, and axial symmetry'
+    },
+    author: {
+      ar: 'أ. د. حميد برادة',
+      fr: 'Pr. Hamid Berrada',
+      en: 'Prof. Hamid Berrada'
+    },
+    subject: {
+      ar: 'الرياضيات',
+      fr: 'Mathématiques',
+      en: 'Mathematics'
+    },
+    isbn: '978-9954-1-0503-4',
+    publishYear: 2024,
+    price: 44.5,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.8,
+    pagesCount: 168,
+    coverStyle: {
+      primaryColor: '#c2410c',
+      secondaryColor: '#9a3412',
+      spineColor: '#7c2d12',
+      accentColor: '#fb923c',
+      pattern: 'geometric',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.36 },
+    synopsis: {
+      ar: 'منهاج تدريبي دقيق لحل المعادلات الحسابية والمسائل الهندسية وتمثيل البيانات الإحصائية.',
+      fr: 'Résolution de problèmes complexes, calcul fractionnaire et lecture de graphiques.',
+      en: 'Mathematical problem-solving, fraction arithmetic, and statistical charts.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'ضرب وقسمة الكسور', fr: 'Multiplication des fractions', en: 'Multiplying Fractions' },
+        content: {
+          ar: 'لضرب كسرين، نضرب البسط في البسط والمقام في المقام: (2/3) × (4/5) = 8/15.',
+          fr: 'Règle essentielle: produit des numérateurs sur produit des dénominateurs.',
+          en: 'Multiplying numerators together and denominators together with simplification.'
+        }
+      }
+    ]
+  },
+  {
+    id: 'book-5ap-social',
+    educationLevelId: 'primary-5',
+    title: {
+      ar: 'المسار في الاجتماعيات 5',
+      fr: 'Parcours Histoire-Géographie 5AP',
+      en: 'Heritage & Human Geography 5'
+    },
+    subtitle: {
+      ar: 'الدولة الإدريسية، تضاريس الوطن العربي، وحقوق الإنسان',
+      fr: 'Histoire médiévale, relief mondial et droits de l’homme',
+      en: 'Medieval dynasties, world topography, and human rights'
+    },
+    author: {
+      ar: 'د. مصطفى الشابي',
+      fr: 'Dr. Mostafa Chabi',
+      en: 'Dr. Mostafa Chabi'
+    },
+    subject: {
+      ar: 'الاجتماعيات',
+      fr: 'Histoire-Géo',
+      en: 'Social Studies'
+    },
+    isbn: '978-9954-1-0504-1',
+    publishYear: 2024,
+    price: 42.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.7,
+    pagesCount: 152,
+    coverStyle: {
+      primaryColor: '#6d28d9',
+      secondaryColor: '#5b21b6',
+      spineColor: '#4c1d95',
+      accentColor: '#c4b5fd',
+      pattern: 'academic',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.34 },
+    synopsis: {
+      ar: 'سرد تاريخي مشوق للحضارات الإسلامية القديمة وتوثيق جغرافي للموارد الطبيعية والمناخية.',
+      fr: 'Récits des grandes dynasties, étude des climats et citoyenneté responsable.',
+      en: 'Rich historical chronicle of Islamic dynasties and detailed climatic zoning.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'تأسيس مدينة فاس وجامعة القرويين', fr: 'Fondation de Fès et Al Quaraouiyine', en: 'Founding of Fez & Al Quaraouiyine' },
+        content: {
+          ar: 'أسس المولى إدريس الثاني مدينة فاس عام 808م، وشيدت فاطمة الفهرية أعرق جامعة علمية.',
+          fr: 'Histoire de la fondation de la capitale spirituelle et de la première université au monde.',
+          en: 'Historical foundation of Fez in 808 AD and the pioneering Al Quaraouiyine University.'
+        }
+      }
+    ]
+  },
 
+  // ==========================================
   // 6AP - Primary 6
+  // ==========================================
   {
     id: 'book-6ap-math',
     educationLevelId: 'primary-6',
@@ -754,8 +1289,120 @@ export const BOOKS_DATA: Book[] = [
       }
     ]
   },
+  {
+    id: 'book-6ap-arabic',
+    educationLevelId: 'primary-6',
+    title: {
+      ar: 'كتابي في اللغة العربية 6',
+      fr: 'Mon Manuel d’Arabe 6AP',
+      en: 'Mastering Arabic 6'
+    },
+    subtitle: {
+      ar: 'النصوص الإشهادية، التراكيب والصرف والتحويل',
+      fr: 'Préparation à l’examen, syntaxe et conjugaison',
+      en: 'Examination reader, advanced grammar and morphology'
+    },
+    author: {
+      ar: 'أ. د. عبد السلام الفاسي',
+      fr: 'Pr. Abdessalam El Fassi',
+      en: 'Prof. Abdessalam El Fassi'
+    },
+    subject: {
+      ar: 'اللغة العربية',
+      fr: 'Langue Arabe',
+      en: 'Arabic Language'
+    },
+    isbn: '978-9954-1-0603-1',
+    publishYear: 2024,
+    price: 45.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.9,
+    pagesCount: 188,
+    coverStyle: {
+      primaryColor: '#064e3b',
+      secondaryColor: '#065f46',
+      spineColor: '#022c22',
+      accentColor: '#34d399',
+      pattern: 'classic',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.40 },
+    synopsis: {
+      ar: 'منهاج تدريبي مكثف لاجتياز الامتحان الوطني الموحد مع نماذج امتحانات وحلول تفصيلية.',
+      fr: 'Recueil complet d’épreuves types et corrigés pour réussir l’examen normalisé.',
+      en: 'Intensive standardized exam preparation with model tests and comprehensive answer keys.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'التمييز والحال', fr: 'Le complément de manière et spécification', en: 'Adverbs of Manner & Specification' },
+        content: {
+          ar: 'جاءَ التِّلْمِيذُ مُسْتَبْشِرًا (حال منصوب) - اشْتَرَيْتُ رِطْلًا عَسَلًا (تمييز ملفوظ).',
+          fr: 'Règles de distinction entre l’état (Hal) et la spécification (Tamyiz).',
+          en: 'Grammatical criteria distinguishing situational states and quantitative specifiers.'
+        }
+      }
+    ]
+  },
+  {
+    id: 'book-6ap-science',
+    educationLevelId: 'primary-6',
+    title: {
+      ar: 'المنير في النشاط العلمي 6',
+      fr: 'Sciences Expérimentales 6AP',
+      en: 'Experimental Sciences 6'
+    },
+    subtitle: {
+      ar: 'الجهاز العصبي، التكاثر، الطاقة المتجددة والأحافير',
+      fr: 'Système nerveux, reproduction et énergies vertes',
+      en: 'Nervous system, reproduction, and green energy'
+    },
+    author: {
+      ar: 'د. إدريس التلمساني',
+      fr: 'Dr. Driss Tlemcani',
+      en: 'Dr. Driss Tlemcani'
+    },
+    subject: {
+      ar: 'النشاط العلمي',
+      fr: 'Sciences',
+      en: 'Science'
+    },
+    isbn: '978-9954-1-0604-8',
+    publishYear: 2024,
+    price: 43.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.8,
+    pagesCount: 160,
+    coverStyle: {
+      primaryColor: '#0284c7',
+      secondaryColor: '#0369a1',
+      spineColor: '#075985',
+      accentColor: '#38bdf8',
+      pattern: 'science',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.4, height: 1.9, depth: 0.37 },
+    synopsis: {
+      ar: 'دراسات بيولوجية وفيزيائية تؤهل التلميذ للمرحلة الإعدادية مع التركيز على البحث العلمي والتجريب.',
+      fr: 'Préparation au collège: anatomie humaine, transmission d’énergie et développement durable.',
+      en: 'Bridging to middle school: human anatomy, energy conservation, and scientific methodology.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'حركات الحركات الإرادية واللاإرادية', fr: 'Mouvements réflexes et volontaires', en: 'Voluntary & Reflex Actions' },
+        content: {
+          ar: 'المخ هو المركز العصبي للحركات الإرادية، والنخاع الشوكي مسؤول عن الأفعال الانعكاسية.',
+          fr: 'Rôle du cerveau dans la motricité volontaire et de la moelle épinière dans les réflexes.',
+          en: 'The brain centers voluntary actions, while the spinal cord governs protective reflex arcs.'
+        }
+      }
+    ]
+  },
 
-  // Secondary
+  // ==========================================
+  // Secondary (1AS - Secondary)
+  // ==========================================
   {
     id: 'book-sec-physics',
     educationLevelId: 'secondary-1',
@@ -862,6 +1509,171 @@ export const BOOKS_DATA: Book[] = [
           ar: 'تأملات في الكوجيطو الديكارتي: «أنا أفكر، إذن أنا موجود» ومدارس التحليل النفسي الحديث.',
           fr: 'Analyse du doute cartésien et des théories modernes de la perception et de la vérité.',
           en: 'Analysis of Cartesian foundationalism and modern psychological conceptions of self.'
+        }
+      }
+    ]
+  },
+  {
+    id: 'book-sec-math',
+    educationLevelId: 'secondary-1',
+    title: {
+      ar: 'الرياضيات العامة والتحليل الرياضي',
+      fr: 'Mathématiques & Analyse Lycée',
+      en: 'Calculus & Advanced Mathematics'
+    },
+    subtitle: {
+      ar: 'الدوال العددية، النهايات، الاشتقاق، والمتتاليات',
+      fr: 'Fonctions, limites, dérivation et suites',
+      en: 'Functions, limits, derivatives and sequences'
+    },
+    author: {
+      ar: 'د. رشيد أعراب',
+      fr: 'Dr. Rachid Aarab',
+      en: 'Dr. Rachid Aarab'
+    },
+    subject: {
+      ar: 'الرياضيات',
+      fr: 'Mathématiques',
+      en: 'Mathematics'
+    },
+    isbn: '978-9954-2-0103-2',
+    publishYear: 2024,
+    price: 68.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 5.0,
+    pagesCount: 280,
+    coverStyle: {
+      primaryColor: '#881337',
+      secondaryColor: '#4c0519',
+      spineColor: '#2b020d',
+      accentColor: '#f43f5e',
+      pattern: 'geometric',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.5, height: 2.1, depth: 0.50 },
+    synopsis: {
+      ar: 'دراسة تحليلية معمقة في حساب التفاضل والتكامل ودراسة منحنيات الدوال والبرهنة بالترجع.',
+      fr: 'Cours exhaustif et exercices d’olympiades en analyse réelle et géométrie vectorielle.',
+      en: 'Rigorous real analysis, calculus limit theorems, mathematical induction, and vector geometry.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'النهايات والاتصال', fr: 'Limites et continuité', en: 'Limits & Continuity' },
+        content: {
+          ar: 'مبرهنة القيم الوسيطية: إذا كانت f دالة متصلة على [a,b] فإنها تأخذ كل قيمة بين f(a) و f(b).',
+          fr: 'Théorème des valeurs intermédiaires et corollaires pour la bijection stricte.',
+          en: 'Intermediate value theorem and applications to existence of roots in real continuous functions.'
+        }
+      }
+    ]
+  },
+  {
+    id: 'book-sec-svt',
+    educationLevelId: 'secondary-1',
+    title: {
+      ar: 'علوم الحياة والأرض والجيولوجيا',
+      fr: 'Sciences de la Vie et de la Terre (SVT)',
+      en: 'Life, Earth & Environmental Sciences'
+    },
+    subtitle: {
+      ar: 'الوراثة البشرية، تكتونية الصفائح، وعلم البيئة',
+      fr: 'Génétique humaine, tectonique des plaques et écologie',
+      en: 'Human genetics, plate tectonics, and ecology'
+    },
+    author: {
+      ar: 'د. مليكة الودغيري',
+      fr: 'Dr. Malika Ouadghiri',
+      en: 'Dr. Malika Ouadghiri'
+    },
+    subject: {
+      ar: 'علوم الحياة والأرض',
+      fr: 'SVT',
+      en: 'Life & Earth Sciences'
+    },
+    isbn: '978-9954-2-0104-9',
+    publishYear: 2024,
+    price: 62.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.9,
+    pagesCount: 248,
+    coverStyle: {
+      primaryColor: '#14532d',
+      secondaryColor: '#166534',
+      spineColor: '#052e16',
+      accentColor: '#4ade80',
+      pattern: 'science',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.5, height: 2.1, depth: 0.46 },
+    synopsis: {
+      ar: 'أطلس بيولوجي وجيولوجي يدرس دينامية الأرض الداخلية وآليات التعبير الجيني وانتقال الصفات الوراثية.',
+      fr: 'Étude approfondie de la dynamique du globe, de l’ADN et des mécanismes de l’hérédité.',
+      en: 'Deep examination of terrestrial plate dynamics, DNA transcription, and Mendelian inheritance.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'بنية جزيئة الـ ADN', fr: 'Structure de la molécule d’ADN', en: 'DNA Double Helix Structure' },
+        content: {
+          ar: 'يتكون الحمض النووي الريبوزي منقوص الأكسجين من لولب مضاعف يحتوي على قواعد آزوتية: A, T, C, G.',
+          fr: 'Modèle de la double hélice avec appariement complémentaire des bases azotées.',
+          en: 'The complementary base-pair double helix model and genetic information replication.'
+        }
+      }
+    ]
+  },
+  {
+    id: 'book-sec-english',
+    educationLevelId: 'secondary-1',
+    title: {
+      ar: 'الإنجليزية الأكاديمية والتواصل الدولي',
+      fr: 'English for Academic Excellence',
+      en: 'English for Academic Excellence'
+    },
+    subtitle: {
+      ar: 'مهارات المقال الأكاديمي، النقاش، والتفكير النقدي',
+      fr: 'Essais académiques, débats et analyse critique',
+      en: 'Academic essay composition, debating & critical reading'
+    },
+    author: {
+      ar: 'د. ألكسندر سميث و ليلى الفاسي',
+      fr: 'Dr. Alexander Smith & Leila Fassi',
+      en: 'Dr. Alexander Smith & Leila Fassi'
+    },
+    subject: {
+      ar: 'اللغة الإنجليزية',
+      fr: 'Anglais',
+      en: 'English'
+    },
+    isbn: '978-9954-2-0105-6',
+    publishYear: 2024,
+    price: 58.0,
+    currency: { ar: 'د.م', fr: 'MAD', en: 'USD' },
+    rating: 4.9,
+    pagesCount: 210,
+    coverStyle: {
+      primaryColor: '#1e1b4b',
+      secondaryColor: '#2e1065',
+      spineColor: '#0f051d',
+      accentColor: '#38bdf8',
+      pattern: 'modern',
+      textColor: '#ffffff'
+    },
+    dimensions: { width: 1.5, height: 2.1, depth: 0.43 },
+    synopsis: {
+      ar: 'منهج متقدم في اللغة الإنجليزية للطور الثانوي يركز على كتابة المقالات الأكاديمية والخطابة والمناظرات الدولية.',
+      fr: 'Manuel intensif pour perfectionner l’anglais écrit et oral à travers la rhétorique et les essais.',
+      en: 'Advanced secondary course focusing on argumentative essays, public speech, and critical discourse.'
+    },
+    samplePages: [
+      {
+        pageNumber: 1,
+        title: { ar: 'بناء الأطروحة الأكاديمية', fr: 'Construire une thèse académique', en: 'Drafting an Academic Thesis' },
+        content: {
+          ar: 'خطوات صياغة فرضية بحثية واضحة مدعومة بالأدلة التجريبية والمنطق التحليلي.',
+          fr: 'Directives pour structurer une argumentation convaincante avec citations rigoureuses.',
+          en: 'Guidelines for framing a compelling research thesis supported by empirical textual evidence.'
         }
       }
     ]

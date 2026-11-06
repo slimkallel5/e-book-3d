@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import * as THREE from 'three';
 import { Group } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
@@ -8,6 +9,7 @@ import { useLibraryStore } from '../../store/useLibraryStore';
 interface BookshelfBookItemProps {
   book: Book;
   position: [number, number, number];
+  worldPosition?: [number, number, number];
   dimensions: {
     height: number;
     depth: number;
@@ -20,33 +22,53 @@ interface BookshelfBookItemProps {
 export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
   book,
   position,
+  worldPosition,
   dimensions,
   isSelected
 }) => {
   const meshRef = useRef<Group>(null);
   const [hovered, setHovered] = useState(false);
   const selectBook = useLibraryStore((s) => s.selectBook);
+  const setHoveredBookInfo = useLibraryStore((s) => s.setHoveredBookInfo);
   const language = useLibraryStore((s) => s.language);
 
   const { height, depth, width } = dimensions;
 
-  // Subtle breathing hover animation
+  // Book remains on its shelf without jumping or moving out
   useFrame(() => {
     if (meshRef.current) {
       if (isSelected) {
         meshRef.current.visible = false;
       } else {
         meshRef.current.visible = true;
-        // Slide slightly forward towards viewer on hover
-        const targetZ = hovered ? position[2] + 0.35 : position[2];
-        const targetY = hovered ? position[1] + 0.08 : position[1];
-        const targetRotX = hovered ? -0.04 : 0;
-        meshRef.current.position.z += (targetZ - meshRef.current.position.z) * 0.18;
-        meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.18;
-        meshRef.current.rotation.x += (targetRotX - meshRef.current.rotation.x) * 0.15;
       }
     }
   });
+
+  const handlePointerEnter = (e: any) => {
+    e.stopPropagation();
+    setHovered(true);
+    document.body.style.cursor = 'pointer';
+
+    // Calculate world position of this book
+    let computedWorldPos: [number, number, number] = worldPosition || [0, 0, 0];
+    if (meshRef.current) {
+      const v = new THREE.Vector3();
+      meshRef.current.getWorldPosition(v);
+      computedWorldPos = [v.x, v.y, v.z];
+    }
+
+    setHoveredBookInfo({
+      book,
+      worldPosition: computedWorldPos
+    });
+  };
+
+  const handlePointerLeave = () => {
+    setHovered(false);
+    document.body.style.cursor = 'default';
+    setHoveredBookInfo(null);
+  };
 
   return (
     <group
@@ -54,17 +76,11 @@ export const BookshelfBookItem: React.FC<BookshelfBookItemProps> = ({
       position={position}
       onClick={(e) => {
         e.stopPropagation();
+        // Hovering is preview; clicking selects book
         selectBook(book.id);
       }}
-      onPointerOver={(e) => {
-        e.stopPropagation();
-        setHovered(true);
-        document.body.style.cursor = 'pointer';
-      }}
-      onPointerOut={() => {
-        setHovered(false);
-        document.body.style.cursor = 'default';
-      }}
+      onPointerOver={handlePointerEnter}
+      onPointerOut={handlePointerLeave}
     >
       {/* 1. Main Book Interior Pages (recessed with warm archival paper tone) */}
       <mesh castShadow receiveShadow position={[0, height / 2, -0.02]}>
