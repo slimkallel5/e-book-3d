@@ -148,7 +148,8 @@ export const App: React.FC = () => {
       <div className="canvas-container">
         <Canvas
           shadows
-          dpr={[1, 1.5]}
+          // Adaptive DPR: Clamp to 1.25 on high-density displays to avoid fragment shader fillrate bottlenecks, 1.0 on standard/mobile
+          dpr={typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 1.25) : 1}
           gl={{
             antialias: true,
             alpha: false,
