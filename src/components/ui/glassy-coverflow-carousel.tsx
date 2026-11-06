@@ -240,7 +240,7 @@ export default function GlassyCarousel({ items, initialIndex = 0, layout = "webs
       })}
     </div>
     <div className="gc-bottom">
-      <div className="gc-active-info"><h2>{active.title}</h2><p>{active.subtitle}</p></div>
+      <div className="gc-active-info"><h2>{active.title}</h2><h4>{active.subtitle}</h4></div>
       {!hideControls && (
         <div className="gc-dock" role="group" aria-label="Carousel controls">
           <span className="gc-position" aria-hidden="true"><span>{String(activeIndex + 1).padStart(2, "0")}</span><span>/</span><span>{String(items.length).padStart(2, "0")}</span></span>
