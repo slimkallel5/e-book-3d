@@ -38,7 +38,8 @@ export const BookDetailOverlay: React.FC<BookDetailOverlayProps> = ({
   if (!book) return null;
 
   const level = EDUCATION_LEVELS.find((l) => l.id === book.educationLevelId);
-  const totalSpreadCount = Math.max(1, Math.ceil(book.samplePages.length / 2));
+  const samplePagesList = book.samplePages || [];
+  const totalSpreadCount = Math.max(1, Math.ceil(samplePagesList.length / 2));
 
   const handleNextPage = () => {
     if (currentBookPage < totalSpreadCount - 1) {
@@ -440,8 +441,8 @@ export const BookDetailOverlay: React.FC<BookDetailOverlayProps> = ({
 
                 <span style={{ fontSize: '0.8rem', color: '#f1f5f9', fontWeight: 600 }}>
                   {language === 'ar'
-                    ? `الصفحات ${currentBookPage * 2 + 1}-${currentBookPage * 2 + 2} من ${book.samplePages.length}`
-                    : `Pages ${currentBookPage * 2 + 1}-${currentBookPage * 2 + 2} of ${book.samplePages.length}`}
+                    ? `الصفحات ${currentBookPage * 2 + 1}-${currentBookPage * 2 + 2} من ${samplePagesList.length}`
+                    : `Pages ${currentBookPage * 2 + 1}-${currentBookPage * 2 + 2} of ${samplePagesList.length}`}
                 </span>
 
                 <button

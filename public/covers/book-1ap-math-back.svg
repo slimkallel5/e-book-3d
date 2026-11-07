@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="850" viewBox="0 0 600 850">
+    <defs>
+      <linearGradient id="bgrad" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#b45309"/>
+        <stop offset="100%" stop-color="#92400e"/>
+      </linearGradient>
+    </defs>
+    <rect width="600" height="850" fill="url(#bgrad)"/>
+    <rect x="30" y="30" width="540" height="790" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.4"/>
+    <rect x="60" y="120" width="480" height="280" rx="12" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.1)"/>
+    <text x="300" y="170" fill="#fbbf24" font-size="20" font-family="sans-serif" font-weight="bold" text-anchor="middle">PRÉSENTATION DU MANUEL</text>
+    <text x="300" y="220" fill="#e2e8f0" font-size="14" font-family="sans-serif" text-anchor="middle">Ouvrage conforme aux programmes officiels de l'Éducation Nationale.</text>
+    <text x="300" y="255" fill="#cbd5e1" font-size="13" font-family="sans-serif" text-anchor="middle">Conçu par une équipe pédagogique d'inspecteurs et d'enseignants chercheurs.</text>
+    <rect x="220" y="680" width="160" height="60" fill="#ffffff" rx="4"/>
+    <text x="300" y="718" fill="#000000" font-size="16" font-family="monospace" font-weight="bold" text-anchor="middle">||| 0102-9 |||</text>
+  </svg>

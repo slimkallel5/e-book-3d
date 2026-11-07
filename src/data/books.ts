@@ -6,6 +6,20 @@ export const BOOKS_DATA: Book[] = [
   // ==========================================
   {
     id: 'book-1ap-arabic',
+    assets: {
+      poster: '/covers/book-1ap-arabic-poster.svg',
+      frontCover: '/covers/book-1ap-arabic-front.svg',
+      backCover: '/covers/book-1ap-arabic-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/arabic-1ap.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-1']
+    },
     educationLevelId: 'primary-1',
     title: {
       ar: 'كتابي في اللغة العربية',
@@ -61,6 +75,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-1ap-math',
+    assets: {
+      poster: '/covers/book-1ap-math-poster.svg',
+      frontCover: '/covers/book-1ap-math-front.svg',
+      backCover: '/covers/book-1ap-math-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/math-1ap.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-1']
+    },
     educationLevelId: 'primary-1',
     title: {
       ar: 'فضاء الرياضيات التفاعلي',
@@ -116,6 +144,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-1ap-science',
+    assets: {
+      poster: '/covers/book-1ap-science-poster.svg',
+      frontCover: '/covers/book-1ap-science-front.svg',
+      backCover: '/covers/book-1ap-science-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/science-1ap.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-1']
+    },
     educationLevelId: 'primary-1',
     title: {
       ar: 'المفيد في النشاط العلمي',
@@ -171,6 +213,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-1ap-islamic',
+    assets: {
+      poster: '/covers/book-1ap-islamic-poster.svg',
+      frontCover: '/covers/book-1ap-islamic-front.svg',
+      backCover: '/covers/book-1ap-islamic-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-1']
+    },
     educationLevelId: 'primary-1',
     title: {
       ar: 'في رحاب التربية الإسلامية',
@@ -226,6 +282,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-1ap-art',
+    assets: {
+      poster: '/covers/book-1ap-art-poster.svg',
+      frontCover: '/covers/book-1ap-art-front.svg',
+      backCover: '/covers/book-1ap-art-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-1']
+    },
     educationLevelId: 'primary-1',
     title: {
       ar: 'عالم الفنون التشكيلية',
@@ -285,6 +355,20 @@ export const BOOKS_DATA: Book[] = [
   // ==========================================
   {
     id: 'book-2ap-french',
+    assets: {
+      poster: '/covers/book-2ap-french-poster.svg',
+      frontCover: '/covers/book-2ap-french-front.svg',
+      backCover: '/covers/book-2ap-french-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/french-2ap.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-2']
+    },
     educationLevelId: 'primary-2',
     title: {
       ar: 'مساري في الفرنسية',
@@ -340,6 +424,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-2ap-arabic',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-2']
+    },
     educationLevelId: 'primary-2',
     title: {
       ar: 'مرشدي في اللغة العربية',
@@ -395,6 +493,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-2ap-math',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-2']
+    },
     educationLevelId: 'primary-2',
     title: {
       ar: 'الجيد في الرياضيات 2',
@@ -450,6 +562,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-2ap-science',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-2']
+    },
     educationLevelId: 'primary-2',
     title: {
       ar: 'فضاء النشاط العلمي والبيئة',
@@ -509,6 +635,20 @@ export const BOOKS_DATA: Book[] = [
   // ==========================================
   {
     id: 'book-3ap-math',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-3']
+    },
     educationLevelId: 'primary-3',
     title: {
       ar: 'المرجع في الرياضيات',
@@ -564,6 +704,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-3ap-french',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-3']
+    },
     educationLevelId: 'primary-3',
     title: {
       ar: 'واحة الكلمات الفرنسية',
@@ -619,6 +773,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-3ap-arabic',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-3']
+    },
     educationLevelId: 'primary-3',
     title: {
       ar: 'المفيد في اللغة العربية 3',
@@ -674,6 +842,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-3ap-science',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-3']
+    },
     educationLevelId: 'primary-3',
     title: {
       ar: 'المنهل في النشاط العلمي',
@@ -733,6 +915,20 @@ export const BOOKS_DATA: Book[] = [
   // ==========================================
   {
     id: 'book-4ap-social',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-4']
+    },
     educationLevelId: 'primary-4',
     title: {
       ar: 'النجاح في الاجتماعيات',
@@ -788,6 +984,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-4ap-math',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-4']
+    },
     educationLevelId: 'primary-4',
     title: {
       ar: 'الرياضيات الحديثة الشاملة',
@@ -843,6 +1053,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-4ap-arabic',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-4']
+    },
     educationLevelId: 'primary-4',
     title: {
       ar: 'الواضح في اللغة العربية 4',
@@ -898,6 +1122,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-4ap-french',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-4']
+    },
     educationLevelId: 'primary-4',
     title: {
       ar: 'نحو التميز بالفرنسية 4',
@@ -957,6 +1195,20 @@ export const BOOKS_DATA: Book[] = [
   // ==========================================
   {
     id: 'book-5ap-arabic',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-5']
+    },
     educationLevelId: 'primary-5',
     title: {
       ar: 'المنير في اللغة العربية',
@@ -1012,6 +1264,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-5ap-science',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-5']
+    },
     educationLevelId: 'primary-5',
     title: {
       ar: 'الواضح في العلوم والبيئة',
@@ -1067,6 +1333,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-5ap-math',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-5']
+    },
     educationLevelId: 'primary-5',
     title: {
       ar: 'النجاح في الرياضيات 5',
@@ -1122,6 +1402,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-5ap-social',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-5']
+    },
     educationLevelId: 'primary-5',
     title: {
       ar: 'المسار في الاجتماعيات 5',
@@ -1181,6 +1475,20 @@ export const BOOKS_DATA: Book[] = [
   // ==========================================
   {
     id: 'book-6ap-math',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-6']
+    },
     educationLevelId: 'primary-6',
     title: {
       ar: 'الجديد في الرياضيات — شهادة الابتدائي',
@@ -1236,6 +1544,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-6ap-french',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-6']
+    },
     educationLevelId: 'primary-6',
     title: {
       ar: 'الفرنسية للجميع — السنة السادسة',
@@ -1291,6 +1613,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-6ap-arabic',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-6']
+    },
     educationLevelId: 'primary-6',
     title: {
       ar: 'كتابي في اللغة العربية 6',
@@ -1346,6 +1682,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-6ap-science',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'primary-6']
+    },
     educationLevelId: 'primary-6',
     title: {
       ar: 'المنير في النشاط العلمي 6',
@@ -1405,6 +1755,20 @@ export const BOOKS_DATA: Book[] = [
   // ==========================================
   {
     id: 'book-sec-physics',
+    assets: {
+      poster: '/covers/book-sec-physics-poster.svg',
+      frontCover: '/covers/book-sec-physics-front.svg',
+      backCover: '/covers/book-sec-physics-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/physics-sec.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'secondary-1']
+    },
     educationLevelId: 'secondary-1',
     title: {
       ar: 'الفيزياء والكيمياء التجريبية',
@@ -1460,6 +1824,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-sec-philosophy',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/missing-philosophy-draft.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'secondary-1']
+    },
     educationLevelId: 'secondary-1',
     title: {
       ar: 'في رحاب الفلسفة والفكر النقدي',
@@ -1515,6 +1893,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-sec-math',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'secondary-1']
+    },
     educationLevelId: 'secondary-1',
     title: {
       ar: 'الرياضيات العامة والتحليل الرياضي',
@@ -1570,6 +1962,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-sec-svt',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'secondary-1']
+    },
     educationLevelId: 'secondary-1',
     title: {
       ar: 'علوم الحياة والأرض والجيولوجيا',
@@ -1625,6 +2031,20 @@ export const BOOKS_DATA: Book[] = [
   },
   {
     id: 'book-sec-english',
+    assets: {
+      poster: '/covers/book-default-poster.svg',
+      frontCover: '/covers/book-default-front.svg',
+      backCover: '/covers/book-default-back.svg'
+    },
+    content: {
+      type: 'pdf',
+      pdfUrl: '/sample-books/general-curriculum.pdf',
+      pageCount: 4
+    },
+    metadata: {
+      publicationYear: 2024,
+      tags: ['curriculum', 'education', 'secondary-1']
+    },
     educationLevelId: 'secondary-1',
     title: {
       ar: 'الإنجليزية الأكاديمية والتواصل الدولي',

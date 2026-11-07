@@ -337,9 +337,18 @@ export function createOpenSpreadTexture(
   ctx.strokeRect(30, 30, 452, 660); // Left page
   ctx.strokeRect(542, 30, 452, 660); // Right page
 
-  const samplePages = book.samplePages;
-  const leftPageData = samplePages[pageIndex * 2] || samplePages[0];
-  const rightPageData = samplePages[pageIndex * 2 + 1] || samplePages[1] || samplePages[0];
+  const samplePages = book.samplePages || [];
+  const defaultPage = {
+    pageNumber: 1,
+    title: { ar: 'محتوى الكتاب المدرسي', fr: 'Contenu Pédagogique', en: 'Curriculum Content' },
+    content: {
+      ar: 'محتوى دراسي موثق صادر عن وزارة التربية والتعليم التونسية.',
+      fr: 'Contenu officiel conforme aux normes du Ministère de l’Éducation.',
+      en: 'Official curriculum content certified by the Ministry of Education.'
+    }
+  };
+  const leftPageData = samplePages[pageIndex * 2] || defaultPage;
+  const rightPageData = samplePages[pageIndex * 2 + 1] || samplePages[1] || defaultPage;
 
   renderSinglePage(ctx, leftPageData, 30, book, language, true);
   renderSinglePage(ctx, rightPageData, 542, book, language, false);

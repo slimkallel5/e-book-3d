@@ -69,27 +69,31 @@ const LibraryDustParticles: React.FC = () => {
 };
 
 export const LibraryEnvironment: React.FC = React.memo(() => {
-  const darkWalnut = '#382014';
-  const midWalnut = '#693a1f';
-  const warmWood = '#945629';
+  const lightOak = '#d5b58b';
+  const naturalHoney = '#c99a62';
+  const warmWalnut = '#a8794d';
+  const naturalWoodShadow = '#806044';
+  const lightBeige = '#e9dcc5';
+  const warmIvory = '#faf6ed';
+  const softGoldenLighting = '#ffe0a3';
+  const warmDaylight = '#fffbf2';
   const goldenAmber = '#e9a743';
-  const warmGlow = '#ffc36a';
-  const shadowRecess = '#21140f';
-  const warmBeige = '#c9a77e';
+  const warmGlow = '#ffe0a3';
+  const warmBeige = '#e9dcc5';
 
   return (
     <group name="library-environment">
-      {/* 1. Global Ambient & Golden Amber Lighting (Faithful to Reference Atmosphere) */}
-      <ambientLight intensity={1.2} color="#fcebd2" />
+      {/* 1. Global Ambient & Natural Daylight Illumination (Bright, Welcoming & Elegant) */}
+      <ambientLight intensity={1.9} color={warmIvory} />
 
-      {/* Main warm illumination over the bookshelf & central room */}
-      <pointLight position={[-1.5, 6.0, 4.0]} intensity={3.5} color={warmGlow} distance={18} decay={1.8} />
+      {/* Main warm soft illumination over the bookshelf & central room */}
+      <pointLight position={[-1.5, 6.0, 4.0]} intensity={4.2} color={softGoldenLighting} distance={20} decay={1.7} />
 
       {/* Daylight streaming through the large right arched window */}
       <directionalLight
-        position={[14, 4.5, -1.0]}
-        intensity={3.8}
-        color="#fff1d6"
+        position={[14, 5.0, -1.0]}
+        intensity={4.6}
+        color={warmDaylight}
         castShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
@@ -104,26 +108,26 @@ export const LibraryEnvironment: React.FC = React.memo(() => {
 
       {/* Warm ambient fill light throughout reading hall to prevent dark voids */}
       <spotLight
-        position={[2.0, 5.0, 5.0]}
+        position={[2.0, 5.5, 5.5]}
         target-position={[2.0, 1.0, -4.0]}
-        intensity={3.6}
-        color="#ffd38a"
-        angle={0.75}
-        penumbra={0.6}
+        intensity={4.0}
+        color={softGoldenLighting}
+        angle={0.8}
+        penumbra={0.7}
       />
-      <pointLight position={[0.0, 1.0, 0.0]} intensity={2.0} color="#ffbe6b" distance={15} />
+      <pointLight position={[0.0, 1.2, 0.0]} intensity={2.4} color="#ffeec9" distance={16} />
 
-      {/* Subtle floor bounce light */}
-      <pointLight position={[3, -2.5, 3]} intensity={1.8} color="#d98943" distance={12} />
+      {/* Floor bounce light for natural daylight diffusion */}
+      <pointLight position={[3, -2.5, 3]} intensity={2.2} color="#f0d5b5" distance={14} />
 
-      {/* 2. Continuous Polished Reflective Wooden/Parquet Floor */}
+      {/* 2. Continuous Natural Warm Parquet Floor with Subtle Soft Reflections */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[2, -4.8, 0]} receiveShadow>
         <planeGeometry args={[50, 40]} />
         <meshStandardMaterial
-          color="#a86536"
-          roughness={0.16}
-          metalness={0.22}
-          envMapIntensity={1.3}
+          color={naturalHoney}
+          roughness={0.28}
+          metalness={0.12}
+          envMapIntensity={1.0}
         />
       </mesh>
 
@@ -131,33 +135,33 @@ export const LibraryEnvironment: React.FC = React.memo(() => {
       {[-8, -4, 0, 4, 8, 12].map((x, i) => (
         <mesh key={`floor-line-${i}`} rotation={[-Math.PI / 2, 0, 0]} position={[x, -4.79, 0]}>
           <planeGeometry args={[0.04, 38]} />
-          <meshBasicMaterial color="#5c341b" transparent opacity={0.35} />
+          <meshBasicMaterial color={naturalWoodShadow} transparent opacity={0.22} />
         </mesh>
       ))}
 
-      {/* Decorative Area Rug under Reading Table (Matching Reference) */}
+      {/* Decorative Area Rug under Reading Table (Light Honey & Warm Beige) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[6.5, -4.78, 1.8]} receiveShadow>
         <planeGeometry args={[7.2, 5.8]} />
-        <meshStandardMaterial color="#8b5030" roughness={0.7} metalness={0.05} />
+        <meshStandardMaterial color={lightOak} roughness={0.75} metalness={0.04} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[6.5, -4.77, 1.8]}>
         <ringGeometry args={[3.3, 3.45, 32]} />
-        <meshStandardMaterial color={goldenAmber} roughness={0.5} metalness={0.4} />
+        <meshStandardMaterial color={naturalHoney} roughness={0.5} metalness={0.3} />
       </mesh>
 
-      {/* 3. Wooden Ceiling with Linear Coffered Decorative Details & Beams */}
+      {/* 3. Lighter Wooden Ceiling with Linear Coffered Decorative Details & Beams */}
       <group position={[2, 6.8, 0]}>
-        {/* Main ceiling base plane */}
+        {/* Main ceiling base plane: warm ivory/cream with natural wood texture */}
         <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
           <planeGeometry args={[60, 50]} />
-          <meshStandardMaterial color={darkWalnut} roughness={0.65} metalness={0.15} />
+          <meshStandardMaterial color={lightBeige} roughness={0.75} metalness={0.08} />
         </mesh>
 
         {/* Linear longitudinal ceiling slats/recesses */}
         {[-14, -11, -8, -5, -2, 1, 4, 7, 10, 13, 16].map((x, idx) => (
           <mesh key={`ceil-slat-${idx}`} position={[x, -0.06, 0]}>
             <boxGeometry args={[0.22, 0.15, 34]} />
-            <meshStandardMaterial color={shadowRecess} roughness={0.8} />
+            <meshStandardMaterial color={naturalHoney} roughness={0.6} />
           </mesh>
         ))}
 
@@ -165,7 +169,7 @@ export const LibraryEnvironment: React.FC = React.memo(() => {
         {[-8, -3, 2, 7, 12].map((z, idx) => (
           <mesh key={`ceil-beam-${idx}`} position={[0, -0.16, z]}>
             <boxGeometry args={[44, 0.35, 0.65]} />
-            <meshStandardMaterial color={midWalnut} roughness={0.55} metalness={0.2} />
+            <meshStandardMaterial color={lightOak} roughness={0.55} metalness={0.12} />
           </mesh>
         ))}
 
@@ -222,16 +226,16 @@ export const LibraryEnvironment: React.FC = React.memo(() => {
 
       {/* 5. Central Section: Architectural Wooden Wall, Framed Artwork, Globe & Credenza */}
       <group position={[1.8, -0.8, -4.5]}>
-        {/* Walnut Wall Paneling */}
+        {/* Warm Beige Wall Paneling */}
         <mesh position={[0, 2.0, 0]} receiveShadow>
           <planeGeometry args={[10, 10]} />
-          <meshStandardMaterial color={darkWalnut} roughness={0.7} metalness={0.1} />
+          <meshStandardMaterial color={lightBeige} roughness={0.75} metalness={0.05} />
         </mesh>
-        {/* Molding Trim Panels */}
+        {/* Light Oak Trim Panels */}
         {[-3.6, -1.2, 1.2, 3.6].map((px, pIdx) => (
           <mesh key={`wall-panel-${pIdx}`} position={[px, 2.0, 0.05]}>
             <boxGeometry args={[1.9, 7.8, 0.08]} />
-            <meshStandardMaterial color={midWalnut} roughness={0.5} metalness={0.2} />
+            <meshStandardMaterial color={lightOak} roughness={0.55} metalness={0.1} />
           </mesh>
         ))}
 
@@ -260,17 +264,17 @@ export const LibraryEnvironment: React.FC = React.memo(() => {
           <pointLight position={[0, 1.25, 0.4]} color={warmGlow} intensity={1.4} distance={4} />
         </group>
 
-        {/* Wooden Credenza / Console Table below Artwork */}
+        {/* Light Wooden Credenza / Console Table below Artwork */}
         <group position={[0, -2.8, 0.6]}>
           {/* Top Counter */}
           <mesh position={[0, 0.85, 0]} receiveShadow>
             <boxGeometry args={[4.2, 0.12, 1.1]} />
-            <meshStandardMaterial color={warmWood} roughness={0.3} metalness={0.2} />
+            <meshStandardMaterial color={naturalHoney} roughness={0.35} metalness={0.15} />
           </mesh>
           {/* Cabinet Body */}
           <mesh position={[0, 0, 0]} receiveShadow>
             <boxGeometry args={[4.0, 1.6, 1.0]} />
-            <meshStandardMaterial color={midWalnut} roughness={0.55} metalness={0.15} />
+            <meshStandardMaterial color={lightOak} roughness={0.55} metalness={0.1} />
           </mesh>
           {/* Brass Handles */}
           {[-0.6, 0.6].map((hx, hIdx) => (
@@ -335,37 +339,37 @@ export const LibraryEnvironment: React.FC = React.memo(() => {
       {/* Warm room back wall covering central-right room behind bookshelves */}
       <mesh position={[5.2, 1.5, -5.2]} receiveShadow>
         <planeGeometry args={[16, 16]} />
-        <meshStandardMaterial color={darkWalnut} roughness={0.7} />
+        <meshStandardMaterial color={lightBeige} roughness={0.75} />
       </mesh>
       {/* Right boundary wall */}
       <mesh position={[13.5, 1.5, 0]} rotation={[0, -Math.PI / 2, 0]} receiveShadow>
         <planeGeometry args={[18, 16]} />
-        <meshStandardMaterial color={darkWalnut} roughness={0.7} />
+        <meshStandardMaterial color={lightBeige} roughness={0.75} />
       </mesh>
 
-      {/* Tall Secondary Walnut Bookshelves in the Background (at x=4.8) */}
+      {/* Tall Secondary Light Oak Bookshelves in the Background (at x=4.8) */}
       <group position={[4.8, 1.2, -4.6]}>
         {/* Bookshelf structure */}
         <mesh position={[0, 0.6, 0]} receiveShadow>
           <boxGeometry args={[4.4, 9.2, 0.8]} />
-          <meshStandardMaterial color={darkWalnut} roughness={0.6} />
+          <meshStandardMaterial color={lightOak} roughness={0.55} />
         </mesh>
         {/* Bookshelf Crown Cornice */}
         <mesh position={[0, 5.2, 0.1]} receiveShadow>
           <boxGeometry args={[4.7, 0.35, 1.0]} />
-          <meshStandardMaterial color={midWalnut} roughness={0.4} />
+          <meshStandardMaterial color={naturalHoney} roughness={0.45} />
         </mesh>
         {/* Bookshelf Shelves with Books */}
         {[-2.6, -1.3, 0.0, 1.3, 2.6].map((sy, sIdx) => (
           <group key={`bg-shelf-${sIdx}`} position={[0, sy, 0.25]}>
             <mesh castShadow receiveShadow>
               <boxGeometry args={[4.0, 0.12, 0.6]} />
-              <meshStandardMaterial color={midWalnut} roughness={0.4} />
+              <meshStandardMaterial color={naturalHoney} roughness={0.45} />
             </mesh>
-            {/* Undershelf warm light */}
+            {/* Undershelf soft golden light */}
             <mesh position={[0, -0.06, 0.25]}>
               <boxGeometry args={[3.8, 0.02, 0.06]} />
-              <meshBasicMaterial color={warmGlow} />
+              <meshBasicMaterial color={softGoldenLighting} />
             </mesh>
             {/* Colorful background book spines */}
             {[-1.6, -1.2, -0.8, -0.4, 0.0, 0.4, 0.8, 1.2, 1.6].map((bx, bIdx) => (
@@ -386,21 +390,21 @@ export const LibraryEnvironment: React.FC = React.memo(() => {
         {/* Continuous Solid Backing Wall behind Window Section to prevent any void leaks */}
         <mesh position={[0, 0.5, -0.1]} receiveShadow>
           <planeGeometry args={[10, 14]} />
-          <meshStandardMaterial color={darkWalnut} roughness={0.7} />
+          <meshStandardMaterial color={lightBeige} roughness={0.75} />
         </mesh>
 
-        {/* Outer Dark Walnut Moulded Frame */}
+        {/* Natural Honey Wood Moulded Frame */}
         <mesh position={[-1.85, 0.0, 0.15]}>
           <boxGeometry args={[0.18, 6.0, 0.2]} />
-          <meshStandardMaterial color={midWalnut} roughness={0.45} />
+          <meshStandardMaterial color={naturalHoney} roughness={0.45} />
         </mesh>
         <mesh position={[1.85, 0.0, 0.15]}>
           <boxGeometry args={[0.18, 6.0, 0.2]} />
-          <meshStandardMaterial color={midWalnut} roughness={0.45} />
+          <meshStandardMaterial color={naturalHoney} roughness={0.45} />
         </mesh>
         <mesh position={[0, -3.0, 0.15]}>
           <boxGeometry args={[3.9, 0.25, 0.25]} />
-          <meshStandardMaterial color={midWalnut} roughness={0.45} />
+          <meshStandardMaterial color={naturalHoney} roughness={0.45} />
         </mesh>
 
         {/* Rectangular lower window glass */}
@@ -417,39 +421,39 @@ export const LibraryEnvironment: React.FC = React.memo(() => {
         {/* Semi-circular wooden arch border cleanly framing the top glass */}
         <mesh position={[0, 2.9, 0.15]}>
           <ringGeometry args={[1.72, 1.95, 48, 1, 0, Math.PI]} />
-          <meshStandardMaterial color={midWalnut} roughness={0.45} />
+          <meshStandardMaterial color={naturalHoney} roughness={0.45} />
         </mesh>
 
         {/* Vertical Center Window Bar spanning full height up into arch */}
         <mesh position={[0, 0.85, 0.14]}>
           <boxGeometry args={[0.12, 7.5, 0.12]} />
-          <meshStandardMaterial color={midWalnut} roughness={0.45} />
+          <meshStandardMaterial color={naturalHoney} roughness={0.45} />
         </mesh>
         {/* Horizontal Window Transoms */}
         {[-1.8, -0.4, 1.0, 2.4].map((wy, widx) => (
           <mesh key={`win-transom-${widx}`} position={[0, wy, 0.14]}>
             <boxGeometry args={[3.5, 0.1, 0.12]} />
-            <meshStandardMaterial color={midWalnut} roughness={0.45} />
+            <meshStandardMaterial color={naturalHoney} roughness={0.45} />
           </mesh>
         ))}
       </group>
 
       {/* 7. Right Foreground: Reading Table, Brass Domed Lamp, and Armchairs */}
       <group position={[6.5, -3.4, 2.0]}>
-        {/* Polished Walnut Round Reading Table */}
+        {/* Natural Honey Wood Round Reading Table */}
         {/* Table Top */}
         <mesh position={[0, 0.5, 0]} receiveShadow>
           <cylinderGeometry args={[1.8, 1.8, 0.1, 32]} />
-          <meshStandardMaterial color={midWalnut} roughness={0.25} metalness={0.15} />
+          <meshStandardMaterial color={naturalHoney} roughness={0.3} metalness={0.12} />
         </mesh>
         {/* Pedestal Base */}
         <mesh position={[0, -0.3, 0]}>
           <cylinderGeometry args={[0.2, 0.28, 1.4, 16]} />
-          <meshStandardMaterial color={darkWalnut} roughness={0.4} />
+          <meshStandardMaterial color={warmWalnut} roughness={0.4} />
         </mesh>
         <mesh position={[0, -0.95, 0]}>
           <cylinderGeometry args={[0.8, 0.9, 0.1, 24]} />
-          <meshStandardMaterial color={darkWalnut} roughness={0.4} />
+          <meshStandardMaterial color={warmWalnut} roughness={0.4} />
         </mesh>
 
         {/* Warm Domed Reading Lamp on Table (Golden Amber Light Source) */}
@@ -504,12 +508,12 @@ export const LibraryEnvironment: React.FC = React.memo(() => {
                 <meshStandardMaterial color={warmBeige} roughness={0.8} />
               </mesh>
             ))}
-            {/* Dark walnut legs */}
+            {/* Natural honey wood legs */}
             {[-0.5, 0.5].map((lx, lIdx) =>
               [-0.5, 0.5].map((lz, lzIdx) => (
                 <mesh key={`leg-${lIdx}-${lzIdx}`} position={[lx, -0.4, lz]} castShadow>
                   <cylinderGeometry args={[0.04, 0.03, 0.8, 8]} />
-                  <meshStandardMaterial color={darkWalnut} roughness={0.4} />
+                  <meshStandardMaterial color={naturalHoney} roughness={0.4} />
                 </mesh>
               ))
             )}

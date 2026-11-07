@@ -9,9 +9,11 @@ import {
   RotateCcw,
   Layers,
   ChevronDown,
-  User
+  User,
+  PlusCircle
 } from 'lucide-react';
 import { Language } from '../../types/education';
+import { BookUploadModal } from '../admin/BookUploadModal';
 
 interface HeaderProps {
   onOpenSearch: () => void;
@@ -33,6 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
   const setIsBasketOpen = useLibraryStore((s) => s.setIsBasketOpen);
 
   const [isLevelDropdownOpen, setIsLevelDropdownOpen] = useState(false);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const basketCount = basket.reduce((acc, item) => acc + item.quantity, 0);
@@ -251,6 +254,31 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Right Controls: Overview, Language, User, Basket */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+        {/* Upload / Create Book Action */}
+        <button
+          data-testid="open-upload-modal-btn"
+          onClick={() => setIsUploadOpen(true)}
+          className="glass-panel-interactive"
+          title={language === 'ar' ? 'إضافة كتاب جديد' : 'Add New Book'}
+          style={{
+            height: '38px',
+            padding: '0 12px',
+            borderRadius: '10px',
+            color: '#fbbf24',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '0.82rem',
+            border: '1px solid rgba(229, 179, 100, 0.35)',
+            background: 'rgba(229, 179, 100, 0.12)'
+          }}
+        >
+          <PlusCircle size={15} />
+          <span className="btn-label-desktop">
+            {language === 'ar' ? 'إضافة كتاب' : language === 'fr' ? 'Ajouter' : 'Upload Book'}
+          </span>
+        </button>
+
         {/* Reset Overview Camera */}
         <button
           onClick={resetView}
@@ -363,6 +391,11 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
         </button>
       </div>
+      {/* Future Book Upload / Creator Modal */}
+      <BookUploadModal
+        isOpen={isUploadOpen}
+        onClose={() => setIsUploadOpen(false)}
+      />
     </header>
   );
 };
