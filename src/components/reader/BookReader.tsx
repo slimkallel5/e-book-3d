@@ -50,6 +50,11 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
   const [turningCanvasFront, setTurningCanvasFront] = useState<HTMLCanvasElement | null>(null);
   const [turningCanvasBack, setTurningCanvasBack] = useState<HTMLCanvasElement | null>(null);
 
+  // Mouse & Touch Dragging State
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [dragProgress, setDragProgress] = useState<number>(0);
+  const [dragDirection, setDragDirection] = useState<'forward' | 'backward' | null>(null);
+
   const [zoomLevel, setZoomLevel] = useState<number>(1.0);
   const [isOpening, setIsOpening] = useState<boolean>(true);
 
@@ -160,119 +165,177 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
   const canGoNext = currentSpreadIndex < maxSpreads - 1;
   const canGoPrev = currentSpreadIndex > 0;
 
+  const prepareTurningCanvases = useCallback(async (dir: 'forward' | 'backward') => {
+    if (!pdfDoc || !book) return;
+    const pdfUrl = book.content.pdfUrl;
+
+    if (dir === 'forward') {
+      const currentPageRightNum = currentSpreadIndex * 2 + 2;
+      const nextSpreadLeftNum = (currentSpreadIndex + 1) * 2 + 1;
+      const nextSpreadRightNum = (currentSpreadIndex + 1) * 2 + 2;
+
+      try {
+        const frontRes = await renderPdfPageToCanvas(pdfDoc, pdfUrl, currentPageRightNum, 900);
+        const backRes = await renderPdfPageToCanvas(pdfDoc, pdfUrl, nextSpreadLeftNum, 900);
+        setTurningCanvasFront(frontRes.canvas);
+        setTurningCanvasBack(backRes.canvas);
+
+        if (nextSpreadRightNum <= totalPages) {
+          renderPdfPageToCanvas(pdfDoc, pdfUrl, nextSpreadRightNum, 900).then((res) => {
+            setRightCanvas(res.canvas);
+          });
+        }
+      } catch (e) {
+        console.error('Error preparing forward canvases:', e);
+      }
+    } else {
+      const currentLeftNum = currentSpreadIndex * 2 + 1;
+      const prevSpreadLeftNum = (currentSpreadIndex - 1) * 2 + 1;
+      const prevSpreadRightNum = (currentSpreadIndex - 1) * 2 + 2;
+
+      try {
+        const backRes = await renderPdfPageToCanvas(pdfDoc, pdfUrl, currentLeftNum, 900);
+        const frontRes = await renderPdfPageToCanvas(pdfDoc, pdfUrl, prevSpreadRightNum, 900);
+        setTurningCanvasFront(frontRes.canvas);
+        setTurningCanvasBack(backRes.canvas);
+
+        if (prevSpreadLeftNum <= totalPages) {
+          renderPdfPageToCanvas(pdfDoc, pdfUrl, prevSpreadLeftNum, 900).then((res) => {
+            setLeftCanvas(res.canvas);
+          });
+        }
+      } catch (e) {
+        console.error('Error preparing backward canvases:', e);
+      }
+    }
+  }, [pdfDoc, book, currentSpreadIndex, totalPages]);
+
   const handleNextPage = useCallback(async () => {
-    if (isAnimating || !canGoNext || !pdfDoc || !book) return;
+    if (isAnimating || isDragging || !canGoNext || !pdfDoc || !book) return;
 
     setIsAnimating(true);
     setTurnDirection('forward');
 
-    const pdfUrl = book.content.pdfUrl;
-    const currentPageRightNum = currentSpreadIndex * 2 + 2;
-    const nextSpreadLeftNum = (currentSpreadIndex + 1) * 2 + 1;
-    const nextSpreadRightNum = (currentSpreadIndex + 1) * 2 + 2;
+    await prepareTurningCanvases('forward');
 
-    try {
-      const frontRes = await renderPdfPageToCanvas(pdfDoc, pdfUrl, currentPageRightNum, 900);
-      const backRes = await renderPdfPageToCanvas(pdfDoc, pdfUrl, nextSpreadLeftNum, 900);
+    const duration = 400;
+    const startTime = performance.now();
 
-      setTurningCanvasFront(frontRes.canvas);
-      setTurningCanvasBack(backRes.canvas);
+    const animateFrame = (now: number) => {
+      const elapsed = now - startTime;
+      const rawProgress = Math.min(1, elapsed / duration);
+      const progress =
+        rawProgress < 0.5
+          ? 4 * rawProgress * rawProgress * rawProgress
+          : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2;
 
-      if (nextSpreadRightNum <= totalPages) {
-        renderPdfPageToCanvas(pdfDoc, pdfUrl, nextSpreadRightNum, 900).then((res) => {
-          setRightCanvas(res.canvas);
-        });
+      setTurnProgress(progress);
+
+      if (rawProgress < 1) {
+        requestAnimationFrame(animateFrame);
+      } else {
+        setCurrentSpreadIndex((prev) => prev + 1);
+        setIsAnimating(false);
+        setTurnDirection(null);
+        setTurnProgress(0);
+        setTurningCanvasFront(null);
+        setTurningCanvasBack(null);
       }
+    };
 
-      const duration = 400;
-      const startTime = performance.now();
-
-      const animateFrame = (now: number) => {
-        const elapsed = now - startTime;
-        const rawProgress = Math.min(1, elapsed / duration);
-        const progress =
-          rawProgress < 0.5
-            ? 4 * rawProgress * rawProgress * rawProgress
-            : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2;
-
-        setTurnProgress(progress);
-
-        if (rawProgress < 1) {
-          requestAnimationFrame(animateFrame);
-        } else {
-          setCurrentSpreadIndex((prev) => prev + 1);
-          setIsAnimating(false);
-          setTurnDirection(null);
-          setTurnProgress(0);
-          setTurningCanvasFront(null);
-          setTurningCanvasBack(null);
-        }
-      };
-
-      requestAnimationFrame(animateFrame);
-    } catch {
-      setCurrentSpreadIndex((prev) => prev + 1);
-      setIsAnimating(false);
-      setTurnDirection(null);
-    }
-  }, [isAnimating, canGoNext, pdfDoc, book, currentSpreadIndex, totalPages]);
+    requestAnimationFrame(animateFrame);
+  }, [isAnimating, isDragging, canGoNext, pdfDoc, book, prepareTurningCanvases]);
 
   const handlePrevPage = useCallback(async () => {
-    if (isAnimating || !canGoPrev || !pdfDoc || !book) return;
+    if (isAnimating || isDragging || !canGoPrev || !pdfDoc || !book) return;
 
     setIsAnimating(true);
     setTurnDirection('backward');
 
-    const pdfUrl = book.content.pdfUrl;
-    const currentLeftNum = currentSpreadIndex * 2 + 1;
-    const prevSpreadLeftNum = (currentSpreadIndex - 1) * 2 + 1;
-    const prevSpreadRightNum = (currentSpreadIndex - 1) * 2 + 2;
+    await prepareTurningCanvases('backward');
 
-    try {
-      const backRes = await renderPdfPageToCanvas(pdfDoc, pdfUrl, currentLeftNum, 900);
-      const frontRes = await renderPdfPageToCanvas(pdfDoc, pdfUrl, prevSpreadRightNum, 900);
+    const duration = 400;
+    const startTime = performance.now();
 
-      setTurningCanvasFront(frontRes.canvas);
-      setTurningCanvasBack(backRes.canvas);
+    const animateFrame = (now: number) => {
+      const elapsed = now - startTime;
+      const rawProgress = Math.min(1, elapsed / duration);
+      const progress =
+        rawProgress < 0.5
+          ? 4 * rawProgress * rawProgress * rawProgress
+          : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2;
 
-      if (prevSpreadLeftNum <= totalPages) {
-        renderPdfPageToCanvas(pdfDoc, pdfUrl, prevSpreadLeftNum, 900).then((res) => {
-          setLeftCanvas(res.canvas);
-        });
+      setTurnProgress(progress);
+
+      if (rawProgress < 1) {
+        requestAnimationFrame(animateFrame);
+      } else {
+        setCurrentSpreadIndex((prev) => prev - 1);
+        setIsAnimating(false);
+        setTurnDirection(null);
+        setTurnProgress(0);
+        setTurningCanvasFront(null);
+        setTurningCanvasBack(null);
       }
+    };
 
-      const duration = 400;
-      const startTime = performance.now();
+    requestAnimationFrame(animateFrame);
+  }, [isAnimating, isDragging, canGoPrev, pdfDoc, book, prepareTurningCanvases]);
 
-      const animateFrame = (now: number) => {
-        const elapsed = now - startTime;
-        const rawProgress = Math.min(1, elapsed / duration);
-        const progress =
-          rawProgress < 0.5
-            ? 4 * rawProgress * rawProgress * rawProgress
-            : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2;
+  // Pointer Drag Handlers
+  const handleStartDrag = useCallback(async (dir: 'forward' | 'backward', initialProgress: number) => {
+    if (isAnimating || isDragging) return;
+    setIsDragging(true);
+    setDragDirection(dir);
+    setDragProgress(initialProgress);
+    await prepareTurningCanvases(dir);
+  }, [isAnimating, isDragging, prepareTurningCanvases]);
 
-        setTurnProgress(progress);
+  const handleUpdateDrag = useCallback((prog: number) => {
+    if (!isDragging) return;
+    setDragProgress(prog);
+  }, [isDragging]);
 
-        if (rawProgress < 1) {
-          requestAnimationFrame(animateFrame);
-        } else {
-          setCurrentSpreadIndex((prev) => prev - 1);
-          setIsAnimating(false);
-          setTurnDirection(null);
-          setTurnProgress(0);
-          setTurningCanvasFront(null);
-          setTurningCanvasBack(null);
+  const handleEndDrag = useCallback((completed: boolean) => {
+    if (!isDragging || !dragDirection) return;
+
+    const startProg = dragProgress;
+    const targetProg = completed ? 1 : 0;
+    const duration = 280;
+    const startTime = performance.now();
+
+    setIsAnimating(true);
+    setIsDragging(false);
+
+    const animateRelease = (now: number) => {
+      const elapsed = now - startTime;
+      const ratio = Math.min(1, elapsed / duration);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - ratio, 3);
+      const currentProg = startProg + (targetProg - startProg) * eased;
+
+      setDragProgress(currentProg);
+
+      if (ratio < 1) {
+        requestAnimationFrame(animateRelease);
+      } else {
+        if (completed) {
+          if (dragDirection === 'forward') {
+            setCurrentSpreadIndex((prev) => prev + 1);
+          } else {
+            setCurrentSpreadIndex((prev) => prev - 1);
+          }
         }
-      };
+        setIsAnimating(false);
+        setDragDirection(null);
+        setDragProgress(0);
+        setTurningCanvasFront(null);
+        setTurningCanvasBack(null);
+      }
+    };
 
-      requestAnimationFrame(animateFrame);
-    } catch {
-      setCurrentSpreadIndex((prev) => prev - 1);
-      setIsAnimating(false);
-      setTurnDirection(null);
-    }
-  }, [isAnimating, canGoPrev, pdfDoc, book, currentSpreadIndex, totalPages]);
+    requestAnimationFrame(animateRelease);
+  }, [isDragging, dragDirection, dragProgress]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -333,12 +396,13 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
         zIndex: 35,
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: 'rgba(243, 235, 221, 0.94)',
+        backgroundColor: 'rgba(248, 241, 229, 0.95)',
         backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
         opacity: isOpening ? 0.4 : 1,
         transform: isOpening ? 'scale(0.97)' : 'scale(1)',
-        color: '#2a1b12'
+        color: 'var(--color-text-primary)'
       }}
     >
       <header
@@ -348,9 +412,9 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '12px 24px',
-          background: 'rgba(255, 255, 255, 0.88)',
-          borderBottom: '1px solid rgba(168, 121, 77, 0.25)',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
+          background: 'var(--color-surface)',
+          borderBottom: '1px solid var(--color-border)',
+          boxShadow: '0 4px 16px var(--color-shadow)',
           zIndex: 40,
           flexWrap: 'wrap',
           gap: '12px'
@@ -367,15 +431,15 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              color: '#382014',
-              background: '#f3ebd3',
-              border: '1px solid #c99a62',
-              fontWeight: 600,
+              color: 'var(--color-text-primary)',
+              background: 'var(--color-surface-secondary)',
+              border: '1px solid var(--color-border)',
+              fontWeight: 700,
               fontSize: '0.84rem'
             }}
             title={language === 'ar' ? 'إغلاق الكتاب' : 'Close book'}
           >
-            {language === 'ar' ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
+            {language === 'ar' ? <ArrowRight size={16} color="var(--color-primary)" /> : <ArrowLeft size={16} color="var(--color-primary)" />}
             <span>{language === 'ar' ? 'إغلاق والعودة' : language === 'fr' ? 'Fermer' : 'Close Reader'}</span>
           </button>
 
@@ -385,7 +449,7 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
                 fontSize: '0.74rem',
                 padding: '4px 10px',
                 borderRadius: '14px',
-                background: level.badgeColor || '#2563eb',
+                background: level.badgeColor || 'var(--color-primary)',
                 color: '#ffffff',
                 fontWeight: 700
               }}
@@ -400,7 +464,7 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
             style={{
               fontSize: '1.08rem',
               fontWeight: 800,
-              color: '#2a1b12',
+              color: 'var(--color-text-primary)',
               margin: 0,
               lineHeight: 1.3
             }}
@@ -410,9 +474,9 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
           <p
             style={{
               fontSize: '0.78rem',
-              color: '#693a1f',
+              color: 'var(--color-text-secondary)',
               margin: 0,
-              fontWeight: 500
+              fontWeight: 600
             }}
           >
             {author} {book.publisher ? `· ${book.publisher[language] || book.publisher.ar}` : ''}
@@ -427,15 +491,15 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
                 alignItems: 'center',
                 gap: '6px',
                 padding: '4px 10px',
-                background: '#fdfbf7',
+                background: 'var(--color-surface-secondary)',
                 borderRadius: '10px',
-                border: '1px solid rgba(168, 121, 77, 0.25)',
+                border: '1px solid var(--color-border)',
                 fontSize: '0.8rem',
-                color: '#382014',
-                fontWeight: 600
+                color: 'var(--color-text-primary)',
+                fontWeight: 700
               }}
             >
-              <BookOpen size={14} color="#a8794d" />
+              <BookOpen size={14} color="var(--color-primary)" />
               <span>
                 {language === 'ar'
                   ? `الصفحات ${pageStart}-${pageEnd} من ${totalPages}`
@@ -452,9 +516,9 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
             style={{
               padding: '6px',
               borderRadius: '8px',
-              color: '#382014',
-              background: '#fdfbf7',
-              border: '1px solid rgba(168, 121, 77, 0.25)',
+              color: 'var(--color-text-primary)',
+              background: 'var(--color-surface-secondary)',
+              border: '1px solid var(--color-border)',
               opacity: canGoPrev && !isAnimating ? 1 : 0.4,
               cursor: canGoPrev && !isAnimating ? 'pointer' : 'not-allowed',
               display: 'flex'
@@ -472,9 +536,9 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
             style={{
               padding: '6px',
               borderRadius: '8px',
-              color: '#382014',
-              background: '#fdfbf7',
-              border: '1px solid rgba(168, 121, 77, 0.25)',
+              color: 'var(--color-text-primary)',
+              background: 'var(--color-surface-secondary)',
+              border: '1px solid var(--color-border)',
               opacity: canGoNext && !isAnimating ? 1 : 0.4,
               cursor: canGoNext && !isAnimating ? 'pointer' : 'not-allowed',
               display: 'flex'
@@ -491,9 +555,9 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
             style={{
               padding: '6px',
               borderRadius: '8px',
-              color: '#382014',
-              background: '#fdfbf7',
-              border: '1px solid rgba(168, 121, 77, 0.25)',
+              color: 'var(--color-text-primary)',
+              background: 'var(--color-surface-secondary)',
+              border: '1px solid var(--color-border)',
               display: 'flex'
             }}
             title={zoomLevel === 1.0 ? 'Zoom In' : 'Zoom Out'}
@@ -510,9 +574,9 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
               style={{
                 padding: '6px',
                 borderRadius: '8px',
-                color: '#382014',
-                background: '#fdfbf7',
-                border: '1px solid rgba(168, 121, 77, 0.25)',
+                color: 'var(--color-text-primary)',
+                background: 'var(--color-surface-secondary)',
+                border: '1px solid var(--color-border)',
                 display: 'flex'
               }}
               title={language === 'ar' ? 'تحميل الكتاب' : 'Download PDF'}
@@ -527,7 +591,7 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
             style={{
               padding: '6px',
               borderRadius: '8px',
-              color: '#64748b',
+              color: 'var(--color-text-secondary)',
               background: 'transparent',
               border: 'none',
               cursor: 'pointer',
@@ -559,11 +623,11 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
               flexDirection: 'column',
               alignItems: 'center',
               gap: '12px',
-              color: '#693a1f'
+              color: 'var(--color-text-primary)'
             }}
           >
             <Loader2 size={36} className="animate-spin text-amber-600" />
-            <p style={{ fontWeight: 600, fontSize: '0.92rem' }}>
+            <p style={{ fontWeight: 700, fontSize: '0.92rem' }}>
               {language === 'ar'
                 ? 'جاري فتح وتحميل صفحات الكتاب...'
                 : language === 'fr'
@@ -580,9 +644,9 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
               maxWidth: '460px',
               padding: '24px 32px',
               borderRadius: '16px',
-              background: 'rgba(255, 255, 255, 0.95)',
-              border: '1px solid rgba(239, 68, 68, 0.35)',
-              boxShadow: '0 12px 32px rgba(0,0,0,0.08)',
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-danger)',
+              boxShadow: '0 12px 32px var(--color-shadow)',
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
@@ -590,15 +654,15 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
               gap: '12px'
             }}
           >
-            <AlertCircle size={40} color="#ef4444" />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#991b1b', margin: 0 }}>
+            <AlertCircle size={40} color="var(--color-danger)" />
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-danger)', margin: 0 }}>
               {language === 'ar'
                 ? 'المحتوى غير متاح'
                 : language === 'fr'
                 ? 'Contenu indisponible'
                 : 'Content Unavailable'}
             </h3>
-            <p style={{ fontSize: '0.86rem', color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+            <p style={{ fontSize: '0.86rem', color: 'var(--color-text-secondary)', lineHeight: 1.5, margin: 0 }}>
               {pdfError}
             </p>
             <button
@@ -608,9 +672,9 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
                 marginTop: '8px',
                 padding: '8px 20px',
                 borderRadius: '10px',
-                background: '#f3ebd3',
-                border: '1px solid #c99a62',
-                color: '#382014',
+                background: 'var(--color-surface-secondary)',
+                border: '1px solid var(--color-border)',
+                color: 'var(--color-text-primary)',
                 fontWeight: 700,
                 fontSize: '0.85rem'
               }}
@@ -640,6 +704,14 @@ export const BookReader: React.FC<BookReaderProps> = ({ onClose }) => {
               turnProgress={turnProgress}
               isAnimating={isAnimating}
               coverColor={book.coverStyle?.primaryColor || '#c99a62'}
+              canGoNext={canGoNext}
+              canGoPrev={canGoPrev}
+              isDragging={isDragging}
+              dragProgress={dragProgress}
+              dragDirection={dragDirection}
+              onStartDrag={handleStartDrag}
+              onUpdateDrag={handleUpdateDrag}
+              onEndDrag={handleEndDrag}
               onPageClick={(isRightSide) => {
                 if (isRightSide) {
                   if (language === 'ar') handlePrevPage();

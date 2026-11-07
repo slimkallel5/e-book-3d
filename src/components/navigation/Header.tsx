@@ -62,17 +62,18 @@ export const Header: React.FC<HeaderProps> = ({
         left: '20px',
         right: '20px',
         zIndex: 30,
-        borderRadius: '16px',
+        borderRadius: '18px',
         padding: '10px 20px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: '16px',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)'
+        background: 'var(--color-surface)',
+        border: '1px solid var(--color-border)',
+        boxShadow: '0 8px 30px var(--color-shadow)'
       }}
     >
-      {/* Brand / Logo */}
+      {/* Group A: Application Identity */}
       <div
         onClick={resetView}
         style={{
@@ -89,26 +90,26 @@ export const Header: React.FC<HeaderProps> = ({
             width: '42px',
             height: '42px',
             borderRadius: '12px',
-            background: 'linear-gradient(135deg, #c4823f, #e5b364)',
+            background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#1e140d',
-            boxShadow: '0 4px 14px rgba(229, 179, 100, 0.35)',
+            color: '#ffffff',
+            boxShadow: '0 4px 14px rgba(217, 155, 61, 0.35)',
             transition: 'transform 0.2s ease'
           }}
         >
           <BookOpen size={24} />
         </div>
         <div className="brand-text-container">
-          <h1 style={{ fontSize: '1.15rem', lineHeight: '1.2', color: '#f8fafc', fontWeight: 800 }}>
+          <h1 style={{ fontSize: '1.15rem', lineHeight: '1.2', color: 'var(--color-text-primary)', fontWeight: 800 }}>
             {language === 'ar'
               ? 'المكتبة التعليمية 3D'
               : language === 'fr'
               ? 'Bibliothèque 3D'
               : '3D Library'}
           </h1>
-          <span style={{ fontSize: '0.72rem', color: '#94a3b8', display: 'block' }}>
+          <span style={{ fontSize: '0.74rem', color: 'var(--color-text-secondary)', display: 'block', fontWeight: 500 }}>
             {language === 'ar'
               ? 'كتب تونس المدرسية'
               : language === 'fr'
@@ -118,8 +119,17 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Middle Controls: Search & Level Quick Jump */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '1', maxWidth: '480px', justifyContent: 'center' }}>
+      {/* Group D: Search & Education-Level Selection */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          flex: '1',
+          maxWidth: '520px',
+          justifyContent: 'center'
+        }}
+      >
         {/* Search Trigger Button */}
         <button
           data-testid="search-trigger-btn"
@@ -127,20 +137,21 @@ export const Header: React.FC<HeaderProps> = ({
           className="glass-panel-interactive"
           style={{
             flex: 1,
-            maxWidth: '280px',
-            height: '38px',
+            maxWidth: '310px',
+            height: '40px',
             borderRadius: '10px',
             padding: '0 14px',
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            color: '#94a3b8',
+            color: 'var(--color-text-secondary)',
             fontSize: '0.82rem',
-            border: '1px solid rgba(255,255,255,0.08)'
+            border: '1px solid var(--color-border)',
+            background: 'var(--color-surface-secondary)'
           }}
         >
-          <Search size={16} color="#e5b364" />
-          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <Search size={16} color="var(--color-primary)" style={{ flexShrink: 0 }} />
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, textAlign: language === 'ar' ? 'right' : 'left' }}>
             {language === 'ar'
               ? 'ابحث عن كتاب، مادة، أو سنة...'
               : language === 'fr'
@@ -149,13 +160,12 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
           <kbd
             style={{
-              marginLeft: language === 'ar' ? 0 : 'auto',
-              marginRight: language === 'ar' ? 'auto' : 0,
               fontSize: '0.68rem',
-              background: 'rgba(255,255,255,0.1)',
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
               padding: '2px 6px',
               borderRadius: '4px',
-              color: '#cbd5e1'
+              color: 'var(--color-text-muted)'
             }}
           >
             ⌘K
@@ -169,23 +179,25 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setIsLevelDropdownOpen(!isLevelDropdownOpen)}
             className="glass-panel-interactive"
             style={{
-              height: '38px',
+              height: '40px',
               padding: '0 12px',
               borderRadius: '10px',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              color: '#f8fafc',
+              color: 'var(--color-text-primary)',
               fontSize: '0.82rem',
-              border: '1px solid rgba(255,255,255,0.08)',
+              fontWeight: 600,
+              border: '1px solid var(--color-border)',
+              background: 'var(--color-surface-secondary)',
               whiteSpace: 'nowrap'
             }}
           >
-            <Layers size={15} color="#e5b364" />
-            <span style={{ maxWidth: '110px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <Layers size={15} color="var(--color-primary)" />
+            <span style={{ maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {activeLevel ? (activeLevel.shortName[language] || activeLevel.shortName.ar) : (language === 'ar' ? 'السنوات' : 'Levels')}
             </span>
-            <ChevronDown size={14} style={{ transform: isLevelDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }} />
+            <ChevronDown size={14} style={{ transform: isLevelDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease', color: 'var(--color-text-secondary)' }} />
           </button>
 
           {isLevelDropdownOpen && (
@@ -193,15 +205,16 @@ export const Header: React.FC<HeaderProps> = ({
               className="glass-panel"
               style={{
                 position: 'absolute',
-                top: '46px',
+                top: '48px',
                 right: language === 'ar' ? '0' : 'auto',
                 left: language === 'ar' ? 'auto' : '0',
-                width: '240px',
+                width: '250px',
                 borderRadius: '12px',
                 padding: '8px',
                 zIndex: 40,
                 boxShadow: 'var(--shadow-lg)',
-                border: '1px solid var(--border-glow)',
+                border: '1px solid var(--color-border)',
+                background: 'var(--color-surface)',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '4px',
@@ -209,6 +222,37 @@ export const Header: React.FC<HeaderProps> = ({
                 overflowY: 'auto'
               }}
             >
+              <button
+                onClick={() => {
+                  setActiveLevelId('all');
+                  setIsLevelDropdownOpen(false);
+                }}
+                style={{
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: activeLevelId === 'all' ? 'var(--color-primary)' : 'transparent',
+                  color: activeLevelId === 'all' ? '#ffffff' : 'var(--color-text-primary)',
+                  fontWeight: activeLevelId === 'all' ? 700 : 500,
+                  fontSize: '0.8rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                  textAlign: language === 'ar' ? 'right' : 'left'
+                }}
+              >
+                <span
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--color-primary)',
+                    flexShrink: 0
+                  }}
+                />
+                <span style={{ flex: 1 }}>{language === 'ar' ? 'جميع المستويات' : language === 'fr' ? 'Tous les niveaux' : 'All Levels'}</span>
+              </button>
               {EDUCATION_LEVELS.map((level) => {
                 const isSelected = activeLevelId === level.id;
                 return (
@@ -222,8 +266,8 @@ export const Header: React.FC<HeaderProps> = ({
                       padding: '8px 12px',
                       borderRadius: '8px',
                       border: 'none',
-                      background: isSelected ? 'rgba(229, 179, 100, 0.2)' : 'transparent',
-                      color: isSelected ? '#fbbf24' : '#cbd5e1',
+                      background: isSelected ? 'var(--color-surface-secondary)' : 'transparent',
+                      color: isSelected ? 'var(--color-primary)' : 'var(--color-text-primary)',
                       fontWeight: isSelected ? 700 : 500,
                       fontSize: '0.8rem',
                       display: 'flex',
@@ -252,30 +296,31 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Right Controls: Overview, Language, User, Basket */}
+      {/* Right Section: Group C (Language & Add Book) + Group B (Account & Basket) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-        {/* Upload / Create Book Action */}
+        {/* Group C: Language Selector & Add Book */}
         <button
           data-testid="open-upload-modal-btn"
           onClick={() => setIsUploadOpen(true)}
           className="glass-panel-interactive"
           title={language === 'ar' ? 'إضافة كتاب جديد' : 'Add New Book'}
           style={{
-            height: '38px',
+            height: '40px',
             padding: '0 12px',
             borderRadius: '10px',
-            color: '#fbbf24',
+            color: 'var(--color-text-primary)',
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
             fontSize: '0.82rem',
-            border: '1px solid rgba(229, 179, 100, 0.35)',
-            background: 'rgba(229, 179, 100, 0.12)'
+            fontWeight: 600,
+            border: '1px solid var(--color-border)',
+            background: 'var(--color-surface-secondary)'
           }}
         >
-          <PlusCircle size={15} />
+          <PlusCircle size={15} color="var(--color-primary)" />
           <span className="btn-label-desktop">
-            {language === 'ar' ? 'إضافة كتاب' : language === 'fr' ? 'Ajouter' : 'Upload Book'}
+            {language === 'ar' ? 'إضافة كتاب' : language === 'fr' ? 'Ajouter' : 'Add Book'}
           </span>
         </button>
 
@@ -285,18 +330,20 @@ export const Header: React.FC<HeaderProps> = ({
           className="glass-panel-interactive"
           title={language === 'ar' ? 'عرض المكتبة بالكامل' : 'Full Library View'}
           style={{
-            height: '38px',
+            height: '40px',
             padding: '0 12px',
             borderRadius: '10px',
-            color: '#f8fafc',
+            color: 'var(--color-text-primary)',
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
             fontSize: '0.82rem',
-            border: '1px solid rgba(255,255,255,0.08)'
+            fontWeight: 600,
+            border: '1px solid var(--color-border)',
+            background: 'var(--color-surface-secondary)'
           }}
         >
-          <RotateCcw size={15} />
+          <RotateCcw size={15} color="var(--color-primary)" />
           <span className="btn-label-desktop">
             {language === 'ar' ? 'المكتبة كاملة' : language === 'fr' ? 'Vue Globale' : 'Full View'}
           </span>
@@ -308,13 +355,13 @@ export const Header: React.FC<HeaderProps> = ({
             display: 'flex',
             alignItems: 'center',
             gap: '2px',
-            background: 'rgba(0,0,0,0.3)',
+            background: 'var(--color-surface-secondary)',
             borderRadius: '10px',
             padding: '3px',
-            border: '1px solid rgba(255,255,255,0.06)'
+            border: '1px solid var(--color-border)'
           }}
         >
-          <Globe size={15} style={{ margin: '0 6px', color: '#cbd5e1' }} />
+          <Globe size={15} style={{ margin: '0 6px', color: 'var(--color-text-secondary)' }} />
           {(['ar', 'fr', 'en'] as Language[]).map((lang) => (
             <button
               key={lang}
@@ -323,8 +370,8 @@ export const Header: React.FC<HeaderProps> = ({
                 padding: '4px 8px',
                 borderRadius: '6px',
                 border: 'none',
-                background: language === lang ? '#c4823f' : 'transparent',
-                color: language === lang ? '#ffffff' : '#94a3b8',
+                background: language === lang ? 'var(--color-primary)' : 'transparent',
+                color: language === lang ? '#ffffff' : 'var(--color-text-secondary)',
                 fontWeight: language === lang ? 700 : 500,
                 fontSize: '0.75rem',
                 cursor: 'pointer',
@@ -336,26 +383,26 @@ export const Header: React.FC<HeaderProps> = ({
           ))}
         </div>
 
-        {/* User Account Placeholder */}
+        {/* Group B: User Account Placeholder */}
         <div
           title={language === 'ar' ? 'حساب الزائر' : 'Guest Account'}
           style={{
-            width: '38px',
-            height: '38px',
+            width: '40px',
+            height: '40px',
             borderRadius: '10px',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)',
+            background: 'var(--color-surface-secondary)',
+            border: '1px solid var(--color-border)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#94a3b8',
+            color: 'var(--color-text-secondary)',
             cursor: 'default'
           }}
         >
           <User size={16} />
         </div>
 
-        {/* Shopping Basket Trigger Button with bounce effect */}
+        {/* Group B: Shopping Basket Trigger Button with bounce effect */}
         <button
           ref={basketButtonRef}
           data-testid="shopping-basket-btn"
@@ -363,26 +410,26 @@ export const Header: React.FC<HeaderProps> = ({
           className={`glass-panel-interactive ${basketBouncing ? 'basket-bounce-active' : ''}`}
           title={language === 'ar' ? 'سلة المشتريات' : 'Shopping Basket'}
           style={{
-            height: '38px',
+            height: '40px',
             padding: '0 14px',
             borderRadius: '10px',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            color: '#f8fafc',
-            border: basketCount > 0 ? '1px solid #e5b364' : '1px solid rgba(255,255,255,0.08)',
-            background: basketCount > 0 ? 'rgba(229, 179, 100, 0.15)' : 'var(--bg-glass)',
+            color: 'var(--color-text-primary)',
+            border: basketCount > 0 ? '1px solid var(--color-primary)' : '1px solid var(--color-border)',
+            background: basketCount > 0 ? 'var(--color-surface-secondary)' : 'var(--color-surface)',
             cursor: 'pointer',
             transition: 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
           }}
         >
-          <ShoppingBag size={18} color="#e5b364" />
+          <ShoppingBag size={18} color="var(--color-primary)" />
           <span
             data-testid="basket-counter"
             style={{
-              fontWeight: 700,
+              fontWeight: 800,
               fontSize: '0.88rem',
-              color: basketCount > 0 ? '#fbbf24' : '#f8fafc',
+              color: basketCount > 0 ? 'var(--color-primary)' : 'var(--color-text-primary)',
               minWidth: '16px',
               textAlign: 'center'
             }}
@@ -391,7 +438,8 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
         </button>
       </div>
-      {/* Future Book Upload / Creator Modal */}
+
+      {/* Book Upload / Creator Modal */}
       <BookUploadModal
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}

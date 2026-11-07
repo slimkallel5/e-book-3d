@@ -57,7 +57,7 @@ export const BasketDrawer: React.FC = () => {
         zIndex: 50,
         display: 'flex',
         justifyContent: language === 'ar' ? 'flex-start' : 'flex-end',
-        background: 'rgba(5, 8, 14, 0.65)',
+        background: 'rgba(73, 53, 35, 0.45)',
         backdropFilter: 'blur(6px)',
         WebkitBackdropFilter: 'blur(6px)'
       }}
@@ -72,9 +72,9 @@ export const BasketDrawer: React.FC = () => {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          background: 'rgba(16, 21, 30, 0.96)',
-          borderLeft: language === 'ar' ? 'none' : '1px solid rgba(229, 179, 100, 0.2)',
-          borderRight: language === 'ar' ? '1px solid rgba(229, 179, 100, 0.2)' : 'none',
+          background: 'var(--color-surface)',
+          borderLeft: language === 'ar' ? 'none' : '1px solid var(--color-border)',
+          borderRight: language === 'ar' ? '1px solid var(--color-border)' : 'none',
           boxShadow: 'var(--shadow-lg)'
         }}
         onClick={(e) => e.stopPropagation()}
@@ -83,36 +83,38 @@ export const BasketDrawer: React.FC = () => {
         <div
           style={{
             padding: '20px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            borderBottom: '1px solid var(--color-border)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            background: 'var(--color-surface-secondary)'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div
               style={{
-                width: '36px',
-                height: '36px',
+                width: '38px',
+                height: '38px',
                 borderRadius: '10px',
-                background: 'rgba(229, 179, 100, 0.15)',
-                color: '#fbbf24',
+                background: 'var(--color-surface)',
+                color: 'var(--color-primary)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                border: '1px solid var(--color-border)'
               }}
             >
               <ShoppingBag size={20} />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc', margin: 0 }}>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: 0 }}>
                 {language === 'ar'
                   ? 'سلة المشتريات'
                   : language === 'fr'
                   ? 'Panier de commande'
                   : 'Shopping Basket'}
               </h2>
-              <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+              <span style={{ fontSize: '0.78rem', color: 'var(--color-text-secondary)' }}>
                 {totalQuantity}{' '}
                 {language === 'ar'
                   ? 'كتب محددة'
@@ -132,12 +134,13 @@ export const BasketDrawer: React.FC = () => {
                 style={{
                   padding: '6px 10px',
                   borderRadius: '8px',
-                  color: '#ef4444',
+                  color: 'var(--color-danger)',
                   fontSize: '0.75rem',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
-                  border: '1px solid rgba(239, 68, 68, 0.25)'
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)'
                 }}
                 title={language === 'ar' ? 'إفراغ السلة' : 'Clear basket'}
               >
@@ -153,8 +156,10 @@ export const BasketDrawer: React.FC = () => {
               style={{
                 padding: '6px',
                 borderRadius: '8px',
-                color: '#94a3b8',
-                display: 'flex'
+                color: 'var(--color-text-secondary)',
+                display: 'flex',
+                background: 'var(--color-surface)',
+                border: '1px solid var(--color-border)'
               }}
               title={language === 'ar' ? 'إغلاق' : 'Close'}
             >
@@ -187,19 +192,19 @@ export const BasketDrawer: React.FC = () => {
                     justifyContent: 'center',
                     padding: '40px 20px',
                     textAlign: 'center',
-                    color: '#64748b',
+                    color: 'var(--color-text-secondary)',
                     gap: '12px'
                   }}
                 >
-                  <ShoppingBag size={48} color="#475569" />
-                  <p style={{ fontSize: '1rem', fontWeight: 600, color: '#94a3b8' }}>
+                  <ShoppingBag size={48} color="var(--color-border)" />
+                  <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
                     {language === 'ar'
                       ? 'سلتك فارغة حالياً'
                       : language === 'fr'
                       ? 'Votre panier est vide'
                       : 'Your basket is empty'}
                   </p>
-                  <span style={{ fontSize: '0.8rem', maxWidth: '240px' }}>
+                  <span style={{ fontSize: '0.8rem', maxWidth: '240px', color: 'var(--color-text-muted)' }}>
                     {language === 'ar'
                       ? 'اختر كتباً من الرفوف وانقر على "إضافة للسلة" لتجميع مستلزماتك المدرسية'
                       : 'Browse the 3D library and click "Add to Basket" to populate your list.'}
@@ -221,8 +226,8 @@ export const BasketDrawer: React.FC = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '10px',
-                        background: 'rgba(255, 255, 255, 0.02)',
-                        border: '1px solid rgba(255, 255, 255, 0.06)'
+                        background: 'var(--color-surface)',
+                        border: '1px solid var(--color-border)'
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -237,14 +242,14 @@ export const BasketDrawer: React.FC = () => {
                             height: '54px',
                             borderRadius: '4px',
                             background: book.coverStyle.primaryColor,
-                            border: `2px solid ${book.coverStyle.accentColor || '#fbbf24'}`,
+                            border: `2px solid ${book.coverStyle.accentColor || 'var(--color-primary)'}`,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             color: '#ffffff',
                             cursor: 'pointer',
                             flexShrink: 0,
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.4)'
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                           }}
                           title={language === 'ar' ? 'معاينة في الفضاء 3D' : 'Inspect in 3D'}
                         >
@@ -261,7 +266,7 @@ export const BasketDrawer: React.FC = () => {
                             style={{
                               fontSize: '0.92rem',
                               fontWeight: 700,
-                              color: '#f8fafc',
+                              color: 'var(--color-text-primary)',
                               margin: 0,
                               cursor: 'pointer',
                               whiteSpace: 'nowrap',
@@ -272,7 +277,7 @@ export const BasketDrawer: React.FC = () => {
                             {book.title[language] || book.title.ar}
                           </h4>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
-                            <span style={{ fontSize: '0.72rem', color: book.coverStyle.accentColor || '#fbbf24' }}>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--color-primary)', fontWeight: 600 }}>
                               {book.subject[language] || book.subject.ar}
                             </span>
                             {level && (
@@ -298,7 +303,7 @@ export const BasketDrawer: React.FC = () => {
                           style={{
                             background: 'transparent',
                             border: 'none',
-                            color: '#64748b',
+                            color: 'var(--color-text-muted)',
                             cursor: 'pointer',
                             padding: '4px',
                             display: 'flex',
@@ -317,7 +322,7 @@ export const BasketDrawer: React.FC = () => {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           paddingTop: '8px',
-                          borderTop: '1px solid rgba(255, 255, 255, 0.04)'
+                          borderTop: '1px solid var(--color-border)'
                         }}
                       >
                         {/* Qty increment / decrement */}
@@ -325,10 +330,10 @@ export const BasketDrawer: React.FC = () => {
                           style={{
                             display: 'flex',
                             alignItems: 'center',
-                            background: 'rgba(0, 0, 0, 0.3)',
+                            background: 'var(--color-surface-secondary)',
                             borderRadius: '8px',
                             padding: '2px 4px',
-                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                            border: '1px solid var(--color-border)',
                             gap: '8px'
                           }}
                         >
@@ -338,7 +343,7 @@ export const BasketDrawer: React.FC = () => {
                             style={{
                               background: 'transparent',
                               border: 'none',
-                              color: '#cbd5e1',
+                              color: 'var(--color-text-primary)',
                               cursor: 'pointer',
                               display: 'flex',
                               alignItems: 'center',
@@ -353,7 +358,7 @@ export const BasketDrawer: React.FC = () => {
                             style={{
                               fontSize: '0.82rem',
                               fontWeight: 700,
-                              color: '#f8fafc',
+                              color: 'var(--color-text-primary)',
                               minWidth: '18px',
                               textAlign: 'center'
                             }}
@@ -366,7 +371,7 @@ export const BasketDrawer: React.FC = () => {
                             style={{
                               background: 'transparent',
                               border: 'none',
-                              color: '#cbd5e1',
+                              color: 'var(--color-text-primary)',
                               cursor: 'pointer',
                               display: 'flex',
                               alignItems: 'center',
@@ -380,12 +385,12 @@ export const BasketDrawer: React.FC = () => {
 
                         {/* Price Calculation */}
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: '0.72rem', color: '#94a3b8', marginInlineEnd: '4px' }}>
+                          <span style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', marginInlineEnd: '4px' }}>
                             ({book.price.toFixed(3)} x {quantity})
                           </span>
                           <span
                             data-testid={`item-price-${book.id}`}
-                            style={{ fontSize: '0.98rem', fontWeight: 800, color: '#fbbf24' }}
+                            style={{ fontSize: '0.98rem', fontWeight: 850, color: 'var(--color-primary)' }}
                           >
                             {itemTotal.toFixed(3)}{' '}
                             <span style={{ fontSize: '0.75rem' }}>{book.currency[language] || book.currency.ar}</span>
@@ -403,21 +408,21 @@ export const BasketDrawer: React.FC = () => {
               <div
                 style={{
                   padding: '20px',
-                  background: 'rgba(10, 13, 18, 0.85)',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: 'var(--color-surface-secondary)',
+                  borderTop: '1px solid var(--color-border)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '14px'
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
+                  <span style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', fontWeight: 600 }}>
                     {language === 'ar' ? 'المجموع الإجمالي:' : language === 'fr' ? 'Sous-total:' : 'Total:'}
                   </span>
                   <div style={{ textAlign: 'right' }}>
                     <span
                       data-testid="basket-total-price"
-                      style={{ fontSize: '1.4rem', fontWeight: 800, color: '#fbbf24' }}
+                      style={{ fontSize: '1.4rem', fontWeight: 850, color: 'var(--color-primary)' }}
                     >
                       {totalPrice.toFixed(3)}{' '}
                       <span style={{ fontSize: '0.85rem' }}>
@@ -435,8 +440,8 @@ export const BasketDrawer: React.FC = () => {
                     width: '100%',
                     padding: '14px',
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #c4823f, #e5b364)',
-                    color: '#1e140d',
+                    background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))',
+                    color: '#ffffff',
                     fontWeight: 700,
                     fontSize: '0.95rem',
                     display: 'flex',
@@ -444,7 +449,7 @@ export const BasketDrawer: React.FC = () => {
                     justifyContent: 'center',
                     gap: '8px',
                     border: 'none',
-                    boxShadow: '0 4px 16px rgba(229, 179, 100, 0.35)'
+                    boxShadow: '0 4px 16px rgba(217, 155, 61, 0.35)'
                   }}
                 >
                   <Sparkles size={18} />
@@ -480,18 +485,18 @@ export const BasketDrawer: React.FC = () => {
                 width: '64px',
                 height: '64px',
                 borderRadius: '50%',
-                background: 'rgba(34, 197, 94, 0.15)',
-                color: '#4ade80',
+                background: 'rgba(40, 122, 88, 0.15)',
+                color: 'var(--color-success)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 0 24px rgba(74, 222, 128, 0.25)'
+                boxShadow: '0 0 24px rgba(40, 122, 88, 0.25)'
               }}
             >
               <CheckCircle size={36} />
             </div>
 
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-primary)' }}>
               {language === 'ar'
                 ? 'تم تسجيل طلبك بنجاح!'
                 : language === 'fr'
@@ -499,7 +504,7 @@ export const BasketDrawer: React.FC = () => {
                 : 'Order Simulated Successfully!'}
             </h3>
 
-            <p style={{ fontSize: '0.85rem', color: '#cbd5e1', lineHeight: '1.6', maxWidth: '320px' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', lineHeight: '1.6', maxWidth: '320px' }}>
               {language === 'ar'
                 ? `تم تجهيز طلب ${totalQuantity} كتب مدرسية بمجموع ${totalPrice.toFixed(3)} د.ت. هذه نسخة استعراضية جاهزة للربط المستقبلي مع بوابات الدفع.`
                 : `Your simulated basket of ${totalQuantity} schoolbooks totaling ${totalPrice.toFixed(3)} TND has been processed successfully.`}
@@ -513,8 +518,8 @@ export const BasketDrawer: React.FC = () => {
                 marginTop: '16px',
                 padding: '12px 24px',
                 borderRadius: '12px',
-                background: 'linear-gradient(135deg, #c4823f, #e5b364)',
-                color: '#1e140d',
+                background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))',
+                color: '#ffffff',
                 fontWeight: 700,
                 fontSize: '0.9rem',
                 border: 'none',
