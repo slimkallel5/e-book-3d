@@ -103,7 +103,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
         alignItems: 'flex-start',
         justifyContent: 'center',
         paddingTop: '80px',
-        background: 'rgba(5, 7, 10, 0.75)',
+        background: 'rgba(73, 53, 35, 0.45)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)'
       }}
@@ -116,13 +116,14 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
           width: '92%',
           maxWidth: '680px',
           borderRadius: '20px',
-          boxShadow: 'var(--shadow-lg), 0 0 40px rgba(0,0,0,0.8)',
-          border: '1px solid rgba(229, 179, 100, 0.3)',
+          boxShadow: 'var(--shadow-lg), 0 0 40px rgba(73, 53, 35, 0.15)',
+          border: '1px solid var(--color-border)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
           maxHeight: '80vh',
-          background: 'rgba(15, 20, 28, 0.94)'
+          background: 'var(--color-surface)',
+          color: 'var(--color-text-primary)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -132,11 +133,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
             display: 'flex',
             alignItems: 'center',
             padding: '16px 20px',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-            gap: '12px'
+            borderBottom: '1px solid var(--color-border)',
+            gap: '12px',
+            background: 'var(--color-surface)'
           }}
         >
-          <Search size={22} color="#e5b364" />
+          <Search size={22} color="var(--color-primary)" />
           <input
             ref={inputRef}
             data-testid="search-input"
@@ -155,7 +157,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
               background: 'transparent',
               border: 'none',
               outline: 'none',
-              color: '#f8fafc',
+              color: 'var(--color-text-primary)',
               fontSize: '1.05rem',
               fontFamily: 'inherit'
             }}
@@ -164,7 +166,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
             <button
               onClick={() => setQuery('')}
               style={{
-                background: 'rgba(255,255,255,0.08)',
+                background: 'var(--color-surface-secondary)',
                 border: 'none',
                 borderRadius: '50%',
                 width: '26px',
@@ -172,7 +174,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#cbd5e1',
+                color: 'var(--color-text-secondary)',
                 cursor: 'pointer'
               }}
             >
@@ -185,15 +187,17 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
             style={{
               padding: '6px 12px',
               borderRadius: '8px',
-              color: '#94a3b8',
+              color: 'var(--color-text-secondary)',
               fontSize: '0.8rem',
               display: 'flex',
               alignItems: 'center',
-              gap: '4px'
+              gap: '4px',
+              border: '1px solid var(--color-border)',
+              background: 'var(--color-surface-secondary)'
             }}
           >
             <span>{language === 'ar' ? 'إغلاق' : language === 'fr' ? 'Fermer' : 'Close'}</span>
-            <kbd style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.1)', padding: '1px 5px', borderRadius: '4px' }}>
+            <kbd style={{ fontSize: '0.65rem', background: 'var(--color-surface)', padding: '1px 5px', borderRadius: '4px', border: '1px solid var(--color-border)' }}>
               ESC
             </kbd>
           </button>
@@ -206,9 +210,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
             alignItems: 'center',
             gap: '8px',
             padding: '10px 20px',
-            borderBottom: '1px solid rgba(255,255,255,0.05)',
+            borderBottom: '1px solid var(--color-border)',
             overflowX: 'auto',
-            background: 'rgba(0,0,0,0.2)'
+            background: 'var(--color-surface-secondary)'
           }}
         >
           {subjects.map((subj) => {
@@ -220,9 +224,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                 style={{
                   padding: '4px 12px',
                   borderRadius: '16px',
-                  border: isSelected ? '1px solid #e5b364' : '1px solid rgba(255,255,255,0.08)',
-                  background: isSelected ? 'rgba(229, 179, 100, 0.2)' : 'rgba(255,255,255,0.04)',
-                  color: isSelected ? '#fbbf24' : '#94a3b8',
+                  border: isSelected ? '1px solid var(--color-primary)' : '1px solid var(--color-border)',
+                  background: isSelected ? 'var(--color-primary)' : 'var(--color-surface)',
+                  color: isSelected ? '#ffffff' : 'var(--color-text-secondary)',
                   fontSize: '0.78rem',
                   fontWeight: isSelected ? 700 : 500,
                   cursor: 'pointer',
@@ -259,22 +263,22 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
               style={{
                 padding: '48px 24px',
                 textAlign: 'center',
-                color: '#64748b',
+                color: 'var(--color-text-secondary)',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 gap: '12px'
               }}
             >
-              <BookOpen size={36} color="#475569" />
-              <p style={{ fontSize: '0.95rem' }}>
+              <BookOpen size={36} color="var(--color-primary)" />
+              <p style={{ fontSize: '0.95rem', fontWeight: 600 }}>
                 {language === 'ar'
                   ? 'لم يتم العثور على أي كتب تطابق بحثك'
                   : language === 'fr'
                   ? 'Aucun manuel ne correspond à votre recherche'
                   : 'No books match your search'}
               </p>
-              <span style={{ fontSize: '0.78rem' }}>
+              <span style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)' }}>
                 {language === 'ar'
                   ? 'جرب البحث بكلمات أخرى مثل "رياضيات"، "قراءة"، أو "الأساسي"'
                   : 'Try searching for "math", "lecture", or a specific grade'}
@@ -296,7 +300,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                     alignItems: 'center',
                     gap: '14px',
                     cursor: 'pointer',
-                    border: '1px solid rgba(255,255,255,0.06)'
+                    border: '1px solid var(--color-border)',
+                    background: 'var(--color-surface)'
                   }}
                 >
                   {/* Book Spine Color Indicator */}
@@ -306,12 +311,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                       height: '48px',
                       borderRadius: '4px',
                       background: book.coverStyle.primaryColor,
-                      border: `2px solid ${book.coverStyle.accentColor || '#e5b364'}`,
+                      border: `2px solid ${book.coverStyle.accentColor || 'var(--color-primary)'}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       color: '#ffffff',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
                       flexShrink: 0
                     }}
                   >
@@ -325,7 +330,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                         style={{
                           fontSize: '0.96rem',
                           fontWeight: 700,
-                          color: '#f8fafc',
+                          color: 'var(--color-text-primary)',
                           margin: 0
                         }}
                       >
@@ -347,8 +352,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                       )}
                     </div>
 
-                    <p style={{ fontSize: '0.76rem', color: '#94a3b8', marginTop: '3px' }}>
-                      <span style={{ color: book.coverStyle.accentColor || '#e5b364' }}>
+                    <p style={{ fontSize: '0.76rem', color: 'var(--color-text-secondary)', marginTop: '3px' }}>
+                      <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
                         {book.subject[language] || book.subject.ar}
                       </span>
                       {' • '}
@@ -359,7 +364,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                   {/* Price & Action */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
                     <div style={{ textAlign: 'right' }}>
-                      <span style={{ fontSize: '1rem', fontWeight: 800, color: '#fbbf24' }}>
+                      <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--color-primary)' }}>
                         {book.price.toFixed(3)}{' '}
                         <span style={{ fontSize: '0.75rem' }}>
                           {book.currency[language] || book.currency.ar}
@@ -371,8 +376,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                       style={{
                         padding: '6px',
                         borderRadius: '8px',
-                        background: 'rgba(229, 179, 100, 0.15)',
-                        color: '#fbbf24',
+                        background: 'var(--color-surface-secondary)',
+                        color: 'var(--color-primary)',
                         display: 'flex'
                       }}
                     >
@@ -389,13 +394,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
         <div
           style={{
             padding: '10px 20px',
-            background: 'rgba(0,0,0,0.3)',
-            borderTop: '1px solid rgba(255,255,255,0.05)',
+            background: 'var(--color-surface-secondary)',
+            borderTop: '1px solid var(--color-border)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             fontSize: '0.75rem',
-            color: '#64748b'
+            color: 'var(--color-text-secondary)'
           }}
         >
           <span>

@@ -155,7 +155,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
-        backgroundColor: 'rgba(0, 0, 0, 0.45)',
+        backgroundColor: 'rgba(73, 53, 35, 0.45)',
         backdropFilter: 'blur(8px)'
       }}
     >
@@ -165,13 +165,13 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
           width: 'min(92vw, 760px)',
           maxHeight: '90vh',
           borderRadius: '20px',
-          background: 'rgba(255, 255, 255, 0.95)',
-          border: '1px solid rgba(201, 154, 98, 0.35)',
-          boxShadow: '0 24px 60px rgba(0, 0, 0, 0.25)',
+          background: 'var(--color-surface)',
+          border: '1px solid var(--color-border)',
+          boxShadow: '0 24px 60px rgba(73, 53, 35, 0.2)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          color: '#2a1b12'
+          color: 'var(--color-text-primary)'
         }}
       >
         <div
@@ -180,13 +180,13 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '16px 24px',
-            borderBottom: '1px solid rgba(168, 121, 77, 0.18)',
-            background: 'rgba(243, 235, 221, 0.65)'
+            borderBottom: '1px solid var(--color-border)',
+            background: 'var(--color-surface-secondary)'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Upload size={20} color="#a8794d" />
-            <h2 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#382014' }}>
+            <Upload size={20} color="var(--color-primary)" />
+            <h2 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--color-text-primary)' }}>
               {language === 'ar' ? 'إضافة كتاب مدرسي جديد' : language === 'fr' ? 'Ajouter un nouveau manuel' : 'Add New Educational Book'}
             </h2>
           </div>
@@ -196,7 +196,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#806044',
+              color: 'var(--color-text-secondary)',
               cursor: 'pointer',
               padding: '4px',
               display: 'flex'
@@ -213,14 +213,14 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
               alignItems: 'center',
               gap: '8px',
               padding: '10px 14px',
-              background: '#fef3c7',
-              border: '1px solid #fde68a',
+              background: 'var(--color-surface-secondary)',
+              border: '1px solid var(--color-border)',
               borderRadius: '10px',
               fontSize: '0.82rem',
-              color: '#92400e'
+              color: 'var(--color-text-primary)'
             }}
           >
-            <Info size={16} style={{ flexShrink: 0 }} />
+            <Info size={16} color="var(--color-primary)" style={{ flexShrink: 0 }} />
             <span>
               {language === 'ar'
                 ? 'ملاحظة: هذا النموذج يجهز بنية الرفع للمستقبل. يتم تخزين الملفات المرفوعة مؤقتاً في جلسة العمل المحلية لعدم وجود خادم خلفي حالياً.'
@@ -232,11 +232,11 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
             <div
               style={{
                 padding: '10px 14px',
-                background: '#fee2e2',
-                border: '1px solid #fca5a5',
+                background: 'rgba(185, 77, 88, 0.12)',
+                border: '1px solid var(--color-danger)',
                 borderRadius: '10px',
                 fontSize: '0.82rem',
-                color: '#991b1b'
+                color: 'var(--color-danger)'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, marginBottom: '4px' }}>
@@ -258,11 +258,11 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                 alignItems: 'center',
                 gap: '8px',
                 padding: '10px 14px',
-                background: '#dcfce7',
-                border: '1px solid #86efac',
+                background: 'rgba(40, 122, 88, 0.12)',
+                border: '1px solid var(--color-success)',
                 borderRadius: '10px',
                 fontSize: '0.84rem',
-                color: '#166534',
+                color: 'var(--color-success)',
                 fontWeight: 600
               }}
             >
@@ -273,7 +273,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: '#382014' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: 'var(--color-text-primary)' }}>
                 Book Title *
               </label>
               <input
@@ -286,15 +286,16 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   width: '100%',
                   padding: '8px 12px',
                   borderRadius: '8px',
-                  border: '1px solid #c99a62',
-                  background: '#faf6ed',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)',
+                  color: 'var(--color-text-primary)',
                   fontSize: '0.86rem'
                 }}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: '#382014' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: 'var(--color-text-primary)' }}>
                 Subtitle (Optional)
               </label>
               <input
@@ -306,8 +307,9 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   width: '100%',
                   padding: '8px 12px',
                   borderRadius: '8px',
-                  border: '1px solid #c99a62',
-                  background: '#faf6ed',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)',
+                  color: 'var(--color-text-primary)',
                   fontSize: '0.86rem'
                 }}
               />
@@ -316,7 +318,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: '#382014' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: 'var(--color-text-primary)' }}>
                 Education Level *
               </label>
               <select
@@ -326,8 +328,9 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   width: '100%',
                   padding: '8px 12px',
                   borderRadius: '8px',
-                  border: '1px solid #c99a62',
-                  background: '#faf6ed',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)',
+                  color: 'var(--color-text-primary)',
                   fontSize: '0.86rem'
                 }}
               >
@@ -340,7 +343,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: '#382014' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: 'var(--color-text-primary)' }}>
                 Subject *
               </label>
               <input
@@ -353,15 +356,16 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   width: '100%',
                   padding: '8px 12px',
                   borderRadius: '8px',
-                  border: '1px solid #c99a62',
-                  background: '#faf6ed',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)',
+                  color: 'var(--color-text-primary)',
                   fontSize: '0.86rem'
                 }}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: '#382014' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: 'var(--color-text-primary)' }}>
                 Language
               </label>
               <select
@@ -371,8 +375,9 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   width: '100%',
                   padding: '8px 12px',
                   borderRadius: '8px',
-                  border: '1px solid #c99a62',
-                  background: '#faf6ed',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)',
+                  color: 'var(--color-text-primary)',
                   fontSize: '0.86rem'
                 }}
               >
@@ -385,7 +390,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: '#382014' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: 'var(--color-text-primary)' }}>
                 Author / Pedagogical Committee *
               </label>
               <input
@@ -398,15 +403,16 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   width: '100%',
                   padding: '8px 12px',
                   borderRadius: '8px',
-                  border: '1px solid #c99a62',
-                  background: '#faf6ed',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)',
+                  color: 'var(--color-text-primary)',
                   fontSize: '0.86rem'
                 }}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: '#382014' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: 'var(--color-text-primary)' }}>
                 Publisher (Optional)
               </label>
               <input
@@ -418,8 +424,9 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   width: '100%',
                   padding: '8px 12px',
                   borderRadius: '8px',
-                  border: '1px solid #c99a62',
-                  background: '#faf6ed',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)',
+                  color: 'var(--color-text-primary)',
                   fontSize: '0.86rem'
                 }}
               />
@@ -427,7 +434,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: '#382014' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px', color: 'var(--color-text-primary)' }}>
               Description / Synopsis
             </label>
             <textarea
@@ -439,8 +446,9 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                 width: '100%',
                 padding: '8px 12px',
                 borderRadius: '8px',
-                border: '1px solid #c99a62',
-                background: '#faf6ed',
+                border: '1px solid var(--color-border)',
+                background: 'var(--color-surface)',
+                color: 'var(--color-text-primary)',
                 fontSize: '0.86rem',
                 resize: 'vertical'
               }}
@@ -451,11 +459,11 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
             style={{
               padding: '16px',
               borderRadius: '12px',
-              background: '#f3ebd3',
-              border: '1px dashed #c99a62'
+              background: 'var(--color-surface-secondary)',
+              border: '1px dashed var(--color-border)'
             }}
           >
-            <label style={{ display: 'block', fontSize: '0.86rem', fontWeight: 800, color: '#382014', marginBottom: '6px' }}>
+            <label style={{ display: 'block', fontSize: '0.86rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '6px' }}>
               Authoritative PDF Content File *
             </label>
             <input
@@ -473,9 +481,9 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                 style={{
                   padding: '8px 16px',
                   borderRadius: '8px',
-                  background: '#faf6ed',
-                  border: '1px solid #a8794d',
-                  color: '#382014',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-text-primary)',
                   fontWeight: 600,
                   fontSize: '0.82rem',
                   display: 'flex',
@@ -483,15 +491,15 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   gap: '6px'
                 }}
               >
-                <FileText size={16} color="#a8794d" />
+                <FileText size={16} color="var(--color-primary)" />
                 <span>Select PDF File</span>
               </button>
               {pdfFile ? (
-                <span style={{ fontSize: '0.82rem', color: '#166534', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.82rem', color: 'var(--color-success)', fontWeight: 600 }}>
                   ✓ {pdfFile.name} ({(pdfFile.size / 1024).toFixed(1)} KB)
                 </span>
               ) : (
-                <span style={{ fontSize: '0.78rem', color: '#806044' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-secondary)' }}>
                   No PDF selected (PDF format only)
                 </span>
               )}
@@ -499,8 +507,8 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
-            <div style={{ padding: '12px', borderRadius: '10px', background: '#faf6ed', border: '1px solid #e9dcc5' }}>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, marginBottom: '6px' }}>
+            <div style={{ padding: '12px', borderRadius: '10px', background: 'var(--color-surface-secondary)', border: '1px solid var(--color-border)' }}>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, marginBottom: '6px', color: 'var(--color-text-primary)' }}>
                 Poster Image
               </label>
               <input
@@ -517,8 +525,9 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   width: '100%',
                   padding: '6px 10px',
                   borderRadius: '6px',
-                  background: '#f3ebd3',
-                  border: '1px solid #c99a62',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-text-primary)',
                   fontSize: '0.78rem',
                   cursor: 'pointer',
                   display: 'flex',
@@ -527,7 +536,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   gap: '4px'
                 }}
               >
-                <ImageIcon size={14} />
+                <ImageIcon size={14} color="var(--color-primary)" />
                 <span>Choose Poster</span>
               </button>
               {posterPreview && (
@@ -535,14 +544,14 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   <img
                     src={posterPreview}
                     alt="Poster Preview"
-                    style={{ width: '60px', height: '85px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #ccc' }}
+                    style={{ width: '60px', height: '85px', objectFit: 'cover', borderRadius: '4px', border: '1px solid var(--color-border)' }}
                   />
                 </div>
               )}
             </div>
 
-            <div style={{ padding: '12px', borderRadius: '10px', background: '#faf6ed', border: '1px solid #e9dcc5' }}>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, marginBottom: '6px' }}>
+            <div style={{ padding: '12px', borderRadius: '10px', background: 'var(--color-surface-secondary)', border: '1px solid var(--color-border)' }}>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, marginBottom: '6px', color: 'var(--color-text-primary)' }}>
                 Front Cover Image
               </label>
               <input
@@ -559,8 +568,9 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   width: '100%',
                   padding: '6px 10px',
                   borderRadius: '6px',
-                  background: '#f3ebd3',
-                  border: '1px solid #c99a62',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-text-primary)',
                   fontSize: '0.78rem',
                   cursor: 'pointer',
                   display: 'flex',
@@ -569,7 +579,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   gap: '4px'
                 }}
               >
-                <ImageIcon size={14} />
+                <ImageIcon size={14} color="var(--color-primary)" />
                 <span>Choose Front</span>
               </button>
               {frontCoverPreview && (
@@ -577,14 +587,14 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   <img
                     src={frontCoverPreview}
                     alt="Front Cover Preview"
-                    style={{ width: '60px', height: '85px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #ccc' }}
+                    style={{ width: '60px', height: '85px', objectFit: 'cover', borderRadius: '4px', border: '1px solid var(--color-border)' }}
                   />
                 </div>
               )}
             </div>
 
-            <div style={{ padding: '12px', borderRadius: '10px', background: '#faf6ed', border: '1px solid #e9dcc5' }}>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, marginBottom: '6px' }}>
+            <div style={{ padding: '12px', borderRadius: '10px', background: 'var(--color-surface-secondary)', border: '1px solid var(--color-border)' }}>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, marginBottom: '6px', color: 'var(--color-text-primary)' }}>
                 Back Cover Image
               </label>
               <input
@@ -601,8 +611,9 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   width: '100%',
                   padding: '6px 10px',
                   borderRadius: '6px',
-                  background: '#f3ebd3',
-                  border: '1px solid #c99a62',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-text-primary)',
                   fontSize: '0.78rem',
                   cursor: 'pointer',
                   display: 'flex',
@@ -611,7 +622,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   gap: '4px'
                 }}
               >
-                <ImageIcon size={14} />
+                <ImageIcon size={14} color="var(--color-primary)" />
                 <span>Choose Back</span>
               </button>
               {backCoverPreview && (
@@ -619,7 +630,7 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
                   <img
                     src={backCoverPreview}
                     alt="Back Cover Preview"
-                    style={{ width: '60px', height: '85px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #ccc' }}
+                    style={{ width: '60px', height: '85px', objectFit: 'cover', borderRadius: '4px', border: '1px solid var(--color-border)' }}
                   />
                 </div>
               )}
@@ -633,8 +644,9 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
               style={{
                 padding: '8px 18px',
                 borderRadius: '10px',
-                border: '1px solid #ccc',
-                background: '#faf6ed',
+                border: '1px solid var(--color-border)',
+                background: 'var(--color-surface-secondary)',
+                color: 'var(--color-text-primary)',
                 fontSize: '0.85rem',
                 cursor: 'pointer'
               }}
@@ -648,8 +660,8 @@ export const BookUploadModal: React.FC<BookUploadModalProps> = ({
               style={{
                 padding: '8px 22px',
                 borderRadius: '10px',
-                border: '1px solid #c99a62',
-                background: 'linear-gradient(135deg, #c99a62, #a8794d)',
+                border: 'none',
+                background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))',
                 color: '#ffffff',
                 fontWeight: 700,
                 fontSize: '0.85rem'

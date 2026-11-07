@@ -1,34 +1,50 @@
 :root {
+  /* Centralized Design System Palette */
+  --color-background: #F8F1E5;
+  --color-surface: #FFF9EF;
+  --color-surface-secondary: #E8D8BD;
+  --color-text-primary: #493523;
+  --color-text-secondary: #78634C;
+  --color-text-muted: #968069;
+  --color-primary: #D99B3D;
+  --color-primary-hover: #C6872B;
+  --color-border: #D9C5A5;
+  --color-border-subtle: rgba(217, 197, 165, 0.65);
+  --color-border-glow: rgba(217, 155, 61, 0.45);
+  --color-success: #287A58;
+  --color-danger: #B94D58;
+  --color-shadow: rgba(73, 53, 35, 0.12);
+
   /* Warm, Light and Elegant Educational Library Token Palette */
-  --bg-primary: #f3ebdd;
-  --bg-secondary: #faf6ed;
-  --bg-glass: rgba(250, 246, 237, 0.82);
-  --bg-glass-hover: rgba(255, 255, 255, 0.92);
-  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-primary: var(--color-background);
+  --bg-secondary: var(--color-surface);
+  --bg-glass: rgba(255, 249, 239, 0.88);
+  --bg-glass-hover: rgba(255, 255, 255, 0.96);
+  --bg-card: var(--color-surface);
 
   --wood-light-oak: #d5b58b;
   --wood-honey: #c99a62;
   --wood-warm-walnut: #a8794d;
   --wood-shadow: #806044;
   --beige-light: #e9dcc5;
-  --cream-bg: #f3ebdd;
-  --ivory-warm: #faf6ed;
+  --cream-bg: #F8F1E5;
+  --ivory-warm: #FFF9EF;
   --golden-light: #ffe0a3;
 
-  --wood-dark: #693a1f;
-  --wood-warm: #a8794d;
-  --wood-accent: #c99a62;
-  --gold-accent: #c99a62;
-  --gold-glow: rgba(201, 154, 98, 0.28);
-  --amber-light: #fbbf24;
+  --wood-dark: #493523;
+  --wood-warm: #78634C;
+  --wood-accent: #D99B3D;
+  --gold-accent: #D99B3D;
+  --gold-glow: rgba(217, 155, 61, 0.28);
+  --amber-light: #D99B3D;
 
-  --text-primary: #2a1b12;
-  --text-secondary: #4a3020;
-  --text-muted: #785a44;
-  --text-accent: #a85a15;
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --text-accent: var(--color-primary);
 
-  --border-subtle: rgba(168, 121, 77, 0.22);
-  --border-glow: rgba(201, 154, 98, 0.45);
+  --border-subtle: var(--color-border-subtle);
+  --border-glow: var(--color-border-glow);
 
   --font-arabic-heading: 'Cairo', system-ui, -apple-system, sans-serif;
   --font-arabic-body: 'Amiri', serif;
@@ -43,10 +59,10 @@
   --radius-lg: 16px;
   --radius-full: 9999px;
 
-  --shadow-sm: 0 2px 8px rgba(128, 96, 68, 0.12);
-  --shadow-md: 0 8px 24px rgba(128, 96, 68, 0.16);
-  --shadow-lg: 0 16px 40px rgba(80, 50, 30, 0.2);
-  --shadow-glow: 0 0 25px rgba(201, 154, 98, 0.25);
+  --shadow-sm: 0 2px 8px rgba(73, 53, 35, 0.08);
+  --shadow-md: 0 8px 24px rgba(73, 53, 35, 0.12);
+  --shadow-lg: 0 16px 40px rgba(73, 53, 35, 0.16);
+  --shadow-glow: 0 0 25px rgba(217, 155, 61, 0.25);
 
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
@@ -71,8 +87,8 @@ html, body, #root {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
   font-family: var(--font-body);
   user-select: none;
 }
@@ -103,6 +119,7 @@ html, body, #root {
   border: 1px solid var(--border-subtle);
   transition: all var(--transition-normal);
   cursor: pointer;
+  color: var(--color-text-primary);
 }
 
 .glass-panel-interactive:hover {
@@ -117,7 +134,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 /* Scrollbar styles */
@@ -126,14 +143,14 @@ h1, h2, h3, h4, h5, h6 {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(217, 197, 165, 0.3);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(120, 99, 76, 0.35);
   border-radius: var(--radius-full);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(229, 179, 100, 0.4);
+  background: var(--color-primary);
 }
 
 /* Basket bounce animation */
@@ -157,8 +174,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .basket-bounce-active {
   animation: basketBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
-  border-color: #fbbf24 !important;
-  box-shadow: 0 0 20px rgba(229, 179, 100, 0.7) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 20px rgba(217, 155, 61, 0.6) !important;
 }
 
 @media (max-width: 768px) {
